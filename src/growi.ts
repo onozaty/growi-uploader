@@ -4,11 +4,8 @@
  * GROWI REST API v3
  * OpenAPI spec version: 7.3.3-RC.0
  */
-import * as axios from 'axios';
-import type {
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
+import * as axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export interface SyncStatus {
   isExecutingSync?: boolean;
@@ -77,7 +74,7 @@ export interface ActivityResponse {
 /**
  * environment variables
  */
-export type SystemInformationParamsEnvVars = {[key: string]: string};
+export type SystemInformationParamsEnvVars = { [key: string]: string };
 
 export interface SystemInformationParams {
   /** GROWI version or '-' */
@@ -352,7 +349,8 @@ export type BookmarkFolderBookmarksItemPageAllOf = {
 /**
  * Pages that are bookmarked in the folder
  */
-export type BookmarkFolderBookmarksItemPage = Page & BookmarkFolderBookmarksItemPageAllOf;
+export type BookmarkFolderBookmarksItemPage = Page &
+  BookmarkFolderBookmarksItemPageAllOf;
 
 export type BookmarkFolderBookmarksItem = {
   /** Bookmark ID */
@@ -584,7 +582,7 @@ export interface ExportZipFileStat {
   innerFileStats?: ExportInnerFileStat[];
 }
 
-export type ExportMetaEnvVars = {[key: string]: string};
+export type ExportMetaEnvVars = { [key: string]: string };
 
 export interface ExportMeta {
   version?: string;
@@ -614,7 +612,9 @@ export interface ExportFileStat {
 /**
  * progress data for each exporting collections
  */
-export type ExportInnerFileStatMetaProgressListItem = { [key: string]: unknown };
+export type ExportInnerFileStatMetaProgressListItem = {
+  [key: string]: unknown;
+};
 
 export type ExportInnerFileStatMeta = {
   progressList?: ExportInnerFileStatMetaProgressListItem[];
@@ -658,14 +658,14 @@ export interface GrowiInfo {
   attachmentInfo?: GrowiInfoAttachmentInfo;
 }
 
-export type HealthcheckInfoSearchInfoStatus = typeof HealthcheckInfoSearchInfoStatus[keyof typeof HealthcheckInfoSearchInfoStatus];
-
+export type HealthcheckInfoSearchInfoStatus =
+  (typeof HealthcheckInfoSearchInfoStatus)[keyof typeof HealthcheckInfoSearchInfoStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthcheckInfoSearchInfoStatus = {
-  green: 'green',
-  yellow: 'yellow',
-  red: 'red',
+  green: "green",
+  yellow: "yellow",
+  red: "red",
 } as const;
 
 export type HealthcheckInfoSearchInfo = {
@@ -698,14 +698,14 @@ export interface HealthcheckInfo {
 /**
  * Import mode
  */
-export type GrowiArchiveImportOptionMode = typeof GrowiArchiveImportOptionMode[keyof typeof GrowiArchiveImportOptionMode];
-
+export type GrowiArchiveImportOptionMode =
+  (typeof GrowiArchiveImportOptionMode)[keyof typeof GrowiArchiveImportOptionMode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GrowiArchiveImportOptionMode = {
-  insert: 'insert',
-  upsert: 'upsert',
-  flushAndInsert: 'flushAndInsert',
+  insert: "insert",
+  upsert: "upsert",
+  flushAndInsert: "flushAndInsert",
 } as const;
 
 /**
@@ -1056,7 +1056,7 @@ export type IndicesGrowi = {
 export type IndicesAliasesGrowiAliasesGrowiAlias = { [key: string]: unknown };
 
 export type IndicesAliasesGrowiAliases = {
-  'growi-alias'?: IndicesAliasesGrowiAliasesGrowiAlias;
+  "growi-alias"?: IndicesAliasesGrowiAliasesGrowiAlias;
 };
 
 export type IndicesAliasesGrowi = {
@@ -1491,13 +1491,13 @@ export type PageInfoForEntity = PageInfo & PageInfoForEntityAllOf;
 /**
  * Subscription status
  */
-export type PageInfoForOperationAllOfSubscriptionStatus = typeof PageInfoForOperationAllOfSubscriptionStatus[keyof typeof PageInfoForOperationAllOfSubscriptionStatus];
-
+export type PageInfoForOperationAllOfSubscriptionStatus =
+  (typeof PageInfoForOperationAllOfSubscriptionStatus)[keyof typeof PageInfoForOperationAllOfSubscriptionStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PageInfoForOperationAllOfSubscriptionStatus = {
-  SUBSCRIBE: 'SUBSCRIBE',
-  UNSUBSCRIBE: 'UNSUBSCRIBE',
+  SUBSCRIBE: "SUBSCRIBE",
+  UNSUBSCRIBE: "UNSUBSCRIBE",
 } as const;
 
 export type PageInfoForOperationAllOf = {
@@ -1512,7 +1512,8 @@ export type PageInfoForOperationAllOf = {
 /**
  * Page information for operation (extends IPageInfoForEntity)
  */
-export type PageInfoForOperation = PageInfoForEntity & PageInfoForOperationAllOf;
+export type PageInfoForOperation = PageInfoForEntity &
+  PageInfoForOperationAllOf;
 
 export type PageInfoForListingAllOf = {
   /** Short body of the revision */
@@ -1527,7 +1528,11 @@ export type PageInfoForListing = PageInfoForEntity & PageInfoForListingAllOf;
 /**
  * Page information (union of all page info types)
  */
-export type PageInfoAll = PageInfo | PageInfoForEntity | PageInfoForOperation | PageInfoForListing;
+export type PageInfoAll =
+  | PageInfo
+  | PageInfoForEntity
+  | PageInfoForOperation
+  | PageInfoForListing;
 
 /**
  * extend data
@@ -1537,15 +1542,14 @@ export type PageExtended = { [key: string]: unknown };
 /**
  * status
  */
-export type PageStatus = typeof PageStatus[keyof typeof PageStatus];
-
+export type PageStatus = (typeof PageStatus)[keyof typeof PageStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PageStatus = {
-  wip: 'wip',
-  published: 'published',
-  deleted: 'deleted',
-  deprecated: 'deprecated',
+  wip: "wip",
+  published: "published",
+  deleted: "deleted",
+  deprecated: "deprecated",
 } as const;
 
 /**
@@ -1691,7 +1695,9 @@ export type ApiResponseErrorAllOfErrorOneOf = { [key: string]: unknown };
 /**
  * Error message or error object containing details about the failure
  */
-export type ApiResponseErrorAllOfError = string | ApiResponseErrorAllOfErrorOneOf;
+export type ApiResponseErrorAllOfError =
+  | string
+  | ApiResponseErrorAllOfErrorOneOf;
 
 export type ApiResponseErrorAllOf = {
   /** Success indicator (always false for error responses) */
@@ -1731,19 +1737,23 @@ export type ConflictResponse = ApiResponseError;
 export type InternalServerErrorResponse = ApiResponseError;
 
 export type GetExternalUserGroupRelationsParams = {
-/**
- * The group IDs to get relations for
- */
-groupIds?: string[];
-/**
- * The child group IDs to get relations for
- */
-childGroupIds?: string[];
+  /**
+   * The group IDs to get relations for
+   */
+  groupIds?: string[];
+  /**
+   * The child group IDs to get relations for
+   */
+  childGroupIds?: string[];
 };
 
-export type GetExternalUserGroupRelations200UserGroupRelationsItem = { [key: string]: unknown };
+export type GetExternalUserGroupRelations200UserGroupRelationsItem = {
+  [key: string]: unknown;
+};
 
-export type GetExternalUserGroupRelations200RelationsOfChildGroupsItem = { [key: string]: unknown };
+export type GetExternalUserGroupRelations200RelationsOfChildGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetExternalUserGroupRelations200 = {
   userGroupRelations?: GetExternalUserGroupRelations200UserGroupRelationsItem[];
@@ -1751,22 +1761,22 @@ export type GetExternalUserGroupRelations200 = {
 };
 
 export type GetExternalUserGroupsParams = {
-/**
- * Page number for pagination
- */
-page?: number;
-/**
- * Number of items per page
- */
-limit?: number;
-/**
- * Offset for pagination
- */
-offset?: number;
-/**
- * Whether to enable pagination
- */
-pagination?: boolean;
+  /**
+   * Page number for pagination
+   */
+  page?: number;
+  /**
+   * Number of items per page
+   */
+  limit?: number;
+  /**
+   * Offset for pagination
+   */
+  offset?: number;
+  /**
+   * Whether to enable pagination
+   */
+  pagination?: boolean;
 };
 
 export type GetExternalUserGroups200UserGroupsItem = { [key: string]: unknown };
@@ -1778,32 +1788,38 @@ export type GetExternalUserGroups200 = {
 };
 
 export type GetAncestorsForExternalUserGroupsParams = {
-/**
- * The ID of the user group to get ancestors for
- */
-groupId: string;
+  /**
+   * The ID of the user group to get ancestors for
+   */
+  groupId: string;
 };
 
-export type GetAncestorsForExternalUserGroups200AncestorUserGroupsItem = { [key: string]: unknown };
+export type GetAncestorsForExternalUserGroups200AncestorUserGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetAncestorsForExternalUserGroups200 = {
   ancestorUserGroups?: GetAncestorsForExternalUserGroups200AncestorUserGroupsItem[];
 };
 
 export type GetChildrenForExternalUserGroupsParams = {
-/**
- * The IDs of the parent user groups
- */
-parentIds?: string[];
-/**
- * Whether to include grandchild user groups
- */
-includeGrandChildren?: boolean;
+  /**
+   * The IDs of the parent user groups
+   */
+  parentIds?: string[];
+  /**
+   * Whether to include grandchild user groups
+   */
+  includeGrandChildren?: boolean;
 };
 
-export type GetChildrenForExternalUserGroups200ChildUserGroupsItem = { [key: string]: unknown };
+export type GetChildrenForExternalUserGroups200ChildUserGroupsItem = {
+  [key: string]: unknown;
+};
 
-export type GetChildrenForExternalUserGroups200GrandChildUserGroupsItem = { [key: string]: unknown };
+export type GetChildrenForExternalUserGroups200GrandChildUserGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetChildrenForExternalUserGroups200 = {
   childUserGroups?: GetChildrenForExternalUserGroups200ChildUserGroupsItem[];
@@ -1817,21 +1833,23 @@ export type GetExternalUserGroupsById200 = {
 };
 
 export type DeleteExternalUserGroupsByIdParams = {
-/**
- * The action to perform on group delete
- */
-actionName: string;
-/**
- * The ID of the user group to transfer to
- */
-transferToUserGroupId?: string;
-/**
- * The type of the user group to transfer to
- */
-transferToUserGroupType?: string;
+  /**
+   * The action to perform on group delete
+   */
+  actionName: string;
+  /**
+   * The ID of the user group to transfer to
+   */
+  transferToUserGroupId?: string;
+  /**
+   * The type of the user group to transfer to
+   */
+  transferToUserGroupType?: string;
 };
 
-export type DeleteExternalUserGroupsById200UserGroupsItem = { [key: string]: unknown };
+export type DeleteExternalUserGroupsById200UserGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type DeleteExternalUserGroupsById200 = {
   userGroups?: DeleteExternalUserGroupsById200UserGroupsItem[];
@@ -1847,7 +1865,8 @@ export type PutExternalUserGroupsById200 = {
   userGroup?: PutExternalUserGroupsById200UserGroup;
 };
 
-export type GetExternalUserGroupRelationsByIdForExternalUserGroups200UserGroupRelationsItem = { [key: string]: unknown };
+export type GetExternalUserGroupRelationsByIdForExternalUserGroups200UserGroupRelationsItem =
+  { [key: string]: unknown };
 
 export type GetExternalUserGroupRelationsByIdForExternalUserGroups200 = {
   userGroupRelations?: GetExternalUserGroupRelationsByIdForExternalUserGroups200UserGroupRelationsItem[];
@@ -1875,7 +1894,9 @@ export type PutSyncSettingsForExternalUserGroupsLdapBody = {
   ldapGroupDescriptionAttribute?: string;
 };
 
-export type PutSyncSettingsForExternalUserGroupsLdap204 = { [key: string]: unknown };
+export type PutSyncSettingsForExternalUserGroupsLdap204 = {
+  [key: string]: unknown;
+};
 
 export type GetSyncSettingsForExternalUserGroupsKeycloak200 = {
   keycloakHost?: string;
@@ -1899,26 +1920,32 @@ export type PutSyncSettingsForExternalUserGroupsKeycloakBody = {
   keycloakGroupDescriptionAttribute?: string;
 };
 
-export type PutSyncSettingsForExternalUserGroupsKeycloak204 = { [key: string]: unknown };
+export type PutSyncSettingsForExternalUserGroupsKeycloak204 = {
+  [key: string]: unknown;
+};
 
 export type PutSyncForExternalUserGroupsLdap202 = { [key: string]: unknown };
 
-export type PutSyncForExternalUserGroupsKeycloak202 = { [key: string]: unknown };
-
-export type GetTemplatesParams = {
-/**
- * Whether to include invalid templates
- */
-includeInvalidTemplates?: boolean;
+export type PutSyncForExternalUserGroupsKeycloak202 = {
+  [key: string]: unknown;
 };
 
-export type GetTemplates200Summaries = {[key: string]: {
-  id?: string;
-  isDefault?: boolean;
-  isValid?: boolean;
-  locale?: string;
-  title?: string;
-}};
+export type GetTemplatesParams = {
+  /**
+   * Whether to include invalid templates
+   */
+  includeInvalidTemplates?: boolean;
+};
+
+export type GetTemplates200Summaries = {
+  [key: string]: {
+    id?: string;
+    isDefault?: boolean;
+    isValid?: boolean;
+    locale?: string;
+    title?: string;
+  };
+};
 
 export type GetTemplates200 = {
   summaries?: GetTemplates200Summaries;
@@ -1928,9 +1955,10 @@ export type GetPresetTemplatesByLocaleByTemplateIdForTemplates200 = {
   markdown?: string;
 };
 
-export type GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200 = {
-  markdown?: string;
-};
+export type GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200 =
+  {
+    markdown?: string;
+  };
 
 export type PostPluginsBodyPluginInstallerForm = {
   url?: string;
@@ -1958,9 +1986,9 @@ export type DeleteRemoveByIdForPlugins200 = {
 };
 
 export type GetActivityParams = {
-limit?: number;
-offset?: number;
-searchFilter?: string;
+  limit?: number;
+  offset?: number;
+  searchFilter?: string;
 };
 
 export type GetAdminHome200 = {
@@ -2013,25 +2041,25 @@ export type PostMaintenanceModeForAppSettings200 = {
 };
 
 export type GetListForAttachmentParams = {
-/**
- * page id
- */
-pageId: string;
-/**
- * page number
- */
-pageNumber?: number;
-/**
- * limit
- */
-limit?: number;
+  /**
+   * page id
+   */
+  pageId: string;
+  /**
+   * page number
+   */
+  pageNumber?: number;
+  /**
+   * limit
+   */
+  limit?: number;
 };
 
 export type GetLimitForAttachmentParams = {
-/**
- * file size
- */
-fileSize: number;
+  /**
+   * file size
+   */
+  fileSize: number;
 };
 
 export type GetLimitForAttachment200 = {
@@ -2132,10 +2160,10 @@ export type PutUpdateBookmarkForBookmarkFolder200 = {
 };
 
 export type GetInfoForBookmarksParams = {
-/**
- * page id
- */
-pageId?: string;
+  /**
+   * page id
+   */
+  pageId?: string;
 };
 
 export type PutBookmarks200 = {
@@ -2210,7 +2238,8 @@ export type PutUploadBrandLogoForCustomizeSetting200AttachmentAllOf = {
   temporaryUrlCached?: unknown;
 };
 
-export type PutUploadBrandLogoForCustomizeSetting200Attachment = Attachment & PutUploadBrandLogoForCustomizeSetting200AttachmentAllOf;
+export type PutUploadBrandLogoForCustomizeSetting200Attachment = Attachment &
+  PutUploadBrandLogoForCustomizeSetting200AttachmentAllOf;
 
 export type PutUploadBrandLogoForCustomizeSetting200 = {
   attachment?: PutUploadBrandLogoForCustomizeSetting200Attachment;
@@ -2294,7 +2323,9 @@ export type PostG2gTransfer200 = {
 /**
  * Metadata of the attachment
  */
-export type PostAttachmentForG2gTransferBodyAttachmentMetadata = { [key: string]: unknown };
+export type PostAttachmentForG2gTransferBodyAttachmentMetadata = {
+  [key: string]: unknown;
+};
 
 export type PostAttachmentForG2gTransferBody = {
   /** The zip file of the data to be transferred */
@@ -2325,7 +2356,9 @@ export type PostGenerateKeyForG2gTransfer200 = {
 /**
  * The map of options for each collection
  */
-export type PostTransferForG2gTransferBodyOptionsMap = { [key: string]: unknown };
+export type PostTransferForG2gTransferBodyOptionsMap = {
+  [key: string]: unknown;
+};
 
 export type PostTransferForG2gTransferBody = {
   /** The transfer key */
@@ -2342,23 +2375,23 @@ export type PostTransferForG2gTransfer200 = {
 };
 
 export type GetHealthcheckParams = {
-/**
- * The list of services to check health
- */
-checkServices?: GetHealthcheckCheckServicesItem[];
-/**
- * Check services and responds 503 if either of these is unhealthy
- */
-strictly?: boolean;
+  /**
+   * The list of services to check health
+   */
+  checkServices?: GetHealthcheckCheckServicesItem[];
+  /**
+   * Check services and responds 503 if either of these is unhealthy
+   */
+  strictly?: boolean;
 };
 
-export type GetHealthcheckCheckServicesItem = typeof GetHealthcheckCheckServicesItem[keyof typeof GetHealthcheckCheckServicesItem];
-
+export type GetHealthcheckCheckServicesItem =
+  (typeof GetHealthcheckCheckServicesItem)[keyof typeof GetHealthcheckCheckServicesItem];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetHealthcheckCheckServicesItem = {
-  mongo: 'mongo',
-  search: 'search',
+  mongo: "mongo",
+  search: "search",
 } as const;
 
 /**
@@ -2375,7 +2408,9 @@ export type GetHealthcheck200OneOfTwo = {
   info?: HealthcheckInfo;
 };
 
-export type GetHealthcheck200 = GetHealthcheck200OneOf | GetHealthcheck200OneOfTwo;
+export type GetHealthcheck200 =
+  | GetHealthcheck200OneOf
+  | GetHealthcheck200OneOfTwo;
 
 export type GetHealthcheck503ErrorsItem = {
   message?: string;
@@ -2411,7 +2446,9 @@ export type GetImport200 = {
  * the array of importing option that have collection name as the key
 
  */
-export type PostImportBodyOptions = {[key: string]: GrowiArchiveImportOption[]};
+export type PostImportBodyOptions = {
+  [key: string]: GrowiArchiveImportOption[];
+};
 
 export type PostImportBody = {
   /** the file name of zip file */
@@ -2419,7 +2456,7 @@ export type PostImportBody = {
   /** collection names to import */
   collections?: string[];
   /** the array of importing option that have collection name as the key
- */
+   */
   options?: PostImportBodyOptions;
 };
 
@@ -2432,18 +2469,18 @@ export type PostUploadForImportBody = {
 };
 
 export type GetListForInAppNotificationParams = {
-/**
- * The number of notifications to get
- */
-limit?: number;
-/**
- * The number of notifications to skip
- */
-offset?: number;
-/**
- * The status to categorize. 'UNOPENED' or 'OPENED'.
- */
-status?: string;
+  /**
+   * The number of notifications to get
+   */
+  limit?: number;
+  /**
+   * The number of notifications to skip
+   */
+  offset?: number;
+  /**
+   * The status to categorize. 'UNOPENED' or 'OPENED'.
+   */
+  status?: string;
 };
 
 export type GetStatusForInAppNotification200 = {
@@ -2463,7 +2500,7 @@ export type PostInstallerBodyRegisterForm = {
   username?: string;
   email?: string;
   password?: string;
-  'app:globalLang'?: string;
+  "app:globalLang"?: string;
 };
 
 export type PostInstallerBody = {
@@ -2560,34 +2597,36 @@ export type GetRootForPageListing200 = {
 };
 
 export type GetAncestorsChildrenForPageListingParams = {
-path: string;
+  path: string;
 };
 
-export type GetAncestorsChildrenForPageListing200AncestorsChildren = {[key: string]: {
-  /** Document ID */
-  _id?: string;
-  /** Number of descendants */
-  descendantCount?: number;
-  /** Indicates if the node is empty */
-  isEmpty?: boolean;
-  /** Access level */
-  grant?: number;
-  /** Path string */
-  path?: string;
-  /**
-   * Revision ID (nullable)
-   * @nullable
-   */
-  revision?: string | null;
-}};
+export type GetAncestorsChildrenForPageListing200AncestorsChildren = {
+  [key: string]: {
+    /** Document ID */
+    _id?: string;
+    /** Number of descendants */
+    descendantCount?: number;
+    /** Indicates if the node is empty */
+    isEmpty?: boolean;
+    /** Access level */
+    grant?: number;
+    /** Path string */
+    path?: string;
+    /**
+     * Revision ID (nullable)
+     * @nullable
+     */
+    revision?: string | null;
+  };
+};
 
 export type GetAncestorsChildrenForPageListing200 = {
   ancestorsChildren?: GetAncestorsChildrenForPageListing200AncestorsChildren;
 };
 
 export type GetChildrenForPageListingParams = {
-id?: string;
-path?: string;
+  id?: string;
+  path?: string;
 };
 
 export type GetChildrenForPageListing200 = {
@@ -2595,29 +2634,29 @@ export type GetChildrenForPageListing200 = {
 };
 
 export type GetInfoForPageListingParams = {
-/**
- * Array of page IDs to retrieve information for (One of pageIds or path is required)
- */
-pageIds?: string[];
-/**
- * Path of the page to retrieve information for (One of pageIds or path is required)
- */
-path?: string;
-attachBookmarkCount?: boolean;
-attachShortBody?: boolean;
+  /**
+   * Array of page IDs to retrieve information for (One of pageIds or path is required)
+   */
+  pageIds?: string[];
+  /**
+   * Path of the page to retrieve information for (One of pageIds or path is required)
+   */
+  path?: string;
+  attachBookmarkCount?: boolean;
+  attachShortBody?: boolean;
 };
 
-export type GetInfoForPageListing200 = {[key: string]: PageInfoAll};
+export type GetInfoForPageListing200 = { [key: string]: PageInfoAll };
 
 export type GetPageParams = {
-/**
- * page id
- */
-pageId?: ObjectId;
-/**
- * page path
- */
-path?: PagePath;
+  /**
+   * page id
+   */
+  pageId?: ObjectId;
+  /**
+   * page path
+   */
+  path?: PagePath;
 };
 
 export type PostPageBodyGrantUserGroupIdsItem = {
@@ -2673,10 +2712,10 @@ export type PutPage200 = {
 };
 
 export type GetExistForPageParams = {
-/**
- * The path to check for existence
- */
-path: string;
+  /**
+   * The path to check for existence
+   */
+  path: string;
 };
 
 export type GetExistForPage200 = {
@@ -2684,17 +2723,17 @@ export type GetExistForPage200 = {
 };
 
 export type GetInfoForPageParams = {
-/**
- * page id
- */
-pageId: ObjectId;
+  /**
+   * page id
+   */
+  pageId: ObjectId;
 };
 
 export type GetGrantDataForPageParams = {
-/**
- * page id
- */
-pageId?: ObjectId;
+  /**
+   * page id
+   */
+  pageId?: ObjectId;
 };
 
 export type GetGrantDataForPage200 = {
@@ -2702,10 +2741,10 @@ export type GetGrantDataForPage200 = {
 };
 
 export type GetNonUserRelatedGroupsGrantedForPageParams = {
-/**
- * Path of the page
- */
-path: string;
+  /**
+   * Path of the page
+   */
+  path: string;
 };
 
 export type GetNonUserRelatedGroupsGrantedForPage200 = {
@@ -2713,10 +2752,10 @@ export type GetNonUserRelatedGroupsGrantedForPage200 = {
 };
 
 export type GetApplicableGrantForPageParams = {
-/**
- * ID of the page
- */
-pageId: string;
+  /**
+   * ID of the page
+   */
+  pageId: string;
 };
 
 export type GetApplicableGrantForPage200 = {
@@ -2733,14 +2772,14 @@ export type PutGrantByPageIdBody = {
 };
 
 export type GetExistPathsForPageParams = {
-/**
- * old parent path
- */
-fromPath?: string;
-/**
- * new parent path
- */
-toPath?: string;
+  /**
+   * old parent path
+   */
+  fromPath?: string;
+  /**
+   * new parent path
+   */
+  toPath?: string;
 };
 
 /**
@@ -2794,18 +2833,18 @@ export type PutSyncLatestRevisionBodyToYjsDraftByPageId200 = {
 };
 
 export type GetRecentForPagesParams = {
-/**
- * Limit of acquisitions
- */
-limit?: number;
-/**
- * Offset of acquisitions
- */
-offset?: number;
-/**
- * Whether to include WIP pages
- */
-includeWipPage?: string;
+  /**
+   * Limit of acquisitions
+   */
+  limit?: number;
+  /**
+   * Offset of acquisitions
+   */
+  offset?: number;
+  /**
+   * Whether to include WIP pages
+   */
+  includeWipPage?: string;
 };
 
 export type PutRenameForPagesBody = {
@@ -2838,25 +2877,26 @@ export type DeleteEmptyTrashForPages200 = {
 };
 
 export type GetListForPagesParams = {
-/**
- * Path to search
- */
-path?: string;
-/**
- * Limit of acquisitions
- */
-limit?: number;
-/**
- * Page number
- */
-page?: number;
+  /**
+   * Path to search
+   */
+  path?: string;
+  /**
+   * Limit of acquisitions
+   */
+  limit?: number;
+  /**
+   * Page number
+   */
+  page?: number;
 };
 
 export type GetListForPages200PagesItemAllOf = {
   lastUpdateUser?: User;
 };
 
-export type GetListForPages200PagesItem = Page & GetListForPages200PagesItemAllOf;
+export type GetListForPages200PagesItem = Page &
+  GetListForPages200PagesItemAllOf;
 
 export type GetListForPages200 = {
   /** Total count of pages */
@@ -2882,14 +2922,14 @@ export type PostDuplicateForPages200 = {
 };
 
 export type GetSubordinatedListForPagesParams = {
-/**
- * Parent path of search
- */
-path?: string;
-/**
- * Limit of acquisitions
- */
-limit?: number;
+  /**
+   * Parent path of search
+   */
+  path?: string;
+  /**
+   * Limit of acquisitions
+   */
+  limit?: number;
 };
 
 export type GetSubordinatedListForPages200 = {
@@ -2899,7 +2939,9 @@ export type GetSubordinatedListForPages200 = {
 /**
  * Map of page IDs to revision IDs
  */
-export type PostDeleteForPagesBodyPageIdToRevisionIdMap = { [key: string]: unknown };
+export type PostDeleteForPagesBodyPageIdToRevisionIdMap = {
+  [key: string]: unknown;
+};
 
 export type PostDeleteForPagesBody = {
   /** Map of page IDs to revision IDs */
@@ -2984,7 +3026,9 @@ export type PutImageTypeForPersonalSettingBody = {
 /**
  * user data
  */
-export type PutImageTypeForPersonalSetting200UserData = { [key: string]: unknown };
+export type PutImageTypeForPersonalSetting200UserData = {
+  [key: string]: unknown;
+};
 
 export type PutImageTypeForPersonalSetting200 = {
   /** user data */
@@ -2994,7 +3038,9 @@ export type PutImageTypeForPersonalSetting200 = {
 /**
  * array of external accounts
  */
-export type GetExternalAccountsForPersonalSetting200ExternalAccounts = { [key: string]: unknown };
+export type GetExternalAccountsForPersonalSetting200ExternalAccounts = {
+  [key: string]: unknown;
+};
 
 export type GetExternalAccountsForPersonalSetting200 = {
   /** array of external accounts */
@@ -3009,7 +3055,9 @@ export type PutPasswordForPersonalSettingBody = {
 /**
  * user data updated
  */
-export type PutPasswordForPersonalSetting200UserData = { [key: string]: unknown };
+export type PutPasswordForPersonalSetting200UserData = {
+  [key: string]: unknown;
+};
 
 export type PutPasswordForPersonalSetting200 = {
   /** user data updated */
@@ -3019,7 +3067,9 @@ export type PutPasswordForPersonalSetting200 = {
 /**
  * user data
  */
-export type PutApiTokenForPersonalSetting200UserData = { [key: string]: unknown };
+export type PutApiTokenForPersonalSetting200UserData = {
+  [key: string]: unknown;
+};
 
 export type PutApiTokenForPersonalSetting200 = {
   /** user data */
@@ -3029,7 +3079,9 @@ export type PutApiTokenForPersonalSetting200 = {
 /**
  * array of access tokens
  */
-export type GetAccessTokenForPersonalSetting200AccessTokens = { [key: string]: unknown };
+export type GetAccessTokenForPersonalSetting200AccessTokens = {
+  [key: string]: unknown;
+};
 
 export type GetAccessTokenForPersonalSetting200 = {
   /** array of access tokens */
@@ -3056,7 +3108,9 @@ export type PutAssociateLdapForPersonalSettingBody = {
 /**
  * Ldap account associate to me
  */
-export type PutAssociateLdapForPersonalSetting200AssociateUser = { [key: string]: unknown };
+export type PutAssociateLdapForPersonalSetting200AssociateUser = {
+  [key: string]: unknown;
+};
 
 export type PutAssociateLdapForPersonalSetting200 = {
   /** Ldap account associate to me */
@@ -3066,7 +3120,9 @@ export type PutAssociateLdapForPersonalSetting200 = {
 /**
  * Ldap account disassociate to me
  */
-export type PutDisassociateLdapForPersonalSetting200DisassociateUser = { [key: string]: unknown };
+export type PutDisassociateLdapForPersonalSetting200DisassociateUser = {
+  [key: string]: unknown;
+};
 
 export type PutDisassociateLdapForPersonalSetting200 = {
   /** Ldap account disassociate to me */
@@ -3090,21 +3146,26 @@ export type PutEditorSettingsForPersonalSetting200 = { [key: string]: unknown };
  */
 export type GetEditorSettingsForPersonalSetting200 = { [key: string]: unknown };
 
-export type PutInAppNotificationSettingsForPersonalSettingBodySubscribeRulesItem = {
-  name?: string;
-  isEnabled?: boolean;
-};
+export type PutInAppNotificationSettingsForPersonalSettingBodySubscribeRulesItem =
+  {
+    name?: string;
+    isEnabled?: boolean;
+  };
 
 export type PutInAppNotificationSettingsForPersonalSettingBody = {
   subscribeRules?: PutInAppNotificationSettingsForPersonalSettingBodySubscribeRulesItem[];
 };
 
-export type PutInAppNotificationSettingsForPersonalSetting200 = { [key: string]: unknown };
+export type PutInAppNotificationSettingsForPersonalSetting200 = {
+  [key: string]: unknown;
+};
 
 /**
  * InAppNotificationSettings
  */
-export type GetInAppNotificationSettingsForPersonalSetting200CurrentUser = { [key: string]: unknown };
+export type GetInAppNotificationSettingsForPersonalSetting200CurrentUser = {
+  [key: string]: unknown;
+};
 
 export type GetInAppNotificationSettingsForPersonalSetting200 = {
   /** InAppNotificationSettings */
@@ -3112,18 +3173,18 @@ export type GetInAppNotificationSettingsForPersonalSetting200 = {
 };
 
 export type GetListForRevisionsParams = {
-/**
- * page id
- */
-pageId?: string;
-/**
- * selected page number
- */
-page?: number;
-/**
- * page item limit
- */
-limit?: number;
+  /**
+   * page id
+   */
+  pageId?: string;
+  /**
+   * selected page number
+   */
+  page?: number;
+  /**
+   * page item limit
+   */
+  limit?: number;
 };
 
 export type GetListForRevisions200 = {
@@ -3135,10 +3196,10 @@ export type GetListForRevisions200 = {
 };
 
 export type GetRevisionsByIdParams = {
-/**
- * page id
- */
-pageId: string;
+  /**
+   * page id
+   */
+  pageId: string;
 };
 
 export type GetRevisionsById200 = {
@@ -3153,13 +3214,13 @@ export type GetIndicesForSearch200 = {
 /**
  * Operation type against to indices > * `normalize` - Normalize indices * `rebuild` - Rebuild indices
  */
-export type PutIndicesForSearchBodyOperation = typeof PutIndicesForSearchBodyOperation[keyof typeof PutIndicesForSearchBodyOperation];
-
+export type PutIndicesForSearchBodyOperation =
+  (typeof PutIndicesForSearchBodyOperation)[keyof typeof PutIndicesForSearchBodyOperation];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PutIndicesForSearchBodyOperation = {
-  normalize: 'normalize',
-  rebuild: 'rebuild',
+  normalize: "normalize",
+  rebuild: "rebuild",
 } as const;
 
 export type PutIndicesForSearchBody = {
@@ -3200,7 +3261,9 @@ export type PutEnabledForSecuritySettingAuthenticationBody = {
 /**
  * updated param
  */
-export type PutEnabledForSecuritySettingAuthentication200 = { [key: string]: unknown };
+export type PutEnabledForSecuritySettingAuthentication200 = {
+  [key: string]: unknown;
+};
 
 export type GetAuthenticationForSecuritySetting200 = {
   /** setup strategies list */
@@ -3214,7 +3277,9 @@ export type PutShareLinkSettingForSecuritySetting200 = {
 /**
  * suceed to get all share links
  */
-export type GetAllShareLinksForSecuritySetting200SecurityParams = { [key: string]: unknown };
+export type GetAllShareLinksForSecuritySetting200SecurityParams = {
+  [key: string]: unknown;
+};
 
 export type GetAllShareLinksForSecuritySetting200 = {
   /** suceed to get all share links */
@@ -3251,10 +3316,10 @@ export type PutGithubOauthForSecuritySetting200 = {
 };
 
 export type GetShareLinksParams = {
-/**
- * page id of share link
- */
-relatedPage: string;
+  /**
+   * page id of share link
+   */
+  relatedPage: string;
 };
 
 export type GetShareLinks200 = {
@@ -3271,10 +3336,10 @@ export type PostShareLinksBody = {
 };
 
 export type DeleteShareLinksParams = {
-/**
- * page id of share link
- */
-relatedPage: string;
+  /**
+   * page id of share link
+   */
+  relatedPage: string;
 };
 
 export type DeleteAllForShareLinks200 = {
@@ -3287,7 +3352,9 @@ export type GetSlackIntegrationLegacySetting200SlackIntegrationParamsAllOf = {
   isSlackbotConfigured?: boolean;
 };
 
-export type GetSlackIntegrationLegacySetting200SlackIntegrationParams = SlackConfigurationParams & GetSlackIntegrationLegacySetting200SlackIntegrationParamsAllOf;
+export type GetSlackIntegrationLegacySetting200SlackIntegrationParams =
+  SlackConfigurationParams &
+    GetSlackIntegrationLegacySetting200SlackIntegrationParamsAllOf;
 
 export type GetSlackIntegrationLegacySetting200 = {
   slackIntegrationParams?: GetSlackIntegrationLegacySetting200SlackIntegrationParams;
@@ -3306,9 +3373,13 @@ export type PutSlackIntegrationLegacySetting200 = {
   responseParams?: SlackConfigurationParams;
 };
 
-export type GetSlackIntegrationSettings200SettingsCommandPermission = { [key: string]: unknown };
+export type GetSlackIntegrationSettings200SettingsCommandPermission = {
+  [key: string]: unknown;
+};
 
-export type GetSlackIntegrationSettings200SettingsEventActionsPermission = { [key: string]: unknown };
+export type GetSlackIntegrationSettings200SettingsEventActionsPermission = {
+  [key: string]: unknown;
+};
 
 export type GetSlackIntegrationSettings200Settings = {
   slackSigningSecretEnvVars?: string;
@@ -3320,7 +3391,9 @@ export type GetSlackIntegrationSettings200Settings = {
   proxyServerUri?: string;
 };
 
-export type GetSlackIntegrationSettings200ConnectionStatuses = { [key: string]: unknown };
+export type GetSlackIntegrationSettings200ConnectionStatuses = {
+  [key: string]: unknown;
+};
 
 export type GetSlackIntegrationSettings200 = {
   currentBotType?: string;
@@ -3335,20 +3408,25 @@ export type PutUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody = {
   slackBotToken?: string;
 };
 
-export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyCommandPermission = { [key: string]: unknown };
+export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyCommandPermission =
+  { [key: string]: unknown };
 
-export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyEventActionsPermission = { [key: string]: unknown };
+export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyEventActionsPermission =
+  { [key: string]: unknown };
 
 export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody = {
   commandPermission?: PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyCommandPermission;
   eventActionsPermission?: PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBodyEventActionsPermission;
 };
 
-export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForBroadcastUseCommands = { [key: string]: unknown };
+export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForBroadcastUseCommands =
+  { [key: string]: unknown };
 
-export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForSingleUseCommands = { [key: string]: unknown };
+export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForSingleUseCommands =
+  { [key: string]: unknown };
 
-export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForSlackEvents = { [key: string]: unknown };
+export type PostSlackAppIntegrationsForSlackIntegrationSettings200PermissionsForSlackEvents =
+  { [key: string]: unknown };
 
 export type PostSlackAppIntegrationsForSlackIntegrationSettings200 = {
   tokenGtoP?: string;
@@ -3359,7 +3437,8 @@ export type PostSlackAppIntegrationsForSlackIntegrationSettings200 = {
   isPrimary?: boolean;
 };
 
-export type DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200Response = { [key: string]: unknown };
+export type DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200Response =
+  { [key: string]: unknown };
 
 export type DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200 = {
   response?: DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200Response;
@@ -3369,27 +3448,36 @@ export type PutProxyUriForSlackIntegrationSettingsBody = {
   proxyUri?: string;
 };
 
-export type PutProxyUriForSlackIntegrationSettings200 = { [key: string]: unknown };
-
-export type PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200 = { [key: string]: unknown };
-
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForBroadcastUseCommands = { [key: string]: unknown };
-
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSingleUseCommands = { [key: string]: unknown };
-
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSlackEventActions = { [key: string]: unknown };
-
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody = {
-  permissionsForBroadcastUseCommands?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForBroadcastUseCommands;
-  permissionsForSingleUseCommands?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSingleUseCommands;
-  permissionsForSlackEventActions?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSlackEventActions;
+export type PutProxyUriForSlackIntegrationSettings200 = {
+  [key: string]: unknown;
 };
 
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200 = { [key: string]: unknown };
+export type PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200 =
+  { [key: string]: unknown };
 
-export type PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody = {
-  channel?: string;
-};
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForBroadcastUseCommands =
+  { [key: string]: unknown };
+
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSingleUseCommands =
+  { [key: string]: unknown };
+
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSlackEventActions =
+  { [key: string]: unknown };
+
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody =
+  {
+    permissionsForBroadcastUseCommands?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForBroadcastUseCommands;
+    permissionsForSingleUseCommands?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSingleUseCommands;
+    permissionsForSlackEventActions?: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBodyPermissionsForSlackEventActions;
+  };
+
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200 =
+  { [key: string]: unknown };
+
+export type PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody =
+  {
+    channel?: string;
+  };
 
 export type PostTestForSlackIntegrationSettingsWithoutProxyBody = {
   channel?: string;
@@ -3406,15 +3494,23 @@ export type PostVerifyForSlackIntegrationProxied200 = {
   challenge?: string;
 };
 
-export type PostCommandsForSlackIntegrationProxiedBody = { [key: string]: unknown };
+export type PostCommandsForSlackIntegrationProxiedBody = {
+  [key: string]: unknown;
+};
 
-export type PostInteractionsForSlackIntegrationBody = { [key: string]: unknown };
+export type PostInteractionsForSlackIntegrationBody = {
+  [key: string]: unknown;
+};
 
-export type PostInteractionsForSlackIntegrationProxiedBody = { [key: string]: unknown };
+export type PostInteractionsForSlackIntegrationProxiedBody = {
+  [key: string]: unknown;
+};
 
-export type GetSupportedCommandsForSlackIntegration200PermissionsForBroadcastUseCommandsItem = { [key: string]: unknown };
+export type GetSupportedCommandsForSlackIntegration200PermissionsForBroadcastUseCommandsItem =
+  { [key: string]: unknown };
 
-export type GetSupportedCommandsForSlackIntegration200PermissionsForSingleUseCommandsItem = { [key: string]: unknown };
+export type GetSupportedCommandsForSlackIntegration200PermissionsForSingleUseCommandsItem =
+  { [key: string]: unknown };
 
 export type GetSupportedCommandsForSlackIntegration200 = {
   permissionsForBroadcastUseCommands?: GetSupportedCommandsForSlackIntegration200PermissionsForBroadcastUseCommandsItem[];
@@ -3429,16 +3525,22 @@ export type PostEventsForSlackIntegrationBody = {
 
 export type PostEventsForSlackIntegration200 = { [key: string]: unknown };
 
-export type PostEventsForSlackIntegrationProxiedBodyGrowiBotEvent = { [key: string]: unknown };
+export type PostEventsForSlackIntegrationProxiedBodyGrowiBotEvent = {
+  [key: string]: unknown;
+};
 
-export type PostEventsForSlackIntegrationProxiedBodyData = { [key: string]: unknown };
+export type PostEventsForSlackIntegrationProxiedBodyData = {
+  [key: string]: unknown;
+};
 
 export type PostEventsForSlackIntegrationProxiedBody = {
   growiBotEvent?: PostEventsForSlackIntegrationProxiedBodyGrowiBotEvent;
   data?: PostEventsForSlackIntegrationProxiedBodyData;
 };
 
-export type PostEventsForSlackIntegrationProxied200 = { [key: string]: unknown };
+export type PostEventsForSlackIntegrationProxied200 = {
+  [key: string]: unknown;
+};
 
 export type PostCompleteRegistrationBodyRegisterForm = {
   username?: string;
@@ -3456,9 +3558,12 @@ export type PostCompleteRegistration200 = {
   redirectTo?: string;
 };
 
-export type GetUserGroupRelations200UserGroupRelationsUserGroupRelationsItem = { [key: string]: unknown };
+export type GetUserGroupRelations200UserGroupRelationsUserGroupRelationsItem = {
+  [key: string]: unknown;
+};
 
-export type GetUserGroupRelations200UserGroupRelationsRelationsOfChildGroupsItem = { [key: string]: unknown };
+export type GetUserGroupRelations200UserGroupRelationsRelationsOfChildGroupsItem =
+  { [key: string]: unknown };
 
 /**
  * contains arrays user objects related
@@ -3474,22 +3579,22 @@ export type GetUserGroupRelations200 = {
 };
 
 export type GetUserGroupsParams = {
-/**
- * page number
- */
-page?: number;
-/**
- * number of items per page
- */
-limit?: number;
-/**
- * offset
- */
-offset?: number;
-/**
- * whether to paginate
- */
-pagination?: boolean;
+  /**
+   * page number
+   */
+  page?: number;
+  /**
+   * number of items per page
+   */
+  limit?: number;
+  /**
+   * offset
+   */
+  offset?: number;
+  /**
+   * whether to paginate
+   */
+  pagination?: boolean;
 };
 
 /**
@@ -3526,13 +3631,15 @@ export type PostUserGroups200 = {
 };
 
 export type GetAncestorsForUserGroupsParams = {
-/**
- * id of userGroup
- */
-groupId: string;
+  /**
+   * id of userGroup
+   */
+  groupId: string;
 };
 
-export type GetAncestorsForUserGroups200AncestorUserGroupsItem = { [key: string]: unknown };
+export type GetAncestorsForUserGroups200AncestorUserGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetAncestorsForUserGroups200 = {
   /** userGroup objects */
@@ -3540,19 +3647,23 @@ export type GetAncestorsForUserGroups200 = {
 };
 
 export type GetChildrenForUserGroupsParams = {
-/**
- * IDs of parent user groups
- */
-parentIds?: string[];
-/**
- * Whether to include grandchild user groups
- */
-includeGrandChildren?: boolean;
+  /**
+   * IDs of parent user groups
+   */
+  parentIds?: string[];
+  /**
+   * Whether to include grandchild user groups
+   */
+  includeGrandChildren?: boolean;
 };
 
-export type GetChildrenForUserGroups200ChildUserGroupsItem = { [key: string]: unknown };
+export type GetChildrenForUserGroups200ChildUserGroupsItem = {
+  [key: string]: unknown;
+};
 
-export type GetChildrenForUserGroups200GrandChildUserGroupsItem = { [key: string]: unknown };
+export type GetChildrenForUserGroups200GrandChildUserGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetChildrenForUserGroups200 = {
   /** Child user group objects */
@@ -3562,13 +3673,15 @@ export type GetChildrenForUserGroups200 = {
 };
 
 export type GetSelectableParentGroupsParams = {
-/**
- * id of userGroup
- */
-groupId: string;
+  /**
+   * id of userGroup
+   */
+  groupId: string;
 };
 
-export type GetSelectableParentGroups200SelectableParentGroupsItem = { [key: string]: unknown };
+export type GetSelectableParentGroups200SelectableParentGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetSelectableParentGroups200 = {
   /** userGroup objects */
@@ -3576,13 +3689,15 @@ export type GetSelectableParentGroups200 = {
 };
 
 export type GetSelectableChildGroupsParams = {
-/**
- * id of userGroup
- */
-groupId: string;
+  /**
+   * id of userGroup
+   */
+  groupId: string;
 };
 
-export type GetSelectableChildGroups200SelectableChildGroupsItem = { [key: string]: unknown };
+export type GetSelectableChildGroups200SelectableChildGroupsItem = {
+  [key: string]: unknown;
+};
 
 export type GetSelectableChildGroups200 = {
   /** userGroup objects */
@@ -3600,18 +3715,18 @@ export type GetUserGroupsById200 = {
 };
 
 export type DeleteUserGroupsByIdParams = {
-/**
- * name of action
- */
-actionName?: string;
-/**
- * userGroup id that will be transferred to
- */
-transferToUserGroupId?: string;
-/**
- * userGroup type that will be transferred to
- */
-transferToUserGroupType?: string;
+  /**
+   * name of action
+   */
+  actionName?: string;
+  /**
+   * userGroup id that will be transferred to
+   */
+  transferToUserGroupId?: string;
+  /**
+   * userGroup type that will be transferred to
+   */
+  transferToUserGroupType?: string;
 };
 
 /**
@@ -3651,22 +3766,22 @@ export type GetUsersByIdForUserGroups200 = {
 };
 
 export type GetUnrelatedUsersByIdForUserGroupsParams = {
-/**
- * search word
- */
-searchWord?: string;
-/**
- * search type
- */
-searchType?: string;
-/**
- * whether name is also searched
- */
-isAlsoNameSearched?: boolean;
-/**
- * whether mail is also searched
- */
-isAlsoMailSearched?: boolean;
+  /**
+   * search word
+   */
+  searchWord?: string;
+  /**
+   * search type
+   */
+  searchType?: string;
+  /**
+   * whether name is also searched
+   */
+  isAlsoNameSearched?: boolean;
+  /**
+   * whether mail is also searched
+   */
+  isAlsoMailSearched?: boolean;
 };
 
 export type GetUnrelatedUsersByIdForUserGroups200 = {
@@ -3688,7 +3803,9 @@ export type DeleteUsersByUsernameByIdForUserGroups200 = {
   deletedGroupsCount?: number;
 };
 
-export type GetUserGroupRelationsByIdForUserGroups200UserGroupRelationsItem = { [key: string]: unknown };
+export type GetUserGroupRelationsByIdForUserGroups200UserGroupRelationsItem = {
+  [key: string]: unknown;
+};
 
 export type GetUserGroupRelationsByIdForUserGroups200 = {
   /** userGroupRelation objects */
@@ -3721,30 +3838,30 @@ export type PutUserUiSettings200 = {
 };
 
 export type GetUsersParams = {
-/**
- * page number
- */
-page?: number;
-/**
- * status list
- */
-selectedStatusList?: string;
-/**
- * For incremental search value from input box
- */
-searchText?: string;
-/**
- * asc or desc
- */
-sortOrder?: string;
-/**
- * sorting column
- */
-sort?: string;
-/**
- * force include attributes
- */
-forceIncludeAttributes?: string;
+  /**
+   * page number
+   */
+  page?: number;
+  /**
+   * status list
+   */
+  selectedStatusList?: string;
+  /**
+   * For incremental search value from input box
+   */
+  searchText?: string;
+  /**
+   * asc or desc
+   */
+  sortOrder?: string;
+  /**
+   * sorting column
+   */
+  sort?: string;
+  /**
+   * force include attributes
+   */
+  forceIncludeAttributes?: string;
 };
 
 export type GetUsers200 = {
@@ -3756,14 +3873,14 @@ export type GetRecentByIdForUsers200 = {
 };
 
 export type PostInviteForUsersParams = {
-/**
- * Invitation emailList
- */
-shapedEmailList?: { [key: string]: unknown };
-/**
- * Whether to send mail
- */
-sendEmail?: boolean;
+  /**
+   * Invitation emailList
+   */
+  shapedEmailList?: { [key: string]: unknown };
+  /**
+   * Whether to send mail
+   */
+  sendEmail?: boolean;
 };
 
 /**
@@ -3826,10 +3943,10 @@ export type DeleteRemoveByIdForUsers200 = {
 };
 
 export type GetExternalAccountsForUsersParams = {
-/**
- * page number
- */
-page?: number;
+  /**
+   * page number
+   */
+  page?: number;
 };
 
 export type GetExternalAccountsForUsers200 = {
@@ -3839,7 +3956,9 @@ export type GetExternalAccountsForUsers200 = {
 /**
  * A result of `ExtenralAccount.findByIdAndRemove`
  */
-export type DeleteRemoveByIdForUsersExternalAccounts200ExternalAccount = { [key: string]: unknown };
+export type DeleteRemoveByIdForUsersExternalAccounts200ExternalAccount = {
+  [key: string]: unknown;
+};
 
 export type DeleteRemoveByIdForUsersExternalAccounts200 = {
   /** A result of `ExtenralAccount.findByIdAndRemove` */
@@ -3892,10 +4011,10 @@ export type PutSendInvitationEmailForUsers200 = {
 };
 
 export type GetListForUsersParams = {
-/**
- * user IDs
- */
-userIds?: string;
+  /**
+   * user IDs
+   */
+  userIds?: string;
 };
 
 export type GetListForUsers200 = {
@@ -3904,22 +4023,22 @@ export type GetListForUsers200 = {
 };
 
 export type GetUsernamesForUsersParams = {
-/**
- * query string to search usernames
- */
-q?: string;
-/**
- * offset for pagination
- */
-offset?: number;
-/**
- * limit for pagination
- */
-limit?: number;
-/**
- * options for including different types of users
- */
-options?: string;
+  /**
+   * query string to search usernames
+   */
+  q?: string;
+  /**
+   * offset for pagination
+   */
+  offset?: number;
+  /**
+   * limit for pagination
+   */
+  limit?: number;
+  /**
+   * options for including different types of users
+   */
+  options?: string;
 };
 
 export type GetUsernamesForUsers200ActiveUser = {
@@ -3976,3232 +4095,3767 @@ export type PostRegister200 = {
  * Get user group relations
  * @summary /external-user-group-relations
  */
-export const getExternalUserGroupRelations = <TData = AxiosResponse<GetExternalUserGroupRelations200>>(
-    params?: GetExternalUserGroupRelationsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-group-relations`,{
+export const getExternalUserGroupRelations = <
+  TData = AxiosResponse<GetExternalUserGroupRelations200>,
+>(
+  params?: GetExternalUserGroupRelationsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-group-relations`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /external-user-groups
  */
-export const getExternalUserGroups = <TData = AxiosResponse<GetExternalUserGroups200>>(
-    params?: GetExternalUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups`,{
+export const getExternalUserGroups = <
+  TData = AxiosResponse<GetExternalUserGroups200>,
+>(
+  params?: GetExternalUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /external-user-groups/ancestors
  */
-export const getAncestorsForExternalUserGroups = <TData = AxiosResponse<GetAncestorsForExternalUserGroups200>>(
-    params: GetAncestorsForExternalUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/ancestors`,{
+export const getAncestorsForExternalUserGroups = <
+  TData = AxiosResponse<GetAncestorsForExternalUserGroups200>,
+>(
+  params: GetAncestorsForExternalUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups/ancestors`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /external-user-groups/children
  */
-export const getChildrenForExternalUserGroups = <TData = AxiosResponse<GetChildrenForExternalUserGroups200>>(
-    params?: GetChildrenForExternalUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/children`,{
+export const getChildrenForExternalUserGroups = <
+  TData = AxiosResponse<GetChildrenForExternalUserGroups200>,
+>(
+  params?: GetChildrenForExternalUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups/children`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /external-user-groups/{id}
  */
-export const getExternalUserGroupsById = <TData = AxiosResponse<GetExternalUserGroupsById200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/${id}`,options
-    );
-  }
+export const getExternalUserGroupsById = <
+  TData = AxiosResponse<GetExternalUserGroupsById200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups/${id}`, options);
+};
 
 /**
  * @summary /external-user-groups/{id}
  */
-export const deleteExternalUserGroupsById = <TData = AxiosResponse<DeleteExternalUserGroupsById200>>(
-    id: string,
-    params: DeleteExternalUserGroupsByIdParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/external-user-groups/${id}`,{
+export const deleteExternalUserGroupsById = <
+  TData = AxiosResponse<DeleteExternalUserGroupsById200>,
+>(
+  id: string,
+  params: DeleteExternalUserGroupsByIdParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/external-user-groups/${id}`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /external-user-groups/{id}
  */
-export const putExternalUserGroupsById = <TData = AxiosResponse<PutExternalUserGroupsById200>>(
-    id: string,
-    putExternalUserGroupsByIdBody: PutExternalUserGroupsByIdBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/external-user-groups/${id}`,
-      putExternalUserGroupsByIdBody,options
-    );
-  }
+export const putExternalUserGroupsById = <
+  TData = AxiosResponse<PutExternalUserGroupsById200>,
+>(
+  id: string,
+  putExternalUserGroupsByIdBody: PutExternalUserGroupsByIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/external-user-groups/${id}`,
+    putExternalUserGroupsByIdBody,
+    options,
+  );
+};
 
 /**
  * @summary /external-user-groups/{id}/external-user-group-relations
  */
-export const getExternalUserGroupRelationsByIdForExternalUserGroups = <TData = AxiosResponse<GetExternalUserGroupRelationsByIdForExternalUserGroups200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/${id}/external-user-group-relations`,options
-    );
-  }
+export const getExternalUserGroupRelationsByIdForExternalUserGroups = <
+  TData = AxiosResponse<GetExternalUserGroupRelationsByIdForExternalUserGroups200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `/external-user-groups/${id}/external-user-group-relations`,
+    options,
+  );
+};
 
 /**
  * @summary Get LDAP sync settings
  */
-export const getSyncSettingsForExternalUserGroupsLdap = <TData = AxiosResponse<GetSyncSettingsForExternalUserGroupsLdap200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/ldap/sync-settings`,options
-    );
-  }
+export const getSyncSettingsForExternalUserGroupsLdap = <
+  TData = AxiosResponse<GetSyncSettingsForExternalUserGroupsLdap200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups/ldap/sync-settings`, options);
+};
 
 /**
  * @summary Update LDAP sync settings
  */
-export const putSyncSettingsForExternalUserGroupsLdap = <TData = AxiosResponse<PutSyncSettingsForExternalUserGroupsLdap204>>(
-    putSyncSettingsForExternalUserGroupsLdapBody: PutSyncSettingsForExternalUserGroupsLdapBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/external-user-groups/ldap/sync-settings`,
-      putSyncSettingsForExternalUserGroupsLdapBody,options
-    );
-  }
+export const putSyncSettingsForExternalUserGroupsLdap = <
+  TData = AxiosResponse<PutSyncSettingsForExternalUserGroupsLdap204>,
+>(
+  putSyncSettingsForExternalUserGroupsLdapBody: PutSyncSettingsForExternalUserGroupsLdapBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/external-user-groups/ldap/sync-settings`,
+    putSyncSettingsForExternalUserGroupsLdapBody,
+    options,
+  );
+};
 
 /**
  * @summary Get Keycloak sync settings
  */
-export const getSyncSettingsForExternalUserGroupsKeycloak = <TData = AxiosResponse<GetSyncSettingsForExternalUserGroupsKeycloak200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/keycloak/sync-settings`,options
-    );
-  }
+export const getSyncSettingsForExternalUserGroupsKeycloak = <
+  TData = AxiosResponse<GetSyncSettingsForExternalUserGroupsKeycloak200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `/external-user-groups/keycloak/sync-settings`,
+    options,
+  );
+};
 
 /**
  * @summary /external-user-groups/keycloak/sync-settings
  */
-export const putSyncSettingsForExternalUserGroupsKeycloak = <TData = AxiosResponse<PutSyncSettingsForExternalUserGroupsKeycloak204>>(
-    putSyncSettingsForExternalUserGroupsKeycloakBody: PutSyncSettingsForExternalUserGroupsKeycloakBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/external-user-groups/keycloak/sync-settings`,
-      putSyncSettingsForExternalUserGroupsKeycloakBody,options
-    );
-  }
+export const putSyncSettingsForExternalUserGroupsKeycloak = <
+  TData = AxiosResponse<PutSyncSettingsForExternalUserGroupsKeycloak204>,
+>(
+  putSyncSettingsForExternalUserGroupsKeycloakBody: PutSyncSettingsForExternalUserGroupsKeycloakBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/external-user-groups/keycloak/sync-settings`,
+    putSyncSettingsForExternalUserGroupsKeycloakBody,
+    options,
+  );
+};
 
 /**
  * @summary Start LDAP sync process
  */
-export const putSyncForExternalUserGroupsLdap = <TData = AxiosResponse<PutSyncForExternalUserGroupsLdap202>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/external-user-groups/ldap/sync`,undefined,options
-    );
-  }
+export const putSyncForExternalUserGroupsLdap = <
+  TData = AxiosResponse<PutSyncForExternalUserGroupsLdap202>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/external-user-groups/ldap/sync`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * @summary /external-user-groups/keycloak/sync
  */
-export const putSyncForExternalUserGroupsKeycloak = <TData = AxiosResponse<PutSyncForExternalUserGroupsKeycloak202>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/external-user-groups/keycloak/sync`,undefined,options
-    );
-  }
+export const putSyncForExternalUserGroupsKeycloak = <
+  TData = AxiosResponse<PutSyncForExternalUserGroupsKeycloak202>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/external-user-groups/keycloak/sync`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * @summary /external-user-groups/ldap/sync-status
  */
-export const getSyncStatusForExternalUserGroupsLdap = <TData = AxiosResponse<SyncStatus>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/external-user-groups/ldap/sync-status`,options
-    );
-  }
+export const getSyncStatusForExternalUserGroupsLdap = <
+  TData = AxiosResponse<SyncStatus>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/external-user-groups/ldap/sync-status`, options);
+};
 
 /**
  * Get all templates
  * @summary /templates
  */
 export const getTemplates = <TData = AxiosResponse<GetTemplates200>>(
-    params?: GetTemplatesParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/templates`,{
+  params?: GetTemplatesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/templates`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get a preset template
  * @summary /templates/preset-templates/{templateId}/{locale}
  */
-export const getPresetTemplatesByLocaleByTemplateIdForTemplates = <TData = AxiosResponse<GetPresetTemplatesByLocaleByTemplateIdForTemplates200>>(
-    templateId: string,
-    locale: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/templates/preset-templates/${templateId}/${locale}`,options
-    );
-  }
+export const getPresetTemplatesByLocaleByTemplateIdForTemplates = <
+  TData = AxiosResponse<GetPresetTemplatesByLocaleByTemplateIdForTemplates200>,
+>(
+  templateId: string,
+  locale: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `/templates/preset-templates/${templateId}/${locale}`,
+    options,
+  );
+};
 
 /**
  * Get a plugin template
  * @summary /templates/plugin-templates/{organizationId}/{reposId}/{templateId}/{locale}
  */
-export const getPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates = <TData = AxiosResponse<GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200>>(
+export const getPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates =
+  <
+    TData = AxiosResponse<GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200>,
+  >(
     organizationId: string,
     reposId: string,
     templateId: string,
-    locale: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
+    locale: string,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
     return axios.default.get(
-      `/templates/plugin-templates/${organizationId}/${reposId}/${templateId}/${locale}`,options
+      `/templates/plugin-templates/${organizationId}/${reposId}/${templateId}/${locale}`,
+      options,
     );
-  }
+  };
 
 /**
  * Install a plugin
  * @summary /plugins
  */
 export const postPlugins = <TData = AxiosResponse<PostPlugins200>>(
-    postPluginsBody: PostPluginsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/plugins`,
-      postPluginsBody,options
-    );
-  }
+  postPluginsBody: PostPluginsBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/plugins`, postPluginsBody, options);
+};
 
 /**
  * Activate a plugin
  * @summary /plugins/{id}/activate
  */
-export const putActivateByIdForPlugins = <TData = AxiosResponse<PutActivateByIdForPlugins200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/plugins/${id}/activate`,undefined,options
-    );
-  }
+export const putActivateByIdForPlugins = <
+  TData = AxiosResponse<PutActivateByIdForPlugins200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/plugins/${id}/activate`, undefined, options);
+};
 
 /**
  * Remove a plugin
  * @summary /plugins/{id}/remove
  */
-export const deleteRemoveByIdForPlugins = <TData = AxiosResponse<DeleteRemoveByIdForPlugins200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/plugins/${id}/remove`,options
-    );
-  }
+export const deleteRemoveByIdForPlugins = <
+  TData = AxiosResponse<DeleteRemoveByIdForPlugins200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/plugins/${id}/remove`, options);
+};
 
 /**
  * @summary /activity
  */
 export const getActivity = <TData = AxiosResponse<ActivityResponse>>(
-    params?: GetActivityParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/activity`,{
+  params?: GetActivityParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/activity`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get adminHome parameters
  * @summary /admin-home
  */
 export const getAdminHome = <TData = AxiosResponse<GetAdminHome200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/admin-home/`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/admin-home/`, options);
+};
 
 /**
  * get app setting params
  * @summary /app-settings
  */
 export const getAppSettings = <TData = AxiosResponse<GetAppSettings200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/app-settings`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/app-settings`, options);
+};
 
 /**
  * Update app setting
  * @summary /app-settings/app-setting
  */
-export const putAppSettingForAppSettings = <TData = AxiosResponse<PutAppSettingForAppSettings200>>(
-    appSettingPutParams: AppSettingPutParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/app-settings/app-setting`,
-      appSettingPutParams,options
-    );
-  }
+export const putAppSettingForAppSettings = <
+  TData = AxiosResponse<PutAppSettingForAppSettings200>,
+>(
+  appSettingPutParams: AppSettingPutParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/app-settings/app-setting`,
+    appSettingPutParams,
+    options,
+  );
+};
 
 /**
  * Update site url setting
  * @summary /app-settings/site-url-setting
  */
-export const putSiteUrlSettingForAppSettings = <TData = AxiosResponse<PutSiteUrlSettingForAppSettings200>>(
-    siteUrlSettingParams: SiteUrlSettingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/app-settings/site-url-setting`,
-      siteUrlSettingParams,options
-    );
-  }
+export const putSiteUrlSettingForAppSettings = <
+  TData = AxiosResponse<PutSiteUrlSettingForAppSettings200>,
+>(
+  siteUrlSettingParams: SiteUrlSettingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/app-settings/site-url-setting`,
+    siteUrlSettingParams,
+    options,
+  );
+};
 
 /**
  * Update smtp setting
  * @summary /app-settings/smtp-setting
  */
-export const putSmtpSettingForAppSettings = <TData = AxiosResponse<PutSmtpSettingForAppSettings200>>(
-    smtpSettingParams: SmtpSettingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/app-settings/smtp-setting`,
-      smtpSettingParams,options
-    );
-  }
+export const putSmtpSettingForAppSettings = <
+  TData = AxiosResponse<PutSmtpSettingForAppSettings200>,
+>(
+  smtpSettingParams: SmtpSettingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/app-settings/smtp-setting`,
+    smtpSettingParams,
+    options,
+  );
+};
 
 /**
  * Send test mail for smtp
  * @summary /app-settings/smtp-setting
  */
-export const postSmtpTestForAppSettings = <TData = AxiosResponse<PostSmtpTestForAppSettings200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/app-settings/smtp-test`,undefined,options
-    );
-  }
+export const postSmtpTestForAppSettings = <
+  TData = AxiosResponse<PostSmtpTestForAppSettings200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/app-settings/smtp-test`, undefined, options);
+};
 
 /**
  * Update ses setting
  * @summary /app-settings/ses-setting
  */
-export const putSesSettingForAppSettings = <TData = AxiosResponse<SesSettingResponseParams>>(
-    sesSettingParams: SesSettingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/app-settings/ses-setting`,
-      sesSettingParams,options
-    );
-  }
+export const putSesSettingForAppSettings = <
+  TData = AxiosResponse<SesSettingResponseParams>,
+>(
+  sesSettingParams: SesSettingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/app-settings/ses-setting`,
+    sesSettingParams,
+    options,
+  );
+};
 
 /**
  * Update fileUploadSetting
  * @summary /app-settings/file-upload-setting
  */
-export const putFileUploadSettingsForAppSettings = <TData = AxiosResponse<PutFileUploadSettingsForAppSettings200>>(
-    fileUploadSettingParams: FileUploadSettingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/app-settings/file-upload-settings`,
-      fileUploadSettingParams,options
-    );
-  }
+export const putFileUploadSettingsForAppSettings = <
+  TData = AxiosResponse<PutFileUploadSettingsForAppSettings200>,
+>(
+  fileUploadSettingParams: FileUploadSettingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/app-settings/file-upload-settings`,
+    fileUploadSettingParams,
+    options,
+  );
+};
 
 /**
  * Update V5SchemaMigration
  * @summary AccessToken supported.
  */
-export const postV5SchemaMigrationForAppSettings = <TData = AxiosResponse<PostV5SchemaMigrationForAppSettings200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/app-settings/v5-schema-migration`,undefined,options
-    );
-  }
+export const postV5SchemaMigrationForAppSettings = <
+  TData = AxiosResponse<PostV5SchemaMigrationForAppSettings200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/app-settings/v5-schema-migration`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * Update MaintenanceMode
  * @summary AccessToken supported.
  */
-export const postMaintenanceModeForAppSettings = <TData = AxiosResponse<PostMaintenanceModeForAppSettings200>>(
-    postMaintenanceModeForAppSettingsBody: PostMaintenanceModeForAppSettingsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/app-settings/maintenance-mode`,
-      postMaintenanceModeForAppSettingsBody,options
-    );
-  }
+export const postMaintenanceModeForAppSettings = <
+  TData = AxiosResponse<PostMaintenanceModeForAppSettings200>,
+>(
+  postMaintenanceModeForAppSettingsBody: PostMaintenanceModeForAppSettingsBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/app-settings/maintenance-mode`,
+    postMaintenanceModeForAppSettingsBody,
+    options,
+  );
+};
 
 /**
  * Get attachment list
  */
-export const getListForAttachment = <TData = AxiosResponse<AttachmentPaginateResult>>(
-    params: GetListForAttachmentParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/attachment/list`,{
+export const getListForAttachment = <
+  TData = AxiosResponse<AttachmentPaginateResult>,
+>(
+  params: GetListForAttachmentParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/attachment/list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get available capacity of uploaded file with GridFS
  * @summary /attachment/limit
  */
-export const getLimitForAttachment = <TData = AxiosResponse<GetLimitForAttachment200>>(
-    params: GetLimitForAttachmentParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/attachment/limit`,{
+export const getLimitForAttachment = <
+  TData = AxiosResponse<GetLimitForAttachment200>,
+>(
+  params: GetLimitForAttachmentParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/attachment/limit`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Add attachment to the page
  * @summary /attachment
  */
 export const postAttachment = <TData = AxiosResponse<PostAttachment200>>(
-    postAttachmentBody: PostAttachmentBodyOne | PostAttachmentBodyTwo, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/attachment`,
-      postAttachmentBody,options
-    );
-  }
+  postAttachmentBody: PostAttachmentBodyOne | PostAttachmentBodyTwo,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/attachment`, postAttachmentBody, options);
+};
 
 /**
  * Get attachment
  */
 export const getAttachmentById = <TData = AxiosResponse<GetAttachmentById200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/attachment/${id}`,options
-    );
-  }
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/attachment/${id}`, options);
+};
 
 /**
  * Create a new bookmark folder
  * @summary Create bookmark folder
  */
-export const postBookmarkFolder = <TData = AxiosResponse<PostBookmarkFolder200>>(
-    postBookmarkFolderBody: PostBookmarkFolderBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/bookmark-folder`,
-      postBookmarkFolderBody,options
-    );
-  }
+export const postBookmarkFolder = <
+  TData = AxiosResponse<PostBookmarkFolder200>,
+>(
+  postBookmarkFolderBody: PostBookmarkFolderBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/bookmark-folder`,
+    postBookmarkFolderBody,
+    options,
+  );
+};
 
 /**
  * Update a bookmark folder
  * @summary Update bookmark folder
  */
 export const putBookmarkFolder = <TData = AxiosResponse<PutBookmarkFolder200>>(
-    putBookmarkFolderBody: PutBookmarkFolderBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/bookmark-folder`,
-      putBookmarkFolderBody,options
-    );
-  }
+  putBookmarkFolderBody: PutBookmarkFolderBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/bookmark-folder`, putBookmarkFolderBody, options);
+};
 
 /**
  * List bookmark folders of a user
  * @summary List bookmark folders of a user
  */
-export const getListByUserIdForBookmarkFolder = <TData = AxiosResponse<GetListByUserIdForBookmarkFolder200>>(
-    userId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/bookmark-folder/list/${userId}`,options
-    );
-  }
+export const getListByUserIdForBookmarkFolder = <
+  TData = AxiosResponse<GetListByUserIdForBookmarkFolder200>,
+>(
+  userId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/bookmark-folder/list/${userId}`, options);
+};
 
 /**
  * Delete a bookmark folder and its children
  * @summary Delete bookmark folder
  */
-export const deleteBookmarkFolderById = <TData = AxiosResponse<DeleteBookmarkFolderById200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/bookmark-folder/${id}`,options
-    );
-  }
+export const deleteBookmarkFolderById = <
+  TData = AxiosResponse<DeleteBookmarkFolderById200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/bookmark-folder/${id}`, options);
+};
 
 /**
  * Update a bookmark folder
  * @summary Update bookmark folder
  */
-export const postAddBookmarkToFolderForBookmarkFolder = <TData = AxiosResponse<PostAddBookmarkToFolderForBookmarkFolder200>>(
-    postAddBookmarkToFolderForBookmarkFolderBody: PostAddBookmarkToFolderForBookmarkFolderBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/bookmark-folder/add-bookmark-to-folder`,
-      postAddBookmarkToFolderForBookmarkFolderBody,options
-    );
-  }
+export const postAddBookmarkToFolderForBookmarkFolder = <
+  TData = AxiosResponse<PostAddBookmarkToFolderForBookmarkFolder200>,
+>(
+  postAddBookmarkToFolderForBookmarkFolderBody: PostAddBookmarkToFolderForBookmarkFolderBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/bookmark-folder/add-bookmark-to-folder`,
+    postAddBookmarkToFolderForBookmarkFolderBody,
+    options,
+  );
+};
 
 /**
  * Update a bookmark in a folder
  * @summary Update bookmark in folder
  */
-export const putUpdateBookmarkForBookmarkFolder = <TData = AxiosResponse<PutUpdateBookmarkForBookmarkFolder200>>(
-    putUpdateBookmarkForBookmarkFolderBody: PutUpdateBookmarkForBookmarkFolderBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/bookmark-folder/update-bookmark`,
-      putUpdateBookmarkForBookmarkFolderBody,options
-    );
-  }
+export const putUpdateBookmarkForBookmarkFolder = <
+  TData = AxiosResponse<PutUpdateBookmarkForBookmarkFolder200>,
+>(
+  putUpdateBookmarkForBookmarkFolderBody: PutUpdateBookmarkForBookmarkFolderBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/bookmark-folder/update-bookmark`,
+    putUpdateBookmarkForBookmarkFolderBody,
+    options,
+  );
+};
 
 /**
  * Get bookmarked info
  * @summary /bookmarks/info
  */
 export const getInfoForBookmarks = <TData = AxiosResponse<BookmarkInfo>>(
-    params?: GetInfoForBookmarksParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/bookmarks/info`,{
+  params?: GetInfoForBookmarksParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/bookmarks/info`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get my bookmarked status
  * @summary /bookmarks/{userId}
  */
 export const getBookmarksByUserId = <TData = AxiosResponse<Bookmarks>>(
-    userId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/bookmarks/${userId}`,options
-    );
-  }
+  userId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/bookmarks/${userId}`, options);
+};
 
 /**
  * Update bookmarked status
  * @summary /bookmarks
  */
 export const putBookmarks = <TData = AxiosResponse<PutBookmarks200>>(
-    bookmarkParams: BookmarkParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/bookmarks`,
-      bookmarkParams,options
-    );
-  }
+  bookmarkParams: BookmarkParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/bookmarks`, bookmarkParams, options);
+};
 
 /**
  * Get customize parameters
  * @summary /customize-setting
  */
-export const getCustomizeSetting = <TData = AxiosResponse<GetCustomizeSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/customize-setting`,options
-    );
-  }
+export const getCustomizeSetting = <
+  TData = AxiosResponse<GetCustomizeSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/customize-setting`, options);
+};
 
 /**
  * Get layout
  * @summary /customize-setting/layout
  */
-export const getLayoutForCustomizeSetting = <TData = AxiosResponse<CustomizeLayout>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/customize-setting/layout`,options
-    );
-  }
+export const getLayoutForCustomizeSetting = <
+  TData = AxiosResponse<CustomizeLayout>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/customize-setting/layout`, options);
+};
 
 /**
  * Update layout
  * @summary /customize-setting/layout
  */
-export const putLayoutForCustomizeSetting = <TData = AxiosResponse<PutLayoutForCustomizeSetting200>>(
-    customizeLayout: CustomizeLayout, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/layout`,
-      customizeLayout,options
-    );
-  }
+export const putLayoutForCustomizeSetting = <
+  TData = AxiosResponse<PutLayoutForCustomizeSetting200>,
+>(
+  customizeLayout: CustomizeLayout,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/layout`,
+    customizeLayout,
+    options,
+  );
+};
 
 /**
  * Get theme
  * @summary /customize-setting/theme
  */
-export const getThemeForCustomizeSetting = <TData = AxiosResponse<GetThemeForCustomizeSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/customize-setting/theme`,options
-    );
-  }
+export const getThemeForCustomizeSetting = <
+  TData = AxiosResponse<GetThemeForCustomizeSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/customize-setting/theme`, options);
+};
 
 /**
  * Update theme
  * @summary /customize-setting/theme
  */
-export const putThemeForCustomizeSetting = <TData = AxiosResponse<PutThemeForCustomizeSetting200>>(
-    customizeTheme: CustomizeTheme, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/theme`,
-      customizeTheme,options
-    );
-  }
+export const putThemeForCustomizeSetting = <
+  TData = AxiosResponse<PutThemeForCustomizeSetting200>,
+>(
+  customizeTheme: CustomizeTheme,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/customize-setting/theme`, customizeTheme, options);
+};
 
 /**
  * Get sidebar
  * @summary /customize-setting/sidebar
  */
-export const getSidebarForCustomizeSetting = <TData = AxiosResponse<CustomizeSidebar>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/customize-setting/sidebar`,options
-    );
-  }
+export const getSidebarForCustomizeSetting = <
+  TData = AxiosResponse<CustomizeSidebar>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/customize-setting/sidebar`, options);
+};
 
 /**
  * Update sidebar
  * @summary /customize-setting/sidebar
  */
-export const putSidebarForCustomizeSetting = <TData = AxiosResponse<PutSidebarForCustomizeSetting200>>(
-    customizeSidebar: CustomizeSidebar, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/sidebar`,
-      customizeSidebar,options
-    );
-  }
+export const putSidebarForCustomizeSetting = <
+  TData = AxiosResponse<PutSidebarForCustomizeSetting200>,
+>(
+  customizeSidebar: CustomizeSidebar,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/sidebar`,
+    customizeSidebar,
+    options,
+  );
+};
 
 /**
  * Update function
  * @summary /customize-setting/function
  */
-export const putFunctionForCustomizeSetting = <TData = AxiosResponse<PutFunctionForCustomizeSetting200>>(
-    customizeFunction: CustomizeFunction, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/function`,
-      customizeFunction,options
-    );
-  }
+export const putFunctionForCustomizeSetting = <
+  TData = AxiosResponse<PutFunctionForCustomizeSetting200>,
+>(
+  customizeFunction: CustomizeFunction,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/function`,
+    customizeFunction,
+    options,
+  );
+};
 
 /**
  * Update presentation
  * @summary /customize-setting/presentation
  */
-export const putPresentationForCustomizeSetting = <TData = AxiosResponse<PutPresentationForCustomizeSetting200>>(
-    customizePresentation: CustomizePresentation, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/presentation`,
-      customizePresentation,options
-    );
-  }
+export const putPresentationForCustomizeSetting = <
+  TData = AxiosResponse<PutPresentationForCustomizeSetting200>,
+>(
+  customizePresentation: CustomizePresentation,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/presentation`,
+    customizePresentation,
+    options,
+  );
+};
 
 /**
  * Update highlight
  * @summary /customize-setting/highlight
  */
-export const putHighlightForCustomizeSetting = <TData = AxiosResponse<PutHighlightForCustomizeSetting200>>(
-    customizeHighlight: CustomizeHighlight, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/highlight`,
-      customizeHighlight,options
-    );
-  }
+export const putHighlightForCustomizeSetting = <
+  TData = AxiosResponse<PutHighlightForCustomizeSetting200>,
+>(
+  customizeHighlight: CustomizeHighlight,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/highlight`,
+    customizeHighlight,
+    options,
+  );
+};
 
 /**
  * Update title
  * @summary /customize-setting/customizeTitle
  */
-export const putCustomizeTitleForCustomizeSetting = <TData = AxiosResponse<PutCustomizeTitleForCustomizeSetting200>>(
-    customizeTitle: CustomizeTitle, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/customizeTitle`,
-      customizeTitle,options
-    );
-  }
+export const putCustomizeTitleForCustomizeSetting = <
+  TData = AxiosResponse<PutCustomizeTitleForCustomizeSetting200>,
+>(
+  customizeTitle: CustomizeTitle,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/customizeTitle`,
+    customizeTitle,
+    options,
+  );
+};
 
 /**
  * Update noscript
  * @summary /customize-setting/customize-noscript
  */
-export const putCustomizeNoscriptForCustomizeSetting = <TData = AxiosResponse<PutCustomizeNoscriptForCustomizeSetting200>>(
-    customizeNoscript: CustomizeNoscript, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/customize-noscript`,
-      customizeNoscript,options
-    );
-  }
+export const putCustomizeNoscriptForCustomizeSetting = <
+  TData = AxiosResponse<PutCustomizeNoscriptForCustomizeSetting200>,
+>(
+  customizeNoscript: CustomizeNoscript,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/customize-noscript`,
+    customizeNoscript,
+    options,
+  );
+};
 
 /**
  * Update customize css
  * @summary /customize-setting/customize-css
  */
-export const putCustomizeCssForCustomizeSetting = <TData = AxiosResponse<PutCustomizeCssForCustomizeSetting200>>(
-    customizeCss: CustomizeCss, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/customize-css`,
-      customizeCss,options
-    );
-  }
+export const putCustomizeCssForCustomizeSetting = <
+  TData = AxiosResponse<PutCustomizeCssForCustomizeSetting200>,
+>(
+  customizeCss: CustomizeCss,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/customize-css`,
+    customizeCss,
+    options,
+  );
+};
 
 /**
  * Update customize script
  * @summary /customize-setting/customize-script
  */
-export const putCustomizeScriptForCustomizeSetting = <TData = AxiosResponse<PutCustomizeScriptForCustomizeSetting200>>(
-    customizeScript: CustomizeScript, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/customize-script`,
-      customizeScript,options
-    );
-  }
+export const putCustomizeScriptForCustomizeSetting = <
+  TData = AxiosResponse<PutCustomizeScriptForCustomizeSetting200>,
+>(
+  customizeScript: CustomizeScript,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/customize-script`,
+    customizeScript,
+    options,
+  );
+};
 
 /**
  * Update customize logo
  * @summary /customize-setting/customize-logo
  */
-export const putCustomizeLogoForCustomizeSetting = <TData = AxiosResponse<PutCustomizeLogoForCustomizeSetting200>>(
-    customizeLogo: CustomizeLogo, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/customize-setting/customize-logo`,
-      customizeLogo,options
-    );
-  }
+export const putCustomizeLogoForCustomizeSetting = <
+  TData = AxiosResponse<PutCustomizeLogoForCustomizeSetting200>,
+>(
+  customizeLogo: CustomizeLogo,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/customize-setting/customize-logo`,
+    customizeLogo,
+    options,
+  );
+};
 
 /**
  * Upload brand logo
  * @summary /customize-setting/upload-brand-logo
  */
-export const putUploadBrandLogoForCustomizeSetting = <TData = AxiosResponse<PutUploadBrandLogoForCustomizeSetting200>>(
-    putUploadBrandLogoForCustomizeSettingBody: PutUploadBrandLogoForCustomizeSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
-if(putUploadBrandLogoForCustomizeSettingBody.file !== undefined) {
- formData.append(`file`, putUploadBrandLogoForCustomizeSettingBody.file)
- }
-
-    return axios.default.put(
-      `/customize-setting/upload-brand-logo`,
-      formData,options
-    );
+export const putUploadBrandLogoForCustomizeSetting = <
+  TData = AxiosResponse<PutUploadBrandLogoForCustomizeSetting200>,
+>(
+  putUploadBrandLogoForCustomizeSettingBody: PutUploadBrandLogoForCustomizeSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  const formData = new FormData();
+  if (putUploadBrandLogoForCustomizeSettingBody.file !== undefined) {
+    formData.append(`file`, putUploadBrandLogoForCustomizeSettingBody.file);
   }
+
+  return axios.default.put(
+    `/customize-setting/upload-brand-logo`,
+    formData,
+    options,
+  );
+};
 
 /**
  * Delete brand logo
  * @summary /customize-setting/delete-brand-logo
  */
-export const deleteDeleteBrandLogoForCustomizeSetting = <TData = AxiosResponse<unknown>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/customize-setting/delete-brand-logo`,options
-    );
-  }
+export const deleteDeleteBrandLogoForCustomizeSetting = <
+  TData = AxiosResponse<unknown>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/customize-setting/delete-brand-logo`, options);
+};
 
 /**
  * get properties of stored zip files for export
  * @summary /export/status
  */
-export const getStatusForExport = <TData = AxiosResponse<GetStatusForExport200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/export/status`,options
-    );
-  }
+export const getStatusForExport = <
+  TData = AxiosResponse<GetStatusForExport200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/export/status`, options);
+};
 
 /**
  * generate zipped jsons for collections
  * @summary /export
  */
 export const postExport = <TData = AxiosResponse<PostExport200>>(
-    postExportBody: PostExportBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/export`,
-      postExportBody,options
-    );
-  }
+  postExportBody: PostExportBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/export`, postExportBody, options);
+};
 
 /**
  * delete the file
  * @summary /export/{fileName}
  */
-export const deleteExportByFileName = <TData = AxiosResponse<DeleteExportByFileName200>>(
-    fileName: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/export/${fileName}`,options
-    );
-  }
+export const deleteExportByFileName = <
+  TData = AxiosResponse<DeleteExportByFileName200>,
+>(
+  fileName: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/export/${fileName}`, options);
+};
 
 /**
  * @summary Request password reset
  */
-export const postForgotPassword = <TData = AxiosResponse<PostForgotPassword200>>(
-    postForgotPasswordBody: PostForgotPasswordBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/forgot-password`,
-      postForgotPasswordBody,options
-    );
-  }
+export const postForgotPassword = <
+  TData = AxiosResponse<PostForgotPassword200>,
+>(
+  postForgotPasswordBody: PostForgotPasswordBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/forgot-password`,
+    postForgotPasswordBody,
+    options,
+  );
+};
 
 /**
  * @summary Reset password
  */
 export const putForgotPassword = <TData = AxiosResponse<PutForgotPassword200>>(
-    putForgotPasswordBody: PutForgotPasswordBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/forgot-password`,
-      putForgotPasswordBody,options
-    );
-  }
+  putForgotPasswordBody: PutForgotPasswordBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/forgot-password`, putForgotPasswordBody, options);
+};
 
 /**
  * @summary /g2g-transfer/files
  */
-export const getFilesForG2gTransfer = <TData = AxiosResponse<GetFilesForG2gTransfer200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/g2g-transfer/files`,options
-    );
-  }
+export const getFilesForG2gTransfer = <
+  TData = AxiosResponse<GetFilesForG2gTransfer200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/g2g-transfer/files`, options);
+};
 
 /**
  * @summary /g2g-transfer
  */
 export const postG2gTransfer = <TData = AxiosResponse<PostG2gTransfer200>>(
-    postG2gTransferBody: PostG2gTransferBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
-if(postG2gTransferBody.file !== undefined) {
- formData.append(`file`, postG2gTransferBody.file)
- }
-if(postG2gTransferBody.collections !== undefined) {
- postG2gTransferBody.collections.forEach(value => formData.append(`collections`, value));
- }
-if(postG2gTransferBody.optionsMap !== undefined) {
- formData.append(`optionsMap`, JSON.stringify(postG2gTransferBody.optionsMap));
- }
-if(postG2gTransferBody.operatorUserId !== undefined) {
- formData.append(`operatorUserId`, postG2gTransferBody.operatorUserId)
- }
-if(postG2gTransferBody.uploadConfigs !== undefined) {
- formData.append(`uploadConfigs`, JSON.stringify(postG2gTransferBody.uploadConfigs));
- }
-
-    return axios.default.post(
-      `/g2g-transfer`,
-      formData,options
+  postG2gTransferBody: PostG2gTransferBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  const formData = new FormData();
+  if (postG2gTransferBody.file !== undefined) {
+    formData.append(`file`, postG2gTransferBody.file);
+  }
+  if (postG2gTransferBody.collections !== undefined) {
+    postG2gTransferBody.collections.forEach((value) =>
+      formData.append(`collections`, value),
     );
   }
+  if (postG2gTransferBody.optionsMap !== undefined) {
+    formData.append(
+      `optionsMap`,
+      JSON.stringify(postG2gTransferBody.optionsMap),
+    );
+  }
+  if (postG2gTransferBody.operatorUserId !== undefined) {
+    formData.append(`operatorUserId`, postG2gTransferBody.operatorUserId);
+  }
+  if (postG2gTransferBody.uploadConfigs !== undefined) {
+    formData.append(
+      `uploadConfigs`,
+      JSON.stringify(postG2gTransferBody.uploadConfigs),
+    );
+  }
+
+  return axios.default.post(`/g2g-transfer`, formData, options);
+};
 
 /**
  * @summary /g2g-transfer/attachment
  */
-export const postAttachmentForG2gTransfer = <TData = AxiosResponse<PostAttachmentForG2gTransfer200>>(
-    postAttachmentForG2gTransferBody: PostAttachmentForG2gTransferBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
-if(postAttachmentForG2gTransferBody.file !== undefined) {
- formData.append(`file`, postAttachmentForG2gTransferBody.file)
- }
-if(postAttachmentForG2gTransferBody.attachmentMetadata !== undefined) {
- formData.append(`attachmentMetadata`, JSON.stringify(postAttachmentForG2gTransferBody.attachmentMetadata));
- }
-
-    return axios.default.post(
-      `/g2g-transfer/attachment`,
-      formData,options
+export const postAttachmentForG2gTransfer = <
+  TData = AxiosResponse<PostAttachmentForG2gTransfer200>,
+>(
+  postAttachmentForG2gTransferBody: PostAttachmentForG2gTransferBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  const formData = new FormData();
+  if (postAttachmentForG2gTransferBody.file !== undefined) {
+    formData.append(`file`, postAttachmentForG2gTransferBody.file);
+  }
+  if (postAttachmentForG2gTransferBody.attachmentMetadata !== undefined) {
+    formData.append(
+      `attachmentMetadata`,
+      JSON.stringify(postAttachmentForG2gTransferBody.attachmentMetadata),
     );
   }
+
+  return axios.default.post(`/g2g-transfer/attachment`, formData, options);
+};
 
 /**
  * @summary /g2g-transfer/growi-info
  */
-export const getGrowiInfoForG2gTransfer = <TData = AxiosResponse<GetGrowiInfoForG2gTransfer200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/g2g-transfer/growi-info`,options
-    );
-  }
+export const getGrowiInfoForG2gTransfer = <
+  TData = AxiosResponse<GetGrowiInfoForG2gTransfer200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/g2g-transfer/growi-info`, options);
+};
 
 /**
  * @summary /g2g-transfer/generate-key
  */
-export const postGenerateKeyForG2gTransfer = <TData = AxiosResponse<PostGenerateKeyForG2gTransfer200>>(
-    postGenerateKeyForG2gTransferBody: PostGenerateKeyForG2gTransferBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/g2g-transfer/generate-key`,
-      postGenerateKeyForG2gTransferBody,options
-    );
-  }
+export const postGenerateKeyForG2gTransfer = <
+  TData = AxiosResponse<PostGenerateKeyForG2gTransfer200>,
+>(
+  postGenerateKeyForG2gTransferBody: PostGenerateKeyForG2gTransferBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/g2g-transfer/generate-key`,
+    postGenerateKeyForG2gTransferBody,
+    options,
+  );
+};
 
 /**
  * @summary /g2g-transfer/transfer
  */
-export const postTransferForG2gTransfer = <TData = AxiosResponse<PostTransferForG2gTransfer200>>(
-    postTransferForG2gTransferBody: PostTransferForG2gTransferBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/g2g-transfer/transfer`,
-      postTransferForG2gTransferBody,options
-    );
-  }
+export const postTransferForG2gTransfer = <
+  TData = AxiosResponse<PostTransferForG2gTransfer200>,
+>(
+  postTransferForG2gTransferBody: PostTransferForG2gTransferBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/g2g-transfer/transfer`,
+    postTransferForG2gTransferBody,
+    options,
+  );
+};
 
 /**
  * Check whether the server is healthy or not
  * @summary /healthcheck
  */
 export const getHealthcheck = <TData = AxiosResponse<GetHealthcheck200>>(
-    params?: GetHealthcheckParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/healthcheck`,{
+  params?: GetHealthcheckParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/healthcheck`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get import settings params
  * @summary /import
  */
 export const getImport = <TData = AxiosResponse<GetImport200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/import`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/import`, options);
+};
 
 /**
  * import a collection from a zipped json
  * @summary /import
  */
 export const postImport = <TData = AxiosResponse<void>>(
-    postImportBody: PostImportBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/import`,
-      postImportBody,options
-    );
-  }
+  postImportBody: PostImportBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/import`, postImportBody, options);
+};
 
 /**
  * Get properties of stored zip files for import
  * @summary /import/status
  */
-export const getStatusForImport = <TData = AxiosResponse<GetStatusForImport200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/import/status`,options
-    );
-  }
+export const getStatusForImport = <
+  TData = AxiosResponse<GetStatusForImport200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/import/status`, options);
+};
 
 /**
  * upload a zip file
  * @summary /import/upload
  */
 export const postUploadForImport = <TData = AxiosResponse<FileImportResponse>>(
-    postUploadForImportBody: PostUploadForImportBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
-if(postUploadForImportBody.file !== undefined) {
- formData.append(`file`, postUploadForImportBody.file)
- }
-
-    return axios.default.post(
-      `/import/upload`,
-      formData,options
-    );
+  postUploadForImportBody: PostUploadForImportBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  const formData = new FormData();
+  if (postUploadForImportBody.file !== undefined) {
+    formData.append(`file`, postUploadForImportBody.file);
   }
+
+  return axios.default.post(`/import/upload`, formData, options);
+};
 
 /**
  * Delete all zip files
  * @summary /import/all
  */
 export const deleteAllForImport = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/import/all`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/import/all`, options);
+};
 
 /**
  * Get the list of in-app notifications
  * @summary /in-app-notification/list
  */
-export const getListForInAppNotification = <TData = AxiosResponse<InAppNotificationListResponse>>(
-    params?: GetListForInAppNotificationParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/in-app-notification/list`,{
+export const getListForInAppNotification = <
+  TData = AxiosResponse<InAppNotificationListResponse>,
+>(
+  params?: GetListForInAppNotificationParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/in-app-notification/list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get the status of in-app notifications
  * @summary /in-app-notification/status
  */
-export const getStatusForInAppNotification = <TData = AxiosResponse<GetStatusForInAppNotification200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/in-app-notification/status`,options
-    );
-  }
+export const getStatusForInAppNotification = <
+  TData = AxiosResponse<GetStatusForInAppNotification200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/in-app-notification/status`, options);
+};
 
 /**
  * Open the in-app notification
  * @summary /in-app-notification/open
  */
-export const postOpenForInAppNotification = <TData = AxiosResponse<PostOpenForInAppNotification200>>(
-    postOpenForInAppNotificationBody: PostOpenForInAppNotificationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/in-app-notification/open`,
-      postOpenForInAppNotificationBody,options
-    );
-  }
+export const postOpenForInAppNotification = <
+  TData = AxiosResponse<PostOpenForInAppNotification200>,
+>(
+  postOpenForInAppNotificationBody: PostOpenForInAppNotificationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/in-app-notification/open`,
+    postOpenForInAppNotificationBody,
+    options,
+  );
+};
 
 /**
  * Open all in-app notifications
  * @summary /in-app-notification/all-statuses-open
  */
-export const putAllStatusesOpenForInAppNotification = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/in-app-notification/all-statuses-open`,undefined,options
-    );
-  }
+export const putAllStatusesOpenForInAppNotification = <
+  TData = AxiosResponse<void>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/in-app-notification/all-statuses-open`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * Install GROWI
  * @summary /installer
  */
 export const postInstaller = <TData = AxiosResponse<PostInstaller200>>(
-    postInstallerBody: PostInstallerBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/installer`,
-      postInstallerBody,options
-    );
-  }
+  postInstallerBody: PostInstallerBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/installer`, postInstallerBody, options);
+};
 
 /**
  * Activate invited user
  * @summary /invited
  */
 export const postInvited = <TData = AxiosResponse<PostInvited200>>(
-    postInvitedBody: PostInvitedBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/invited`,
-      postInvitedBody,options
-    );
-  }
+  postInvitedBody: PostInvitedBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/invited`, postInvitedBody, options);
+};
 
 /**
  * Logout the currently authenticated user
  * @summary Logout user
  */
 export const postLogout = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/logout`,undefined,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/logout`, undefined, options);
+};
 
 /**
  * @summary Get markdown parameters
  */
-export const getMarkdownSetting = <TData = AxiosResponse<GetMarkdownSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/markdown-setting`,options
-    );
-  }
+export const getMarkdownSetting = <
+  TData = AxiosResponse<GetMarkdownSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/markdown-setting`, options);
+};
 
 /**
  * @summary Update lineBreak setting
  */
-export const putLineBreakForMarkdownSetting = <TData = AxiosResponse<PutLineBreakForMarkdownSetting200>>(
-    lineBreakParams: LineBreakParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/markdown-setting/lineBreak`,
-      lineBreakParams,options
-    );
-  }
+export const putLineBreakForMarkdownSetting = <
+  TData = AxiosResponse<PutLineBreakForMarkdownSetting200>,
+>(
+  lineBreakParams: LineBreakParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/markdown-setting/lineBreak`,
+    lineBreakParams,
+    options,
+  );
+};
 
 /**
  * @summary Update indent setting
  */
-export const putIndentForMarkdownSetting = <TData = AxiosResponse<PutIndentForMarkdownSetting200>>(
-    indentParams: IndentParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/markdown-setting/indent`,
-      indentParams,options
-    );
-  }
+export const putIndentForMarkdownSetting = <
+  TData = AxiosResponse<PutIndentForMarkdownSetting200>,
+>(
+  indentParams: IndentParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/markdown-setting/indent`, indentParams, options);
+};
 
 /**
  * Update xss
  * @summary Update XSS setting
  */
 export const putXssForMarkdownSetting = <TData = AxiosResponse<XssParams>>(
-    xssParams: XssParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/markdown-setting/xss`,
-      xssParams,options
-    );
-  }
+  xssParams: XssParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/markdown-setting/xss`, xssParams, options);
+};
 
 /**
  * get mongodb collections names
  * @summary /mongo/collections
  */
-export const getCollectionsForMongo = <TData = AxiosResponse<GetCollectionsForMongo200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/mongo/collections`,options
-    );
-  }
+export const getCollectionsForMongo = <
+  TData = AxiosResponse<GetCollectionsForMongo200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/mongo/collections`, options);
+};
 
 /**
  * Get notification paramators
  */
-export const getNotificationSetting = <TData = AxiosResponse<GetNotificationSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/notification-setting/`,options
-    );
-  }
+export const getNotificationSetting = <
+  TData = AxiosResponse<GetNotificationSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/notification-setting/`, options);
+};
 
 /**
  * add user notification setting
  */
-export const postUserNotificationForNotificationSetting = <TData = AxiosResponse<PostUserNotificationForNotificationSetting200>>(
-    userNotificationParams: UserNotificationParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/notification-setting/user-notification`,
-      userNotificationParams,options
-    );
-  }
+export const postUserNotificationForNotificationSetting = <
+  TData = AxiosResponse<PostUserNotificationForNotificationSetting200>,
+>(
+  userNotificationParams: UserNotificationParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/notification-setting/user-notification`,
+    userNotificationParams,
+    options,
+  );
+};
 
 /**
  * delete user trigger notification pattern
  */
-export const deleteUserNotificationByIdForNotificationSetting = <TData = AxiosResponse<UserNotification>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/notification-setting/user-notification/${id}`,options
-    );
-  }
+export const deleteUserNotificationByIdForNotificationSetting = <
+  TData = AxiosResponse<UserNotification>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(
+    `/notification-setting/user-notification/${id}`,
+    options,
+  );
+};
 
 /**
  * get global notification setting
  */
-export const getGlobalNotificationByIdForNotificationSetting = <TData = AxiosResponse<GetGlobalNotificationByIdForNotificationSetting200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/notification-setting/global-notification/${id}`,options
-    );
-  }
+export const getGlobalNotificationByIdForNotificationSetting = <
+  TData = AxiosResponse<GetGlobalNotificationByIdForNotificationSetting200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `/notification-setting/global-notification/${id}`,
+    options,
+  );
+};
 
 /**
  * update global notification
  */
-export const putGlobalNotificationByIdForNotificationSetting = <TData = AxiosResponse<PutGlobalNotificationByIdForNotificationSetting200>>(
-    id: string,
-    globalNotificationParams: GlobalNotificationParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/notification-setting/global-notification/${id}`,
-      globalNotificationParams,options
-    );
-  }
+export const putGlobalNotificationByIdForNotificationSetting = <
+  TData = AxiosResponse<PutGlobalNotificationByIdForNotificationSetting200>,
+>(
+  id: string,
+  globalNotificationParams: GlobalNotificationParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/notification-setting/global-notification/${id}`,
+    globalNotificationParams,
+    options,
+  );
+};
 
 /**
  * delete global notification pattern
  */
-export const deleteGlobalNotificationByIdForNotificationSetting = <TData = AxiosResponse<GlobalNotification>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/notification-setting/global-notification/${id}`,options
-    );
-  }
+export const deleteGlobalNotificationByIdForNotificationSetting = <
+  TData = AxiosResponse<GlobalNotification>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(
+    `/notification-setting/global-notification/${id}`,
+    options,
+  );
+};
 
 /**
  * add global notification
  */
-export const postGlobalNotificationForNotificationSetting = <TData = AxiosResponse<PostGlobalNotificationForNotificationSetting200>>(
-    globalNotificationParams: GlobalNotificationParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/notification-setting/global-notification`,
-      globalNotificationParams,options
-    );
-  }
+export const postGlobalNotificationForNotificationSetting = <
+  TData = AxiosResponse<PostGlobalNotificationForNotificationSetting200>,
+>(
+  globalNotificationParams: GlobalNotificationParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/notification-setting/global-notification`,
+    globalNotificationParams,
+    options,
+  );
+};
 
 /**
  * Update settings for notify for page grant
  */
-export const putNotifyForPageGrantForNotificationSetting = <TData = AxiosResponse<NotifyForPageGrant>>(
-    notifyForPageGrant: NotifyForPageGrant, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/notification-setting/notify-for-page-grant`,
-      notifyForPageGrant,options
-    );
-  }
+export const putNotifyForPageGrantForNotificationSetting = <
+  TData = AxiosResponse<NotifyForPageGrant>,
+>(
+  notifyForPageGrant: NotifyForPageGrant,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/notification-setting/notify-for-page-grant`,
+    notifyForPageGrant,
+    options,
+  );
+};
 
 /**
  * toggle enabled global notification
  */
-export const putEnabledByIdForNotificationSettingGlobalNotification = <TData = AxiosResponse<PutEnabledByIdForNotificationSettingGlobalNotification200>>(
-    id: string,
-    putEnabledByIdForNotificationSettingGlobalNotificationBody: PutEnabledByIdForNotificationSettingGlobalNotificationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/notification-setting/global-notification/${id}/enabled`,
-      putEnabledByIdForNotificationSettingGlobalNotificationBody,options
-    );
-  }
+export const putEnabledByIdForNotificationSettingGlobalNotification = <
+  TData = AxiosResponse<PutEnabledByIdForNotificationSettingGlobalNotification200>,
+>(
+  id: string,
+  putEnabledByIdForNotificationSettingGlobalNotificationBody: PutEnabledByIdForNotificationSettingGlobalNotificationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/notification-setting/global-notification/${id}/enabled`,
+    putEnabledByIdForNotificationSettingGlobalNotificationBody,
+    options,
+  );
+};
 
 /**
  * Get the root page
  * @summary /page-listing/root
  */
-export const getRootForPageListing = <TData = AxiosResponse<GetRootForPageListing200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page-listing/root`,options
-    );
-  }
+export const getRootForPageListing = <
+  TData = AxiosResponse<GetRootForPageListing200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page-listing/root`, options);
+};
 
 /**
  * Get the ancestors and children of a page
  * @summary /page-listing/ancestors-children
  */
-export const getAncestorsChildrenForPageListing = <TData = AxiosResponse<GetAncestorsChildrenForPageListing200>>(
-    params: GetAncestorsChildrenForPageListingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page-listing/ancestors-children`,{
+export const getAncestorsChildrenForPageListing = <
+  TData = AxiosResponse<GetAncestorsChildrenForPageListing200>,
+>(
+  params: GetAncestorsChildrenForPageListingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page-listing/ancestors-children`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get the children of a page
  * @summary /page-listing/children
  */
-export const getChildrenForPageListing = <TData = AxiosResponse<GetChildrenForPageListing200>>(
-    params?: GetChildrenForPageListingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page-listing/children`,{
+export const getChildrenForPageListing = <
+  TData = AxiosResponse<GetChildrenForPageListing200>,
+>(
+  params?: GetChildrenForPageListingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page-listing/children`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get summary information of pages
  * @summary /page-listing/info
  */
-export const getInfoForPageListing = <TData = AxiosResponse<GetInfoForPageListing200>>(
-    params?: GetInfoForPageListingParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page-listing/info`,{
+export const getInfoForPageListing = <
+  TData = AxiosResponse<GetInfoForPageListing200>,
+>(
+  params?: GetInfoForPageListingParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page-listing/info`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * get page by pagePath or pageId
  * @summary Get page
  */
 export const getPage = <TData = AxiosResponse<Page>>(
-    params?: GetPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page`,{
+  params?: GetPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Create page
  * @summary Create page
  */
 export const postPage = <TData = AxiosResponse<PostPage201>>(
-    postPageBody: PostPageBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/page`,
-      postPageBody,options
-    );
-  }
+  postPageBody: PostPageBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/page`, postPageBody, options);
+};
 
 /**
  * Update page
  */
 export const putPage = <TData = AxiosResponse<PutPage200>>(
-    putPageBody: PutPageBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/page`,
-      putPageBody,options
-    );
-  }
+  putPageBody: PutPageBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/page`, putPageBody, options);
+};
 
 /**
  * Check if a page exists at the specified path
  * @summary Check if page exists
  */
 export const getExistForPage = <TData = AxiosResponse<GetExistForPage200>>(
-    params: GetExistForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/exist`,{
+  params: GetExistForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/exist`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Update liked status
  * @summary Get page likes
  */
 export const putLikesForPage = <TData = AxiosResponse<Page>>(
-    likeParams: LikeParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/page/likes`,
-      likeParams,options
-    );
-  }
+  likeParams: LikeParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/page/likes`, likeParams, options);
+};
 
 /**
  * Get summary informations for a page
  * @summary /page/info
  */
 export const getInfoForPage = <TData = AxiosResponse<PageInfoAll>>(
-    params: GetInfoForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/info`,{
+  params: GetInfoForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/info`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Retrieve current page's grant data
  * @summary Get page grant data
  */
-export const getGrantDataForPage = <TData = AxiosResponse<GetGrantDataForPage200>>(
-    params?: GetGrantDataForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/grant-data`,{
+export const getGrantDataForPage = <
+  TData = AxiosResponse<GetGrantDataForPage200>,
+>(
+  params?: GetGrantDataForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/grant-data`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Check if non-user related groups are granted access to a specific page or its closest ancestor
  * @summary Check if non-user related groups are granted page access
  */
-export const getNonUserRelatedGroupsGrantedForPage = <TData = AxiosResponse<GetNonUserRelatedGroupsGrantedForPage200>>(
-    params: GetNonUserRelatedGroupsGrantedForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/non-user-related-groups-granted`,{
+export const getNonUserRelatedGroupsGrantedForPage = <
+  TData = AxiosResponse<GetNonUserRelatedGroupsGrantedForPage200>,
+>(
+  params: GetNonUserRelatedGroupsGrantedForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/non-user-related-groups-granted`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Retrieve applicable grant data for a specific page
  * @summary Get applicable grant data
  */
-export const getApplicableGrantForPage = <TData = AxiosResponse<GetApplicableGrantForPage200>>(
-    params: GetApplicableGrantForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/applicable-grant`,{
+export const getApplicableGrantForPage = <
+  TData = AxiosResponse<GetApplicableGrantForPage200>,
+>(
+  params: GetApplicableGrantForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/applicable-grant`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Update the grant of a specific page
  * @summary Update page grant
  */
 export const putGrantByPageId = <TData = AxiosResponse<Page>>(
-    pageId: string,
-    putGrantByPageIdBody: PutGrantByPageIdBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/${pageId}/grant`,
-      putGrantByPageIdBody,options
-    );
-  }
+  pageId: string,
+  putGrantByPageIdBody: PutGrantByPageIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/${pageId}/grant`, putGrantByPageIdBody, options);
+};
 
 /**
  * return page's markdown
  */
 export const getExportByPageIdForPage = <TData = AxiosResponse<void>>(
-    pageId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/export/${pageId}`,options
-    );
-  }
+  pageId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/export/${pageId}`, options);
+};
 
 /**
  * Get already exist paths
  * @summary Get already exist paths
  */
-export const getExistPathsForPage = <TData = AxiosResponse<GetExistPathsForPage200>>(
-    params?: GetExistPathsForPageParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/page/exist-paths`,{
+export const getExistPathsForPage = <
+  TData = AxiosResponse<GetExistPathsForPage200>,
+>(
+  params?: GetExistPathsForPageParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/page/exist-paths`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Update subscription status
  * @summary Update subscription status
  */
 export const putSubscribeForPage = <TData = AxiosResponse<Page>>(
-    putSubscribeForPageBody: PutSubscribeForPageBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/page/subscribe`,
-      putSubscribeForPageBody,options
-    );
-  }
+  putSubscribeForPageBody: PutSubscribeForPageBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/page/subscribe`, putSubscribeForPageBody, options);
+};
 
 /**
  * Update the content width setting for a specific page
  * @summary Update content width
  */
-export const putContentWidthByPageId = <TData = AxiosResponse<PutContentWidthByPageId200>>(
-    pageId: string,
-    putContentWidthByPageIdBody: PutContentWidthByPageIdBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/${pageId}/content-width`,
-      putContentWidthByPageIdBody,options
-    );
-  }
+export const putContentWidthByPageId = <
+  TData = AxiosResponse<PutContentWidthByPageId200>,
+>(
+  pageId: string,
+  putContentWidthByPageIdBody: PutContentWidthByPageIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/${pageId}/content-width`,
+    putContentWidthByPageIdBody,
+    options,
+  );
+};
 
 /**
  * Publish a specific page
  * @summary Publish page
  */
 export const putPublishByPageIdForPage = <TData = AxiosResponse<Page>>(
-    pageId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/page/${pageId}/publish`,undefined,options
-    );
-  }
+  pageId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/page/${pageId}/publish`, undefined, options);
+};
 
 /**
  * Unpublish a specific page
  * @summary Unpublish page
  */
 export const putUnpublishByPageIdForPage = <TData = AxiosResponse<Page>>(
-    pageId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/page/${pageId}/unpublish`,undefined,options
-    );
-  }
+  pageId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/page/${pageId}/unpublish`, undefined, options);
+};
 
 /**
  * Retrieve Yjs data for a specific page
  * @summary Get Yjs data
  */
-export const getYjsDataByPageId = <TData = AxiosResponse<GetYjsDataByPageId200>>(
-    pageId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/${pageId}/yjs-data`,options
-    );
-  }
+export const getYjsDataByPageId = <
+  TData = AxiosResponse<GetYjsDataByPageId200>,
+>(
+  pageId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/${pageId}/yjs-data`, options);
+};
 
 /**
  * Sync the latest revision body to the Yjs draft for a specific page
  * @summary Sync latest revision body to Yjs draft
  */
-export const putSyncLatestRevisionBodyToYjsDraftByPageId = <TData = AxiosResponse<PutSyncLatestRevisionBodyToYjsDraftByPageId200>>(
-    pageId: string,
-    putSyncLatestRevisionBodyToYjsDraftByPageIdBody: PutSyncLatestRevisionBodyToYjsDraftByPageIdBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/${pageId}/sync-latest-revision-body-to-yjs-draft`,
-      putSyncLatestRevisionBodyToYjsDraftByPageIdBody,options
-    );
-  }
+export const putSyncLatestRevisionBodyToYjsDraftByPageId = <
+  TData = AxiosResponse<PutSyncLatestRevisionBodyToYjsDraftByPageId200>,
+>(
+  pageId: string,
+  putSyncLatestRevisionBodyToYjsDraftByPageIdBody: PutSyncLatestRevisionBodyToYjsDraftByPageIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/${pageId}/sync-latest-revision-body-to-yjs-draft`,
+    putSyncLatestRevisionBodyToYjsDraftByPageIdBody,
+    options,
+  );
+};
 
 /**
  * Get recently updated pages
  */
 export const getRecentForPages = <TData = AxiosResponse<void>>(
-    params?: GetRecentForPagesParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/pages/recent`,{
+  params?: GetRecentForPagesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/pages/recent`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Rename page
  */
 export const putRenameForPages = <TData = AxiosResponse<PutRenameForPages200>>(
-    putRenameForPagesBody: PutRenameForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/pages/rename`,
-      putRenameForPagesBody,options
-    );
-  }
+  putRenameForPagesBody: PutRenameForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/pages/rename`, putRenameForPagesBody, options);
+};
 
 /**
  * Resume rename page operation
  */
-export const postResumeRenameForPages = <TData = AxiosResponse<PostResumeRenameForPages200>>(
-    postResumeRenameForPagesBody: PostResumeRenameForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/pages/resume-rename`,
-      postResumeRenameForPagesBody,options
-    );
-  }
+export const postResumeRenameForPages = <
+  TData = AxiosResponse<PostResumeRenameForPages200>,
+>(
+  postResumeRenameForPagesBody: PostResumeRenameForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/pages/resume-rename`,
+    postResumeRenameForPagesBody,
+    options,
+  );
+};
 
 /**
  * empty trash
  */
-export const deleteEmptyTrashForPages = <TData = AxiosResponse<DeleteEmptyTrashForPages200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/pages/empty-trash`,options
-    );
-  }
+export const deleteEmptyTrashForPages = <
+  TData = AxiosResponse<DeleteEmptyTrashForPages200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/pages/empty-trash`, options);
+};
 
 /**
  * Get list of pages
  */
 export const getListForPages = <TData = AxiosResponse<GetListForPages200>>(
-    params?: GetListForPagesParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/pages/list`,{
+  params?: GetListForPagesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/pages/list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Duplicate page
  */
-export const postDuplicateForPages = <TData = AxiosResponse<PostDuplicateForPages200>>(
-    postDuplicateForPagesBody: PostDuplicateForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/pages/duplicate`,
-      postDuplicateForPagesBody,options
-    );
-  }
+export const postDuplicateForPages = <
+  TData = AxiosResponse<PostDuplicateForPages200>,
+>(
+  postDuplicateForPagesBody: PostDuplicateForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/pages/duplicate`,
+    postDuplicateForPagesBody,
+    options,
+  );
+};
 
 /**
  * Get subordinated pages
  */
-export const getSubordinatedListForPages = <TData = AxiosResponse<GetSubordinatedListForPages200>>(
-    params?: GetSubordinatedListForPagesParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/pages/subordinated-list`,{
+export const getSubordinatedListForPages = <
+  TData = AxiosResponse<GetSubordinatedListForPages200>,
+>(
+  params?: GetSubordinatedListForPagesParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/pages/subordinated-list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Delete pages
  */
-export const postDeleteForPages = <TData = AxiosResponse<PostDeleteForPages200>>(
-    postDeleteForPagesBody: PostDeleteForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/pages/delete`,
-      postDeleteForPagesBody,options
-    );
-  }
+export const postDeleteForPages = <
+  TData = AxiosResponse<PostDeleteForPages200>,
+>(
+  postDeleteForPagesBody: PostDeleteForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/pages/delete`, postDeleteForPagesBody, options);
+};
 
 /**
  * Convert pages by path
  */
-export const postConvertPagesByPathForPages = <TData = AxiosResponse<PostConvertPagesByPathForPages200>>(
-    postConvertPagesByPathForPagesBody: PostConvertPagesByPathForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/pages/convert-pages-by-path`,
-      postConvertPagesByPathForPagesBody,options
-    );
-  }
+export const postConvertPagesByPathForPages = <
+  TData = AxiosResponse<PostConvertPagesByPathForPages200>,
+>(
+  postConvertPagesByPathForPagesBody: PostConvertPagesByPathForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/pages/convert-pages-by-path`,
+    postConvertPagesByPathForPagesBody,
+    options,
+  );
+};
 
 /**
  * Migrate legacy pages
  */
-export const postLegacyPagesMigrationForPages = <TData = AxiosResponse<PostLegacyPagesMigrationForPages200>>(
-    postLegacyPagesMigrationForPagesBody: PostLegacyPagesMigrationForPagesBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/pages/legacy-pages-migration`,
-      postLegacyPagesMigrationForPagesBody,options
-    );
-  }
+export const postLegacyPagesMigrationForPages = <
+  TData = AxiosResponse<PostLegacyPagesMigrationForPages200>,
+>(
+  postLegacyPagesMigrationForPagesBody: PostLegacyPagesMigrationForPagesBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/pages/legacy-pages-migration`,
+    postLegacyPagesMigrationForPagesBody,
+    options,
+  );
+};
 
 /**
  * Get V5 migration status
  */
-export const getV5MigrationStatusForPages = <TData = AxiosResponse<GetV5MigrationStatusForPages200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/pages/v5-migration-status`,options
-    );
-  }
+export const getV5MigrationStatusForPages = <
+  TData = AxiosResponse<GetV5MigrationStatusForPages200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/pages/v5-migration-status`, options);
+};
 
 /**
  * Get personal parameters
  * @summary /personal-setting
  */
-export const getPersonalSetting = <TData = AxiosResponse<GetPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting`,options
-    );
-  }
+export const getPersonalSetting = <
+  TData = AxiosResponse<GetPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/personal-setting`, options);
+};
 
 /**
  * Update personal setting
  * @summary /personal-setting
  */
-export const putPersonalSetting = <TData = AxiosResponse<PutPersonalSetting200>>(
-    personalSettings: PersonalSettings, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting`,
-      personalSettings,options
-    );
-  }
+export const putPersonalSetting = <
+  TData = AxiosResponse<PutPersonalSetting200>,
+>(
+  personalSettings: PersonalSettings,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/personal-setting`, personalSettings, options);
+};
 
 /**
  * Get whether a password has been set
  * @summary /personal-setting
  */
-export const getIsPasswordSetForPersonalSetting = <TData = AxiosResponse<GetIsPasswordSetForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting/is-password-set`,options
-    );
-  }
+export const getIsPasswordSetForPersonalSetting = <
+  TData = AxiosResponse<GetIsPasswordSetForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/personal-setting/is-password-set`, options);
+};
 
 /**
  * Update user image type
  * @summary /personal-setting/image-type
  */
-export const putImageTypeForPersonalSetting = <TData = AxiosResponse<PutImageTypeForPersonalSetting200>>(
-    putImageTypeForPersonalSettingBody: PutImageTypeForPersonalSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/image-type`,
-      putImageTypeForPersonalSettingBody,options
-    );
-  }
+export const putImageTypeForPersonalSetting = <
+  TData = AxiosResponse<PutImageTypeForPersonalSetting200>,
+>(
+  putImageTypeForPersonalSettingBody: PutImageTypeForPersonalSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/image-type`,
+    putImageTypeForPersonalSettingBody,
+    options,
+  );
+};
 
 /**
  * Get external accounts that linked current user
  * @summary /personal-setting/external-accounts
  */
-export const getExternalAccountsForPersonalSetting = <TData = AxiosResponse<GetExternalAccountsForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting/external-accounts`,options
-    );
-  }
+export const getExternalAccountsForPersonalSetting = <
+  TData = AxiosResponse<GetExternalAccountsForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/personal-setting/external-accounts`, options);
+};
 
 /**
  * Update user password
  * @summary /personal-setting/password
  */
-export const putPasswordForPersonalSetting = <TData = AxiosResponse<PutPasswordForPersonalSetting200>>(
-    putPasswordForPersonalSettingBody: PutPasswordForPersonalSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/password`,
-      putPasswordForPersonalSettingBody,options
-    );
-  }
+export const putPasswordForPersonalSetting = <
+  TData = AxiosResponse<PutPasswordForPersonalSetting200>,
+>(
+  putPasswordForPersonalSettingBody: PutPasswordForPersonalSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/password`,
+    putPasswordForPersonalSettingBody,
+    options,
+  );
+};
 
 /**
  * Update user api token
  * @summary /personal-setting/api-token
  */
-export const putApiTokenForPersonalSetting = <TData = AxiosResponse<PutApiTokenForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/api-token`,undefined,options
-    );
-  }
+export const putApiTokenForPersonalSetting = <
+  TData = AxiosResponse<PutApiTokenForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/personal-setting/api-token`, undefined, options);
+};
 
 /**
  * Get access token
  * @summary /personal-setting/access-token
  */
-export const getAccessTokenForPersonalSetting = <TData = AxiosResponse<GetAccessTokenForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting/access-token`,options
-    );
-  }
+export const getAccessTokenForPersonalSetting = <
+  TData = AxiosResponse<GetAccessTokenForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/personal-setting/access-token`, options);
+};
 
 /**
  * Generate access token
  * @summary /personal-setting/access-token
  */
-export const postAccessTokenForPersonalSetting = <TData = AxiosResponse<PostAccessTokenForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/personal-setting/access-token`,undefined,options
-    );
-  }
+export const postAccessTokenForPersonalSetting = <
+  TData = AxiosResponse<PostAccessTokenForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/personal-setting/access-token`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * Delete access token
  * @summary /personal-setting/access-token
  */
-export const deleteAccessTokenForPersonalSetting = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/personal-setting/access-token/`,options
-    );
-  }
+export const deleteAccessTokenForPersonalSetting = <
+  TData = AxiosResponse<void>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/personal-setting/access-token/`, options);
+};
 
 /**
  * Delete all access tokens
  * @summary /personal-setting/access-token/all
  */
-export const deleteAllForPersonalSettingAccessToken = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/personal-setting/access-token/all`,options
-    );
-  }
+export const deleteAllForPersonalSettingAccessToken = <
+  TData = AxiosResponse<void>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/personal-setting/access-token/all`, options);
+};
 
 /**
  * associate Ldap account
  * @summary /personal-setting/associate-ldap
  */
-export const putAssociateLdapForPersonalSetting = <TData = AxiosResponse<PutAssociateLdapForPersonalSetting200>>(
-    putAssociateLdapForPersonalSettingBody: PutAssociateLdapForPersonalSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/associate-ldap`,
-      putAssociateLdapForPersonalSettingBody,options
-    );
-  }
+export const putAssociateLdapForPersonalSetting = <
+  TData = AxiosResponse<PutAssociateLdapForPersonalSetting200>,
+>(
+  putAssociateLdapForPersonalSettingBody: PutAssociateLdapForPersonalSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/associate-ldap`,
+    putAssociateLdapForPersonalSettingBody,
+    options,
+  );
+};
 
 /**
  * disassociate Ldap account
  * @summary /personal-setting/disassociate-ldap
  */
-export const putDisassociateLdapForPersonalSetting = <TData = AxiosResponse<PutDisassociateLdapForPersonalSetting200>>(
-    disassociateUser: DisassociateUser, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/disassociate-ldap`,
-      disassociateUser,options
-    );
-  }
+export const putDisassociateLdapForPersonalSetting = <
+  TData = AxiosResponse<PutDisassociateLdapForPersonalSetting200>,
+>(
+  disassociateUser: DisassociateUser,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/disassociate-ldap`,
+    disassociateUser,
+    options,
+  );
+};
 
 /**
  * Put editor preferences
  * @summary /personal-setting/editor-settings
  */
-export const putEditorSettingsForPersonalSetting = <TData = AxiosResponse<PutEditorSettingsForPersonalSetting200>>(
-    putEditorSettingsForPersonalSettingBody: PutEditorSettingsForPersonalSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/editor-settings`,
-      putEditorSettingsForPersonalSettingBody,options
-    );
-  }
+export const putEditorSettingsForPersonalSetting = <
+  TData = AxiosResponse<PutEditorSettingsForPersonalSetting200>,
+>(
+  putEditorSettingsForPersonalSettingBody: PutEditorSettingsForPersonalSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/editor-settings`,
+    putEditorSettingsForPersonalSettingBody,
+    options,
+  );
+};
 
 /**
  * Get editor preferences
  * @summary /personal-setting/editor-settings
  */
-export const getEditorSettingsForPersonalSetting = <TData = AxiosResponse<GetEditorSettingsForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting/editor-settings`,options
-    );
-  }
+export const getEditorSettingsForPersonalSetting = <
+  TData = AxiosResponse<GetEditorSettingsForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/personal-setting/editor-settings`, options);
+};
 
 /**
  * Put InAppNotificationSettings
  * @summary /personal-setting/in-app-notification-settings
  */
-export const putInAppNotificationSettingsForPersonalSetting = <TData = AxiosResponse<PutInAppNotificationSettingsForPersonalSetting200>>(
-    putInAppNotificationSettingsForPersonalSettingBody: PutInAppNotificationSettingsForPersonalSettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/personal-setting/in-app-notification-settings`,
-      putInAppNotificationSettingsForPersonalSettingBody,options
-    );
-  }
+export const putInAppNotificationSettingsForPersonalSetting = <
+  TData = AxiosResponse<PutInAppNotificationSettingsForPersonalSetting200>,
+>(
+  putInAppNotificationSettingsForPersonalSettingBody: PutInAppNotificationSettingsForPersonalSettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/personal-setting/in-app-notification-settings`,
+    putInAppNotificationSettingsForPersonalSettingBody,
+    options,
+  );
+};
 
 /**
  * Get InAppNotificationSettings
  * @summary personal-setting/in-app-notification-settings
  */
-export const getInAppNotificationSettingsForPersonalSetting = <TData = AxiosResponse<GetInAppNotificationSettingsForPersonalSetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/personal-setting/in-app-notification-settings`,options
-    );
-  }
+export const getInAppNotificationSettingsForPersonalSetting = <
+  TData = AxiosResponse<GetInAppNotificationSettingsForPersonalSetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `/personal-setting/in-app-notification-settings`,
+    options,
+  );
+};
 
 /**
  * Get revisions by page id
  */
-export const getListForRevisions = <TData = AxiosResponse<GetListForRevisions200>>(
-    params?: GetListForRevisionsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/revisions/list`,{
+export const getListForRevisions = <
+  TData = AxiosResponse<GetListForRevisions200>,
+>(
+  params?: GetListForRevisionsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/revisions/list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get one revision by id
  */
 export const getRevisionsById = <TData = AxiosResponse<GetRevisionsById200>>(
-    id: string,
-    params: GetRevisionsByIdParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/revisions/${id}`,{
+  id: string,
+  params: GetRevisionsByIdParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/revisions/${id}`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get current status of indices
  * @summary /search/indices
  */
-export const getIndicesForSearch = <TData = AxiosResponse<GetIndicesForSearch200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/search/indices`,options
-    );
-  }
+export const getIndicesForSearch = <
+  TData = AxiosResponse<GetIndicesForSearch200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/search/indices`, options);
+};
 
 /**
  * Operate indices
  * @summary /search/indices
  */
-export const putIndicesForSearch = <TData = AxiosResponse<PutIndicesForSearch200>>(
-    putIndicesForSearchBody: PutIndicesForSearchBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/search/indices`,
-      putIndicesForSearchBody,options
-    );
-  }
+export const putIndicesForSearch = <
+  TData = AxiosResponse<PutIndicesForSearch200>,
+>(
+  putIndicesForSearchBody: PutIndicesForSearchBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/search/indices`, putIndicesForSearchBody, options);
+};
 
 /**
  * Reconnect to Elasticsearch
  * @summary /search/connection
  */
 export const postConnectionForSearch = <TData = AxiosResponse<void>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/search/connection`,undefined,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/search/connection`, undefined, options);
+};
 
 /**
  * Get security paramators
  */
-export const getSecuritySetting = <TData = AxiosResponse<GetSecuritySetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/security-setting/`,options
-    );
-  }
+export const getSecuritySetting = <
+  TData = AxiosResponse<GetSecuritySetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/security-setting/`, options);
+};
 
 /**
  * Update authentication isEnabled
  */
-export const putEnabledForSecuritySettingAuthentication = <TData = AxiosResponse<PutEnabledForSecuritySettingAuthentication200>>(
-    putEnabledForSecuritySettingAuthenticationBody: PutEnabledForSecuritySettingAuthenticationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/authentication/enabled`,
-      putEnabledForSecuritySettingAuthenticationBody,options
-    );
-  }
+export const putEnabledForSecuritySettingAuthentication = <
+  TData = AxiosResponse<PutEnabledForSecuritySettingAuthentication200>,
+>(
+  putEnabledForSecuritySettingAuthenticationBody: PutEnabledForSecuritySettingAuthenticationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/authentication/enabled`,
+    putEnabledForSecuritySettingAuthenticationBody,
+    options,
+  );
+};
 
 /**
  * Get setup strategies for passport
  * @summary /security-setting/authentication
  */
-export const getAuthenticationForSecuritySetting = <TData = AxiosResponse<GetAuthenticationForSecuritySetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/security-setting/authentication`,options
-    );
-  }
+export const getAuthenticationForSecuritySetting = <
+  TData = AxiosResponse<GetAuthenticationForSecuritySetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/security-setting/authentication`, options);
+};
 
 /**
  * Update GeneralSetting
  * @summary /security-setting/general-setting
  */
-export const putGeneralSettingForSecuritySetting = <TData = AxiosResponse<GeneralSetting>>(
-    generalSetting: GeneralSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/general-setting`,
-      generalSetting,options
-    );
-  }
+export const putGeneralSettingForSecuritySetting = <
+  TData = AxiosResponse<GeneralSetting>,
+>(
+  generalSetting: GeneralSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/general-setting`,
+    generalSetting,
+    options,
+  );
+};
 
 /**
  * Update ShareLink Setting
  * @summary /security-setting/share-link-setting
  */
-export const putShareLinkSettingForSecuritySetting = <TData = AxiosResponse<PutShareLinkSettingForSecuritySetting200>>(
-    shareLinkSetting: ShareLinkSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/share-link-setting`,
-      shareLinkSetting,options
-    );
-  }
+export const putShareLinkSettingForSecuritySetting = <
+  TData = AxiosResponse<PutShareLinkSettingForSecuritySetting200>,
+>(
+  shareLinkSetting: ShareLinkSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/share-link-setting`,
+    shareLinkSetting,
+    options,
+  );
+};
 
 /**
  * Get All ShareLinks at Share Link Setting
  * @summary /security-setting/all-share-links
  */
-export const getAllShareLinksForSecuritySetting = <TData = AxiosResponse<GetAllShareLinksForSecuritySetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/security-setting/all-share-links`,options
-    );
-  }
+export const getAllShareLinksForSecuritySetting = <
+  TData = AxiosResponse<GetAllShareLinksForSecuritySetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/security-setting/all-share-links`, options);
+};
 
 /**
  * Delete All ShareLinks at Share Link Setting
  * @summary /security-setting/all-share-links
  */
-export const deleteAllShareLinksForSecuritySetting = <TData = AxiosResponse<DeleteAllShareLinksForSecuritySetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/security-setting/all-share-links`,options
-    );
-  }
+export const deleteAllShareLinksForSecuritySetting = <
+  TData = AxiosResponse<DeleteAllShareLinksForSecuritySetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/security-setting/all-share-links`, options);
+};
 
 /**
  * Update LocalSetting
  * @summary /security-setting/local-setting
  */
-export const putLocalSettingForSecuritySetting = <TData = AxiosResponse<PutLocalSettingForSecuritySetting200>>(
-    localSetting: LocalSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/local-setting`,
-      localSetting,options
-    );
-  }
+export const putLocalSettingForSecuritySetting = <
+  TData = AxiosResponse<PutLocalSettingForSecuritySetting200>,
+>(
+  localSetting: LocalSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/local-setting`,
+    localSetting,
+    options,
+  );
+};
 
 /**
  * Update LDAP setting
  * @summary /security-setting/ldap
  */
-export const putLdapForSecuritySetting = <TData = AxiosResponse<PutLdapForSecuritySetting200>>(
-    ldapAuthSetting: LdapAuthSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/ldap`,
-      ldapAuthSetting,options
-    );
-  }
+export const putLdapForSecuritySetting = <
+  TData = AxiosResponse<PutLdapForSecuritySetting200>,
+>(
+  ldapAuthSetting: LdapAuthSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/security-setting/ldap`, ldapAuthSetting, options);
+};
 
 /**
  * Update SAML setting
  * @summary /security-setting/saml
  */
-export const putSamlForSecuritySetting = <TData = AxiosResponse<PutSamlForSecuritySetting200>>(
-    samlAuthSetting: SamlAuthSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/saml`,
-      samlAuthSetting,options
-    );
-  }
+export const putSamlForSecuritySetting = <
+  TData = AxiosResponse<PutSamlForSecuritySetting200>,
+>(
+  samlAuthSetting: SamlAuthSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/security-setting/saml`, samlAuthSetting, options);
+};
 
 /**
  * Update OpenID Connect setting
  * @summary /security-setting/oidc
  */
-export const putOidcForSecuritySetting = <TData = AxiosResponse<PutOidcForSecuritySetting200>>(
-    oidcAuthSetting: OidcAuthSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/oidc`,
-      oidcAuthSetting,options
-    );
-  }
+export const putOidcForSecuritySetting = <
+  TData = AxiosResponse<PutOidcForSecuritySetting200>,
+>(
+  oidcAuthSetting: OidcAuthSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/security-setting/oidc`, oidcAuthSetting, options);
+};
 
 /**
  * Update google OAuth
  * @summary /security-setting/google-oauth
  */
-export const putGoogleOauthForSecuritySetting = <TData = AxiosResponse<PutGoogleOauthForSecuritySetting200>>(
-    googleOAuthSetting: GoogleOAuthSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/google-oauth`,
-      googleOAuthSetting,options
-    );
-  }
+export const putGoogleOauthForSecuritySetting = <
+  TData = AxiosResponse<PutGoogleOauthForSecuritySetting200>,
+>(
+  googleOAuthSetting: GoogleOAuthSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/google-oauth`,
+    googleOAuthSetting,
+    options,
+  );
+};
 
 /**
  * Update github OAuth
  * @summary /security-setting/github-oauth
  */
-export const putGithubOauthForSecuritySetting = <TData = AxiosResponse<PutGithubOauthForSecuritySetting200>>(
-    gitHubOAuthSetting: GitHubOAuthSetting, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/security-setting/github-oauth`,
-      gitHubOAuthSetting,options
-    );
-  }
+export const putGithubOauthForSecuritySetting = <
+  TData = AxiosResponse<PutGithubOauthForSecuritySetting200>,
+>(
+  gitHubOAuthSetting: GitHubOAuthSetting,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/security-setting/github-oauth`,
+    gitHubOAuthSetting,
+    options,
+  );
+};
 
 /**
  * get share links
  */
 export const getShareLinks = <TData = AxiosResponse<GetShareLinks200>>(
-    params: GetShareLinksParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/share-links/`,{
+  params: GetShareLinksParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/share-links/`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Create new share link
  */
 export const postShareLinks = <TData = AxiosResponse<ShareLinkSimple>>(
-    postShareLinksBody: PostShareLinksBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/share-links/`,
-      postShareLinksBody,options
-    );
-  }
+  postShareLinksBody: PostShareLinksBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/share-links/`, postShareLinksBody, options);
+};
 
 /**
  * delete all share links related one page
  * @summary delete all share links related one page
  */
 export const deleteShareLinks = <TData = AxiosResponse<ShareLinkSimple>>(
-    params: DeleteShareLinksParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/share-links/`,{
+  params: DeleteShareLinksParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/share-links/`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * delete all share links
  * @summary delete all share links
  */
-export const deleteAllForShareLinks = <TData = AxiosResponse<DeleteAllForShareLinks200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/share-links/all`,options
-    );
-  }
+export const deleteAllForShareLinks = <
+  TData = AxiosResponse<DeleteAllForShareLinks200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/share-links/all`, options);
+};
 
 /**
  * delete one share link related one page
  */
 export const deleteShareLinksById = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/share-links/${id}`,options
-    );
-  }
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/share-links/${id}`, options);
+};
 
 /**
  * Get slack configuration setting
  */
-export const getSlackIntegrationLegacySetting = <TData = AxiosResponse<GetSlackIntegrationLegacySetting200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/slack-integration-legacy-setting/`,options
-    );
-  }
+export const getSlackIntegrationLegacySetting = <
+  TData = AxiosResponse<GetSlackIntegrationLegacySetting200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/slack-integration-legacy-setting/`, options);
+};
 
 /**
  * Update slack configuration setting
  */
-export const putSlackIntegrationLegacySetting = <TData = AxiosResponse<PutSlackIntegrationLegacySetting200>>(
-    putSlackIntegrationLegacySettingBody: PutSlackIntegrationLegacySettingBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/slack-integration-legacy-setting/`,
-      putSlackIntegrationLegacySettingBody,options
-    );
-  }
+export const putSlackIntegrationLegacySetting = <
+  TData = AxiosResponse<PutSlackIntegrationLegacySetting200>,
+>(
+  putSlackIntegrationLegacySettingBody: PutSlackIntegrationLegacySettingBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/slack-integration-legacy-setting/`,
+    putSlackIntegrationLegacySettingBody,
+    options,
+  );
+};
 
 /**
  * Get current settings and connection statuses.
  * @summary /slack-integration-settings
  */
-export const getSlackIntegrationSettings = <TData = AxiosResponse<GetSlackIntegrationSettings200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/slack-integration-settings/`,options
-    );
-  }
+export const getSlackIntegrationSettings = <
+  TData = AxiosResponse<GetSlackIntegrationSettings200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/slack-integration-settings/`, options);
+};
 
 /**
  * Put botType setting.
  * @summary /slack-integration/bot-type
  */
-export const putBotTypeForSlackIntegrationSettings = <TData = AxiosResponse<void>>(
-    botType: BotType, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/slack-integration-settings/bot-type/`,
-      botType,options
-    );
-  }
+export const putBotTypeForSlackIntegrationSettings = <
+  TData = AxiosResponse<void>,
+>(
+  botType: BotType,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/slack-integration-settings/bot-type/`,
+    botType,
+    options,
+  );
+};
 
 /**
  * Delete botType setting.
  * @summary /slack-integration/bot-type
  */
 export const deleteBotTypeForSlackIntegration = <TData = AxiosResponse<void>>(
-    botType: BotType, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/slack-integration/bot-type/`,{data:
-      botType, ...options}
-    );
-  }
+  botType: BotType,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/slack-integration/bot-type/`, {
+    data: botType,
+    ...options,
+  });
+};
 
 /**
  * Update customBotWithoutProxy setting.
  * @summary /slack-integration-settings/without-proxy/update-settings
  */
-export const putUpdateSettingsForSlackIntegrationSettingsWithoutProxy = <TData = AxiosResponse<void>>(
-    putUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody: PutUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/slack-integration-settings/without-proxy/update-settings/`,
-      putUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody,options
-    );
-  }
+export const putUpdateSettingsForSlackIntegrationSettingsWithoutProxy = <
+  TData = AxiosResponse<void>,
+>(
+  putUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody: PutUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/slack-integration-settings/without-proxy/update-settings/`,
+    putUpdateSettingsForSlackIntegrationSettingsWithoutProxyBody,
+    options,
+  );
+};
 
 /**
  * Update customBotWithoutProxy permissions.
  * @summary /slack-integration-settings/without-proxy/update-permissions
  */
-export const putUpdatePermissionsForSlackIntegrationSettingsWithoutProxy = <TData = AxiosResponse<void>>(
-    putUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody: PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/slack-integration-settings/without-proxy/update-permissions/`,
-      putUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody,options
-    );
-  }
+export const putUpdatePermissionsForSlackIntegrationSettingsWithoutProxy = <
+  TData = AxiosResponse<void>,
+>(
+  putUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody: PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/slack-integration-settings/without-proxy/update-permissions/`,
+    putUpdatePermissionsForSlackIntegrationSettingsWithoutProxyBody,
+    options,
+  );
+};
 
 /**
  * Generate SlackAppIntegrations
  * @summary /slack-integration-settings/slack-app-integrations
  */
-export const postSlackAppIntegrationsForSlackIntegrationSettings = <TData = AxiosResponse<PostSlackAppIntegrationsForSlackIntegrationSettings200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration-settings/slack-app-integrations`,undefined,options
-    );
-  }
+export const postSlackAppIntegrationsForSlackIntegrationSettings = <
+  TData = AxiosResponse<PostSlackAppIntegrationsForSlackIntegrationSettings200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration-settings/slack-app-integrations`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * Delete accessTokens
  * @summary /slack-integration-settings/slack-app-integrations/:id
  */
-export const deleteSlackAppIntegrationsByIdForSlackIntegrationSettings = <TData = AxiosResponse<DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/slack-integration-settings/slack-app-integrations/${id}`,options
-    );
-  }
+export const deleteSlackAppIntegrationsByIdForSlackIntegrationSettings = <
+  TData = AxiosResponse<DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(
+    `/slack-integration-settings/slack-app-integrations/${id}`,
+    options,
+  );
+};
 
 /**
  * Update proxy uri
  * @summary /slack-integration-settings/proxy-uri
  */
-export const putProxyUriForSlackIntegrationSettings = <TData = AxiosResponse<PutProxyUriForSlackIntegrationSettings200>>(
-    putProxyUriForSlackIntegrationSettingsBody: PutProxyUriForSlackIntegrationSettingsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/slack-integration-settings/proxy-uri`,
-      putProxyUriForSlackIntegrationSettingsBody,options
-    );
-  }
+export const putProxyUriForSlackIntegrationSettings = <
+  TData = AxiosResponse<PutProxyUriForSlackIntegrationSettings200>,
+>(
+  putProxyUriForSlackIntegrationSettingsBody: PutProxyUriForSlackIntegrationSettingsBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/slack-integration-settings/proxy-uri`,
+    putProxyUriForSlackIntegrationSettingsBody,
+    options,
+  );
+};
 
 /**
  * Make SlackAppTokens primary
  * @summary /slack-integration-settings/slack-app-integrations/:id/makeprimary
  */
-export const putMakeprimaryByIdForSlackIntegrationSettingsSlackAppIntegrations = <TData = AxiosResponse<void>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
+export const putMakeprimaryByIdForSlackIntegrationSettingsSlackAppIntegrations =
+  <TData = AxiosResponse<void>>(
+    id: string,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
     return axios.default.put(
-      `/slack-integration-settings/slack-app-integrations/${id}/makeprimary`,undefined,options
+      `/slack-integration-settings/slack-app-integrations/${id}/makeprimary`,
+      undefined,
+      options,
     );
-  }
+  };
 
 /**
  * Regenerate SlackAppTokens
  * @summary /slack-integration-settings/slack-app-integrations/:id/regenerate-tokens
  */
-export const putRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations = <TData = AxiosResponse<PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
+export const putRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations =
+  <
+    TData = AxiosResponse<PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200>,
+  >(
+    id: string,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
     return axios.default.put(
-      `/slack-integration-settings/slack-app-integrations/${id}/regenerate-tokens`,undefined,options
+      `/slack-integration-settings/slack-app-integrations/${id}/regenerate-tokens`,
+      undefined,
+      options,
     );
-  }
+  };
 
 /**
  * update supported commands
  * @summary /slack-integration-settings/slack-app-integrations/:id/permissions
  */
-export const putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations = <TData = AxiosResponse<PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200>>(
+export const putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations =
+  <
+    TData = AxiosResponse<PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200>,
+  >(
     id: string,
-    putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
+    putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody: PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
     return axios.default.put(
       `/slack-integration-settings/slack-app-integrations/${id}/permissions`,
-      putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,options
+      putPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,
+      options,
     );
-  }
+  };
 
 /**
  * Delete botType setting.
  * @summary /slack-integration-settings/slack-app-integrations/:id/relation-test
  */
-export const postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrations = <TData = AxiosResponse<void>>(
+export const postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrations =
+  <TData = AxiosResponse<void>>(
     id: string,
-    postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody: PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
+    postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody: PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,
+    options?: AxiosRequestConfig,
+  ): Promise<TData> => {
     return axios.default.post(
       `/slack-integration-settings/slack-app-integrations/${id}/relation-test`,
-      postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,options
+      postRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsBody,
+      options,
     );
-  }
+  };
 
 /**
  * Test the connection with slack work space.
  * @summary /slack-integration-settings/without-proxy/test
  */
-export const postTestForSlackIntegrationSettingsWithoutProxy = <TData = AxiosResponse<void>>(
-    postTestForSlackIntegrationSettingsWithoutProxyBody: PostTestForSlackIntegrationSettingsWithoutProxyBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration-settings/without-proxy/test`,
-      postTestForSlackIntegrationSettingsWithoutProxyBody,options
-    );
-  }
+export const postTestForSlackIntegrationSettingsWithoutProxy = <
+  TData = AxiosResponse<void>,
+>(
+  postTestForSlackIntegrationSettingsWithoutProxyBody: PostTestForSlackIntegrationSettingsWithoutProxyBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration-settings/without-proxy/test`,
+    postTestForSlackIntegrationSettingsWithoutProxyBody,
+    options,
+  );
+};
 
 /**
  * Handle Slack commands
  * @summary /slack-integration/commands
  */
 export const postCommandsForSlackIntegration = <TData = AxiosResponse<string>>(
-    postCommandsForSlackIntegrationBody: PostCommandsForSlackIntegrationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/commands`,
-      postCommandsForSlackIntegrationBody,{
-        responseType: 'text',
-    ...options,}
-    );
-  }
+  postCommandsForSlackIntegrationBody: PostCommandsForSlackIntegrationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/commands`,
+    postCommandsForSlackIntegrationBody,
+    {
+      responseType: "text",
+      ...options,
+    },
+  );
+};
 
 /**
  * Verify the access token
  * @summary /slack-integration/proxied/verify
  */
-export const postVerifyForSlackIntegrationProxied = <TData = AxiosResponse<PostVerifyForSlackIntegrationProxied200>>(
-    postVerifyForSlackIntegrationProxiedBody: PostVerifyForSlackIntegrationProxiedBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/proxied/verify`,
-      postVerifyForSlackIntegrationProxiedBody,options
-    );
-  }
+export const postVerifyForSlackIntegrationProxied = <
+  TData = AxiosResponse<PostVerifyForSlackIntegrationProxied200>,
+>(
+  postVerifyForSlackIntegrationProxiedBody: PostVerifyForSlackIntegrationProxiedBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/proxied/verify`,
+    postVerifyForSlackIntegrationProxiedBody,
+    options,
+  );
+};
 
 /**
  * Handle Slack commands
  * @summary /slack-integration/proxied/commands
  */
-export const postCommandsForSlackIntegrationProxied = <TData = AxiosResponse<string>>(
-    postCommandsForSlackIntegrationProxiedBody: PostCommandsForSlackIntegrationProxiedBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/proxied/commands`,
-      postCommandsForSlackIntegrationProxiedBody,{
-        responseType: 'text',
-    ...options,}
-    );
-  }
+export const postCommandsForSlackIntegrationProxied = <
+  TData = AxiosResponse<string>,
+>(
+  postCommandsForSlackIntegrationProxiedBody: PostCommandsForSlackIntegrationProxiedBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/proxied/commands`,
+    postCommandsForSlackIntegrationProxiedBody,
+    {
+      responseType: "text",
+      ...options,
+    },
+  );
+};
 
 /**
  * Handle Slack interactions
  * @summary /slack-integration/interactions
  */
-export const postInteractionsForSlackIntegration = <TData = AxiosResponse<void>>(
-    postInteractionsForSlackIntegrationBody: PostInteractionsForSlackIntegrationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/interactions`,
-      postInteractionsForSlackIntegrationBody,options
-    );
-  }
+export const postInteractionsForSlackIntegration = <
+  TData = AxiosResponse<void>,
+>(
+  postInteractionsForSlackIntegrationBody: PostInteractionsForSlackIntegrationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/interactions`,
+    postInteractionsForSlackIntegrationBody,
+    options,
+  );
+};
 
 /**
  * Handle Slack interactions
  * @summary /slack-integration/proxied/interactions
  */
-export const postInteractionsForSlackIntegrationProxied = <TData = AxiosResponse<void>>(
-    postInteractionsForSlackIntegrationProxiedBody: PostInteractionsForSlackIntegrationProxiedBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/proxied/interactions`,
-      postInteractionsForSlackIntegrationProxiedBody,options
-    );
-  }
+export const postInteractionsForSlackIntegrationProxied = <
+  TData = AxiosResponse<void>,
+>(
+  postInteractionsForSlackIntegrationProxiedBody: PostInteractionsForSlackIntegrationProxiedBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/proxied/interactions`,
+    postInteractionsForSlackIntegrationProxiedBody,
+    options,
+  );
+};
 
 /**
  * Get supported commands
  * @summary /slack-integration/supported-commands
  */
-export const getSupportedCommandsForSlackIntegration = <TData = AxiosResponse<GetSupportedCommandsForSlackIntegration200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/slack-integration/supported-commands`,options
-    );
-  }
+export const getSupportedCommandsForSlackIntegration = <
+  TData = AxiosResponse<GetSupportedCommandsForSlackIntegration200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/slack-integration/supported-commands`, options);
+};
 
 /**
  * Handle Slack events
  * @summary /slack-integration/events
  */
-export const postEventsForSlackIntegration = <TData = AxiosResponse<PostEventsForSlackIntegration200>>(
-    postEventsForSlackIntegrationBody: PostEventsForSlackIntegrationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/events`,
-      postEventsForSlackIntegrationBody,options
-    );
-  }
+export const postEventsForSlackIntegration = <
+  TData = AxiosResponse<PostEventsForSlackIntegration200>,
+>(
+  postEventsForSlackIntegrationBody: PostEventsForSlackIntegrationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/events`,
+    postEventsForSlackIntegrationBody,
+    options,
+  );
+};
 
 /**
  * Handle Slack events
  * @summary /slack-integration/proxied/events
  */
-export const postEventsForSlackIntegrationProxied = <TData = AxiosResponse<PostEventsForSlackIntegrationProxied200>>(
-    postEventsForSlackIntegrationProxiedBody: PostEventsForSlackIntegrationProxiedBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/slack-integration/proxied/events`,
-      postEventsForSlackIntegrationProxiedBody,options
-    );
-  }
+export const postEventsForSlackIntegrationProxied = <
+  TData = AxiosResponse<PostEventsForSlackIntegrationProxied200>,
+>(
+  postEventsForSlackIntegrationProxiedBody: PostEventsForSlackIntegrationProxiedBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/slack-integration/proxied/events`,
+    postEventsForSlackIntegrationProxiedBody,
+    options,
+  );
+};
 
 /**
  * Get statistics for user
  * @summary /statistics/user
  */
-export const getUserForStatistics = <TData = AxiosResponse<StatisticsUserResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/statistics/user`,options
-    );
-  }
+export const getUserForStatistics = <
+  TData = AxiosResponse<StatisticsUserResponse>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/statistics/user`, options);
+};
 
 /**
  * @summary /complete-registration
  */
-export const postCompleteRegistration = <TData = AxiosResponse<PostCompleteRegistration200>>(
-    postCompleteRegistrationBody: PostCompleteRegistrationBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/complete-registration`,
-      postCompleteRegistrationBody,options
-    );
-  }
+export const postCompleteRegistration = <
+  TData = AxiosResponse<PostCompleteRegistration200>,
+>(
+  postCompleteRegistrationBody: PostCompleteRegistrationBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/complete-registration`,
+    postCompleteRegistrationBody,
+    options,
+  );
+};
 
 /**
  * Gets the user group relations
  * @summary /user-group-relations
  */
-export const getUserGroupRelations = <TData = AxiosResponse<GetUserGroupRelations200>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-group-relations`,options
-    );
-  }
+export const getUserGroupRelations = <
+  TData = AxiosResponse<GetUserGroupRelations200>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-group-relations`, options);
+};
 
 /**
  * Get usergroups
  * @summary /user-groups
  */
 export const getUserGroups = <TData = AxiosResponse<GetUserGroups200>>(
-    params?: GetUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups`,{
+  params?: GetUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Adds userGroup
  * @summary /user-groups
  */
 export const postUserGroups = <TData = AxiosResponse<PostUserGroups200>>(
-    postUserGroupsBody: PostUserGroupsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/user-groups`,
-      postUserGroupsBody,options
-    );
-  }
+  postUserGroupsBody: PostUserGroupsBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/user-groups`, postUserGroupsBody, options);
+};
 
 /**
  * Get ancestor user groups.
  * @summary /user-groups/ancestors
  */
-export const getAncestorsForUserGroups = <TData = AxiosResponse<GetAncestorsForUserGroups200>>(
-    params: GetAncestorsForUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/ancestors`,{
+export const getAncestorsForUserGroups = <
+  TData = AxiosResponse<GetAncestorsForUserGroups200>,
+>(
+  params: GetAncestorsForUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/ancestors`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get child user groups
  * @summary /user-groups/children
  */
-export const getChildrenForUserGroups = <TData = AxiosResponse<GetChildrenForUserGroups200>>(
-    params?: GetChildrenForUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/children`,{
+export const getChildrenForUserGroups = <
+  TData = AxiosResponse<GetChildrenForUserGroups200>,
+>(
+  params?: GetChildrenForUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/children`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get selectable parent UserGroups
  * @summary /selectable-parent-groups
  */
-export const getSelectableParentGroups = <TData = AxiosResponse<GetSelectableParentGroups200>>(
-    params: GetSelectableParentGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/selectable-parent-groups`,{
+export const getSelectableParentGroups = <
+  TData = AxiosResponse<GetSelectableParentGroups200>,
+>(
+  params: GetSelectableParentGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/selectable-parent-groups`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get selectable child UserGroups
  * @summary /selectable-child-groups
  */
-export const getSelectableChildGroups = <TData = AxiosResponse<GetSelectableChildGroups200>>(
-    params: GetSelectableChildGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/selectable-child-groups`,{
+export const getSelectableChildGroups = <
+  TData = AxiosResponse<GetSelectableChildGroups200>,
+>(
+  params: GetSelectableChildGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/selectable-child-groups`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get UserGroup from Group ID
  * @summary /user-groups/{id}
  */
 export const getUserGroupsById = <TData = AxiosResponse<GetUserGroupsById200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/${id}`,options
-    );
-  }
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/${id}`, options);
+};
 
 /**
  * Deletes userGroup
  * @summary /user-groups/{id}
  */
-export const deleteUserGroupsById = <TData = AxiosResponse<DeleteUserGroupsById200>>(
-    id: string,
-    params?: DeleteUserGroupsByIdParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/user-groups/${id}`,{
+export const deleteUserGroupsById = <
+  TData = AxiosResponse<DeleteUserGroupsById200>,
+>(
+  id: string,
+  params?: DeleteUserGroupsByIdParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/user-groups/${id}`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Update userGroup
  * @summary /user-groups/{id}
  */
 export const putUserGroupsById = <TData = AxiosResponse<PutUserGroupsById200>>(
-    id: string,
-    putUserGroupsByIdBody: PutUserGroupsByIdBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/user-groups/${id}`,
-      putUserGroupsByIdBody,options
-    );
-  }
+  id: string,
+  putUserGroupsByIdBody: PutUserGroupsByIdBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/user-groups/${id}`,
+    putUserGroupsByIdBody,
+    options,
+  );
+};
 
 /**
  * Get users related to the userGroup
  * @summary /user-groups/{id}/users
  */
-export const getUsersByIdForUserGroups = <TData = AxiosResponse<GetUsersByIdForUserGroups200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/${id}/users`,options
-    );
-  }
+export const getUsersByIdForUserGroups = <
+  TData = AxiosResponse<GetUsersByIdForUserGroups200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/${id}/users`, options);
+};
 
 /**
  * Get users unrelated to the userGroup
  * @summary /user-groups/{id}/unrelated-users
  */
-export const getUnrelatedUsersByIdForUserGroups = <TData = AxiosResponse<GetUnrelatedUsersByIdForUserGroups200>>(
-    id: string,
-    params?: GetUnrelatedUsersByIdForUserGroupsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/${id}/unrelated-users`,{
+export const getUnrelatedUsersByIdForUserGroups = <
+  TData = AxiosResponse<GetUnrelatedUsersByIdForUserGroups200>,
+>(
+  id: string,
+  params?: GetUnrelatedUsersByIdForUserGroupsParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/${id}/unrelated-users`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Add a user to the userGroup
  * @summary /user-groups/{id}/users/{username}
  */
-export const postUsersByUsernameByIdForUserGroups = <TData = AxiosResponse<PostUsersByUsernameByIdForUserGroups200>>(
-    id: string,
-    username: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/user-groups/${id}/users/${username}`,undefined,options
-    );
-  }
+export const postUsersByUsernameByIdForUserGroups = <
+  TData = AxiosResponse<PostUsersByUsernameByIdForUserGroups200>,
+>(
+  id: string,
+  username: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `/user-groups/${id}/users/${username}`,
+    undefined,
+    options,
+  );
+};
 
 /**
  * remove a user from the userGroup
  * @summary /user-groups/{id}/users/{username}
  */
-export const deleteUsersByUsernameByIdForUserGroups = <TData = AxiosResponse<DeleteUsersByUsernameByIdForUserGroups200>>(
-    id: string,
-    username: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/user-groups/${id}/users/${username}`,options
-    );
-  }
+export const deleteUsersByUsernameByIdForUserGroups = <
+  TData = AxiosResponse<DeleteUsersByUsernameByIdForUserGroups200>,
+>(
+  id: string,
+  username: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/user-groups/${id}/users/${username}`, options);
+};
 
 /**
  * Get the user group relations for the userGroup
  * @summary /user-groups/{id}/user-group-relations
  */
-export const getUserGroupRelationsByIdForUserGroups = <TData = AxiosResponse<GetUserGroupRelationsByIdForUserGroups200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/${id}/user-group-relations`,options
-    );
-  }
+export const getUserGroupRelationsByIdForUserGroups = <
+  TData = AxiosResponse<GetUserGroupRelationsByIdForUserGroups200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/${id}/user-group-relations`, options);
+};
 
 /**
  * Get closed pages for the userGroup
  * @summary /user-groups/{id}/pages
  */
-export const getPagesByIdForUserGroups = <TData = AxiosResponse<GetPagesByIdForUserGroups200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/user-groups/${id}/pages`,options
-    );
-  }
+export const getPagesByIdForUserGroups = <
+  TData = AxiosResponse<GetPagesByIdForUserGroups200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/user-groups/${id}/pages`, options);
+};
 
 /**
  * Update the user's UI settings
  * @summary /user-ui-settings
  */
 export const putUserUiSettings = <TData = AxiosResponse<PutUserUiSettings200>>(
-    putUserUiSettingsBody: PutUserUiSettingsBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/user-ui-settings`,
-      putUserUiSettingsBody,options
-    );
-  }
+  putUserUiSettingsBody: PutUserUiSettingsBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/user-ui-settings`, putUserUiSettingsBody, options);
+};
 
 /**
  * Select selected columns from users order by asc or desc
  * @summary /users
  */
 export const getUsers = <TData = AxiosResponse<GetUsers200>>(
-    params?: GetUsersParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/users`,{
+  params?: GetUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/users`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /usersIdReacent
  */
-export const getRecentByIdForUsers = <TData = AxiosResponse<GetRecentByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/users/${id}/recent`,options
-    );
-  }
+export const getRecentByIdForUsers = <
+  TData = AxiosResponse<GetRecentByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/users/${id}/recent`, options);
+};
 
 /**
  * Create new users and send Emails
  * @summary /users/invite
  */
-export const postInviteForUsers = <TData = AxiosResponse<PostInviteForUsers200>>(
-    params?: PostInviteForUsersParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/users/invite`,undefined,{
+export const postInviteForUsers = <
+  TData = AxiosResponse<PostInviteForUsers200>,
+>(
+  params?: PostInviteForUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/users/invite`, undefined, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Grant user admin
  * @summary /users/{id}/grant-admin
  */
-export const putGrantAdminByIdForUsers = <TData = AxiosResponse<PutGrantAdminByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/grant-admin`,undefined,options
-    );
-  }
+export const putGrantAdminByIdForUsers = <
+  TData = AxiosResponse<PutGrantAdminByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/grant-admin`, undefined, options);
+};
 
 /**
  * Revoke user admin
  * @summary /users/{id}/revoke-admin
  */
-export const putRevokeAdminByIdForUsers = <TData = AxiosResponse<PutRevokeAdminByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/revoke-admin`,undefined,options
-    );
-  }
+export const putRevokeAdminByIdForUsers = <
+  TData = AxiosResponse<PutRevokeAdminByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/revoke-admin`, undefined, options);
+};
 
 /**
  * Grant user read only access
  * @summary /users/{id}/grant-read-only
  */
-export const putGrantReadOnlyByIdForUsers = <TData = AxiosResponse<PutGrantReadOnlyByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/grant-read-only`,undefined,options
-    );
-  }
+export const putGrantReadOnlyByIdForUsers = <
+  TData = AxiosResponse<PutGrantReadOnlyByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/grant-read-only`, undefined, options);
+};
 
 /**
  * Revoke user read only access
  * @summary /users/{id}/revoke-read-only
  */
-export const putRevokeReadOnlyByIdForUsers = <TData = AxiosResponse<PutRevokeReadOnlyByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/revoke-read-only`,undefined,options
-    );
-  }
+export const putRevokeReadOnlyByIdForUsers = <
+  TData = AxiosResponse<PutRevokeReadOnlyByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/revoke-read-only`, undefined, options);
+};
 
 /**
  * Activate user
  * @summary /users/{id}/activate
  */
-export const putActivateByIdForUsers = <TData = AxiosResponse<PutActivateByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/activate`,undefined,options
-    );
-  }
+export const putActivateByIdForUsers = <
+  TData = AxiosResponse<PutActivateByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/activate`, undefined, options);
+};
 
 /**
  * Deactivate user
  * @summary /users/{id}/deactivate
  */
-export const putDeactivateByIdForUsers = <TData = AxiosResponse<PutDeactivateByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/${id}/deactivate`,undefined,options
-    );
-  }
+export const putDeactivateByIdForUsers = <
+  TData = AxiosResponse<PutDeactivateByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(`/users/${id}/deactivate`, undefined, options);
+};
 
 /**
  * Delete user
  * @summary /users/{id}/remove
  */
-export const deleteRemoveByIdForUsers = <TData = AxiosResponse<DeleteRemoveByIdForUsers200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/users/${id}/remove`,options
-    );
-  }
+export const deleteRemoveByIdForUsers = <
+  TData = AxiosResponse<DeleteRemoveByIdForUsers200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/users/${id}/remove`, options);
+};
 
 /**
  * Get external-account
  * @summary /users/external-accounts
  */
-export const getExternalAccountsForUsers = <TData = AxiosResponse<GetExternalAccountsForUsers200>>(
-    params?: GetExternalAccountsForUsersParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/users/external-accounts`,{
+export const getExternalAccountsForUsers = <
+  TData = AxiosResponse<GetExternalAccountsForUsers200>,
+>(
+  params?: GetExternalAccountsForUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/users/external-accounts`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Delete ExternalAccount
  * @summary /users/external-accounts/{id}/remove
  */
-export const deleteRemoveByIdForUsersExternalAccounts = <TData = AxiosResponse<DeleteRemoveByIdForUsersExternalAccounts200>>(
-    id: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `/users/external-accounts/${id}/remove`,options
-    );
-  }
+export const deleteRemoveByIdForUsersExternalAccounts = <
+  TData = AxiosResponse<DeleteRemoveByIdForUsersExternalAccounts200>,
+>(
+  id: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(`/users/external-accounts/${id}/remove`, options);
+};
 
 /**
  * update imageUrlCache
  * @summary /users/update.imageUrlCache
  */
-export const putUpdateImageUrlCacheForUsers = <TData = AxiosResponse<PutUpdateImageUrlCacheForUsers200>>(
-    putUpdateImageUrlCacheForUsersBody: PutUpdateImageUrlCacheForUsersBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/update.imageUrlCache`,
-      putUpdateImageUrlCacheForUsersBody,options
-    );
-  }
+export const putUpdateImageUrlCacheForUsers = <
+  TData = AxiosResponse<PutUpdateImageUrlCacheForUsers200>,
+>(
+  putUpdateImageUrlCacheForUsersBody: PutUpdateImageUrlCacheForUsersBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/users/update.imageUrlCache`,
+    putUpdateImageUrlCacheForUsersBody,
+    options,
+  );
+};
 
 /**
  * update imageUrlCache
  * @summary /users/reset-password
  */
-export const putResetPasswordForUsers = <TData = AxiosResponse<PutResetPasswordForUsers200>>(
-    putResetPasswordForUsersBody: PutResetPasswordForUsersBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/reset-password`,
-      putResetPasswordForUsersBody,options
-    );
-  }
+export const putResetPasswordForUsers = <
+  TData = AxiosResponse<PutResetPasswordForUsers200>,
+>(
+  putResetPasswordForUsersBody: PutResetPasswordForUsersBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/users/reset-password`,
+    putResetPasswordForUsersBody,
+    options,
+  );
+};
 
 /**
  * send new password email
  * @summary /users/reset-password-email
  */
 export const putResetPasswordEmailForUsers = <TData = AxiosResponse<void>>(
-    putResetPasswordEmailForUsersBody: PutResetPasswordEmailForUsersBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/reset-password-email`,
-      putResetPasswordEmailForUsersBody,options
-    );
-  }
+  putResetPasswordEmailForUsersBody: PutResetPasswordEmailForUsersBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/users/reset-password-email`,
+    putResetPasswordEmailForUsersBody,
+    options,
+  );
+};
 
 /**
  * send invitation email
  * @summary /users/send-invitation-email
  */
-export const putSendInvitationEmailForUsers = <TData = AxiosResponse<PutSendInvitationEmailForUsers200>>(
-    putSendInvitationEmailForUsersBody: PutSendInvitationEmailForUsersBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `/users/send-invitation-email`,
-      putSendInvitationEmailForUsersBody,options
-    );
-  }
+export const putSendInvitationEmailForUsers = <
+  TData = AxiosResponse<PutSendInvitationEmailForUsers200>,
+>(
+  putSendInvitationEmailForUsersBody: PutSendInvitationEmailForUsersBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `/users/send-invitation-email`,
+    putSendInvitationEmailForUsersBody,
+    options,
+  );
+};
 
 /**
  * Get list of users
  * @summary /users/list
  */
 export const getListForUsers = <TData = AxiosResponse<GetListForUsers200>>(
-    params?: GetListForUsersParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/users/list`,{
+  params?: GetListForUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/users/list`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * Get list of usernames
  * @summary /users/usernames
  */
-export const getUsernamesForUsers = <TData = AxiosResponse<GetUsernamesForUsers200>>(
-    params?: GetUsernamesForUsersParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `/users/usernames`,{
+export const getUsernamesForUsers = <
+  TData = AxiosResponse<GetUsernamesForUsers200>,
+>(
+  params?: GetUsernamesForUsersParams,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`/users/usernames`, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params },
+  });
+};
 
 /**
  * @summary /login
  */
 export const postLogin = <TData = AxiosResponse<PostLogin200>>(
-    postLoginBody: PostLoginBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/login`,
-      postLoginBody,options
-    );
-  }
+  postLoginBody: PostLoginBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/login`, postLoginBody, options);
+};
 
 /**
  * @summary /register
  */
 export const postRegister = <TData = AxiosResponse<PostRegister200>>(
-    postRegisterBody: PostRegisterBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `/register`,
-      postRegisterBody,options
-    );
-  }
+  postRegisterBody: PostRegisterBody,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(`/register`, postRegisterBody, options);
+};
 
-export type GetExternalUserGroupRelationsResult = AxiosResponse<GetExternalUserGroupRelations200>
-export type GetExternalUserGroupsResult = AxiosResponse<GetExternalUserGroups200>
-export type GetAncestorsForExternalUserGroupsResult = AxiosResponse<GetAncestorsForExternalUserGroups200>
-export type GetChildrenForExternalUserGroupsResult = AxiosResponse<GetChildrenForExternalUserGroups200>
-export type GetExternalUserGroupsByIdResult = AxiosResponse<GetExternalUserGroupsById200>
-export type DeleteExternalUserGroupsByIdResult = AxiosResponse<DeleteExternalUserGroupsById200>
-export type PutExternalUserGroupsByIdResult = AxiosResponse<PutExternalUserGroupsById200>
-export type GetExternalUserGroupRelationsByIdForExternalUserGroupsResult = AxiosResponse<GetExternalUserGroupRelationsByIdForExternalUserGroups200>
-export type GetSyncSettingsForExternalUserGroupsLdapResult = AxiosResponse<GetSyncSettingsForExternalUserGroupsLdap200>
-export type PutSyncSettingsForExternalUserGroupsLdapResult = AxiosResponse<PutSyncSettingsForExternalUserGroupsLdap204>
-export type GetSyncSettingsForExternalUserGroupsKeycloakResult = AxiosResponse<GetSyncSettingsForExternalUserGroupsKeycloak200>
-export type PutSyncSettingsForExternalUserGroupsKeycloakResult = AxiosResponse<PutSyncSettingsForExternalUserGroupsKeycloak204>
-export type PutSyncForExternalUserGroupsLdapResult = AxiosResponse<PutSyncForExternalUserGroupsLdap202>
-export type PutSyncForExternalUserGroupsKeycloakResult = AxiosResponse<PutSyncForExternalUserGroupsKeycloak202>
-export type GetSyncStatusForExternalUserGroupsLdapResult = AxiosResponse<SyncStatus>
-export type GetTemplatesResult = AxiosResponse<GetTemplates200>
-export type GetPresetTemplatesByLocaleByTemplateIdForTemplatesResult = AxiosResponse<GetPresetTemplatesByLocaleByTemplateIdForTemplates200>
-export type GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplatesResult = AxiosResponse<GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200>
-export type PostPluginsResult = AxiosResponse<PostPlugins200>
-export type PutActivateByIdForPluginsResult = AxiosResponse<PutActivateByIdForPlugins200>
-export type DeleteRemoveByIdForPluginsResult = AxiosResponse<DeleteRemoveByIdForPlugins200>
-export type GetActivityResult = AxiosResponse<ActivityResponse>
-export type GetAdminHomeResult = AxiosResponse<GetAdminHome200>
-export type GetAppSettingsResult = AxiosResponse<GetAppSettings200>
-export type PutAppSettingForAppSettingsResult = AxiosResponse<PutAppSettingForAppSettings200>
-export type PutSiteUrlSettingForAppSettingsResult = AxiosResponse<PutSiteUrlSettingForAppSettings200>
-export type PutSmtpSettingForAppSettingsResult = AxiosResponse<PutSmtpSettingForAppSettings200>
-export type PostSmtpTestForAppSettingsResult = AxiosResponse<PostSmtpTestForAppSettings200>
-export type PutSesSettingForAppSettingsResult = AxiosResponse<SesSettingResponseParams>
-export type PutFileUploadSettingsForAppSettingsResult = AxiosResponse<PutFileUploadSettingsForAppSettings200>
-export type PostV5SchemaMigrationForAppSettingsResult = AxiosResponse<PostV5SchemaMigrationForAppSettings200>
-export type PostMaintenanceModeForAppSettingsResult = AxiosResponse<PostMaintenanceModeForAppSettings200>
-export type GetListForAttachmentResult = AxiosResponse<AttachmentPaginateResult>
-export type GetLimitForAttachmentResult = AxiosResponse<GetLimitForAttachment200>
-export type PostAttachmentResult = AxiosResponse<PostAttachment200>
-export type GetAttachmentByIdResult = AxiosResponse<GetAttachmentById200>
-export type PostBookmarkFolderResult = AxiosResponse<PostBookmarkFolder200>
-export type PutBookmarkFolderResult = AxiosResponse<PutBookmarkFolder200>
-export type GetListByUserIdForBookmarkFolderResult = AxiosResponse<GetListByUserIdForBookmarkFolder200>
-export type DeleteBookmarkFolderByIdResult = AxiosResponse<DeleteBookmarkFolderById200>
-export type PostAddBookmarkToFolderForBookmarkFolderResult = AxiosResponse<PostAddBookmarkToFolderForBookmarkFolder200>
-export type PutUpdateBookmarkForBookmarkFolderResult = AxiosResponse<PutUpdateBookmarkForBookmarkFolder200>
-export type GetInfoForBookmarksResult = AxiosResponse<BookmarkInfo>
-export type GetBookmarksByUserIdResult = AxiosResponse<Bookmarks>
-export type PutBookmarksResult = AxiosResponse<PutBookmarks200>
-export type GetCustomizeSettingResult = AxiosResponse<GetCustomizeSetting200>
-export type GetLayoutForCustomizeSettingResult = AxiosResponse<CustomizeLayout>
-export type PutLayoutForCustomizeSettingResult = AxiosResponse<PutLayoutForCustomizeSetting200>
-export type GetThemeForCustomizeSettingResult = AxiosResponse<GetThemeForCustomizeSetting200>
-export type PutThemeForCustomizeSettingResult = AxiosResponse<PutThemeForCustomizeSetting200>
-export type GetSidebarForCustomizeSettingResult = AxiosResponse<CustomizeSidebar>
-export type PutSidebarForCustomizeSettingResult = AxiosResponse<PutSidebarForCustomizeSetting200>
-export type PutFunctionForCustomizeSettingResult = AxiosResponse<PutFunctionForCustomizeSetting200>
-export type PutPresentationForCustomizeSettingResult = AxiosResponse<PutPresentationForCustomizeSetting200>
-export type PutHighlightForCustomizeSettingResult = AxiosResponse<PutHighlightForCustomizeSetting200>
-export type PutCustomizeTitleForCustomizeSettingResult = AxiosResponse<PutCustomizeTitleForCustomizeSetting200>
-export type PutCustomizeNoscriptForCustomizeSettingResult = AxiosResponse<PutCustomizeNoscriptForCustomizeSetting200>
-export type PutCustomizeCssForCustomizeSettingResult = AxiosResponse<PutCustomizeCssForCustomizeSetting200>
-export type PutCustomizeScriptForCustomizeSettingResult = AxiosResponse<PutCustomizeScriptForCustomizeSetting200>
-export type PutCustomizeLogoForCustomizeSettingResult = AxiosResponse<PutCustomizeLogoForCustomizeSetting200>
-export type PutUploadBrandLogoForCustomizeSettingResult = AxiosResponse<PutUploadBrandLogoForCustomizeSetting200>
-export type DeleteDeleteBrandLogoForCustomizeSettingResult = AxiosResponse<unknown>
-export type GetStatusForExportResult = AxiosResponse<GetStatusForExport200>
-export type PostExportResult = AxiosResponse<PostExport200>
-export type DeleteExportByFileNameResult = AxiosResponse<DeleteExportByFileName200>
-export type PostForgotPasswordResult = AxiosResponse<PostForgotPassword200>
-export type PutForgotPasswordResult = AxiosResponse<PutForgotPassword200>
-export type GetFilesForG2gTransferResult = AxiosResponse<GetFilesForG2gTransfer200>
-export type PostG2gTransferResult = AxiosResponse<PostG2gTransfer200>
-export type PostAttachmentForG2gTransferResult = AxiosResponse<PostAttachmentForG2gTransfer200>
-export type GetGrowiInfoForG2gTransferResult = AxiosResponse<GetGrowiInfoForG2gTransfer200>
-export type PostGenerateKeyForG2gTransferResult = AxiosResponse<PostGenerateKeyForG2gTransfer200>
-export type PostTransferForG2gTransferResult = AxiosResponse<PostTransferForG2gTransfer200>
-export type GetHealthcheckResult = AxiosResponse<GetHealthcheck200>
-export type GetImportResult = AxiosResponse<GetImport200>
-export type PostImportResult = AxiosResponse<void>
-export type GetStatusForImportResult = AxiosResponse<GetStatusForImport200>
-export type PostUploadForImportResult = AxiosResponse<FileImportResponse>
-export type DeleteAllForImportResult = AxiosResponse<void>
-export type GetListForInAppNotificationResult = AxiosResponse<InAppNotificationListResponse>
-export type GetStatusForInAppNotificationResult = AxiosResponse<GetStatusForInAppNotification200>
-export type PostOpenForInAppNotificationResult = AxiosResponse<PostOpenForInAppNotification200>
-export type PutAllStatusesOpenForInAppNotificationResult = AxiosResponse<void>
-export type PostInstallerResult = AxiosResponse<PostInstaller200>
-export type PostInvitedResult = AxiosResponse<PostInvited200>
-export type PostLogoutResult = AxiosResponse<void>
-export type GetMarkdownSettingResult = AxiosResponse<GetMarkdownSetting200>
-export type PutLineBreakForMarkdownSettingResult = AxiosResponse<PutLineBreakForMarkdownSetting200>
-export type PutIndentForMarkdownSettingResult = AxiosResponse<PutIndentForMarkdownSetting200>
-export type PutXssForMarkdownSettingResult = AxiosResponse<XssParams>
-export type GetCollectionsForMongoResult = AxiosResponse<GetCollectionsForMongo200>
-export type GetNotificationSettingResult = AxiosResponse<GetNotificationSetting200>
-export type PostUserNotificationForNotificationSettingResult = AxiosResponse<PostUserNotificationForNotificationSetting200>
-export type DeleteUserNotificationByIdForNotificationSettingResult = AxiosResponse<UserNotification>
-export type GetGlobalNotificationByIdForNotificationSettingResult = AxiosResponse<GetGlobalNotificationByIdForNotificationSetting200>
-export type PutGlobalNotificationByIdForNotificationSettingResult = AxiosResponse<PutGlobalNotificationByIdForNotificationSetting200>
-export type DeleteGlobalNotificationByIdForNotificationSettingResult = AxiosResponse<GlobalNotification>
-export type PostGlobalNotificationForNotificationSettingResult = AxiosResponse<PostGlobalNotificationForNotificationSetting200>
-export type PutNotifyForPageGrantForNotificationSettingResult = AxiosResponse<NotifyForPageGrant>
-export type PutEnabledByIdForNotificationSettingGlobalNotificationResult = AxiosResponse<PutEnabledByIdForNotificationSettingGlobalNotification200>
-export type GetRootForPageListingResult = AxiosResponse<GetRootForPageListing200>
-export type GetAncestorsChildrenForPageListingResult = AxiosResponse<GetAncestorsChildrenForPageListing200>
-export type GetChildrenForPageListingResult = AxiosResponse<GetChildrenForPageListing200>
-export type GetInfoForPageListingResult = AxiosResponse<GetInfoForPageListing200>
-export type GetPageResult = AxiosResponse<Page>
-export type PostPageResult = AxiosResponse<PostPage201>
-export type PutPageResult = AxiosResponse<PutPage200>
-export type GetExistForPageResult = AxiosResponse<GetExistForPage200>
-export type PutLikesForPageResult = AxiosResponse<Page>
-export type GetInfoForPageResult = AxiosResponse<PageInfoAll>
-export type GetGrantDataForPageResult = AxiosResponse<GetGrantDataForPage200>
-export type GetNonUserRelatedGroupsGrantedForPageResult = AxiosResponse<GetNonUserRelatedGroupsGrantedForPage200>
-export type GetApplicableGrantForPageResult = AxiosResponse<GetApplicableGrantForPage200>
-export type PutGrantByPageIdResult = AxiosResponse<Page>
-export type GetExportByPageIdForPageResult = AxiosResponse<void>
-export type GetExistPathsForPageResult = AxiosResponse<GetExistPathsForPage200>
-export type PutSubscribeForPageResult = AxiosResponse<Page>
-export type PutContentWidthByPageIdResult = AxiosResponse<PutContentWidthByPageId200>
-export type PutPublishByPageIdForPageResult = AxiosResponse<Page>
-export type PutUnpublishByPageIdForPageResult = AxiosResponse<Page>
-export type GetYjsDataByPageIdResult = AxiosResponse<GetYjsDataByPageId200>
-export type PutSyncLatestRevisionBodyToYjsDraftByPageIdResult = AxiosResponse<PutSyncLatestRevisionBodyToYjsDraftByPageId200>
-export type GetRecentForPagesResult = AxiosResponse<void>
-export type PutRenameForPagesResult = AxiosResponse<PutRenameForPages200>
-export type PostResumeRenameForPagesResult = AxiosResponse<PostResumeRenameForPages200>
-export type DeleteEmptyTrashForPagesResult = AxiosResponse<DeleteEmptyTrashForPages200>
-export type GetListForPagesResult = AxiosResponse<GetListForPages200>
-export type PostDuplicateForPagesResult = AxiosResponse<PostDuplicateForPages200>
-export type GetSubordinatedListForPagesResult = AxiosResponse<GetSubordinatedListForPages200>
-export type PostDeleteForPagesResult = AxiosResponse<PostDeleteForPages200>
-export type PostConvertPagesByPathForPagesResult = AxiosResponse<PostConvertPagesByPathForPages200>
-export type PostLegacyPagesMigrationForPagesResult = AxiosResponse<PostLegacyPagesMigrationForPages200>
-export type GetV5MigrationStatusForPagesResult = AxiosResponse<GetV5MigrationStatusForPages200>
-export type GetPersonalSettingResult = AxiosResponse<GetPersonalSetting200>
-export type PutPersonalSettingResult = AxiosResponse<PutPersonalSetting200>
-export type GetIsPasswordSetForPersonalSettingResult = AxiosResponse<GetIsPasswordSetForPersonalSetting200>
-export type PutImageTypeForPersonalSettingResult = AxiosResponse<PutImageTypeForPersonalSetting200>
-export type GetExternalAccountsForPersonalSettingResult = AxiosResponse<GetExternalAccountsForPersonalSetting200>
-export type PutPasswordForPersonalSettingResult = AxiosResponse<PutPasswordForPersonalSetting200>
-export type PutApiTokenForPersonalSettingResult = AxiosResponse<PutApiTokenForPersonalSetting200>
-export type GetAccessTokenForPersonalSettingResult = AxiosResponse<GetAccessTokenForPersonalSetting200>
-export type PostAccessTokenForPersonalSettingResult = AxiosResponse<PostAccessTokenForPersonalSetting200>
-export type DeleteAccessTokenForPersonalSettingResult = AxiosResponse<void>
-export type DeleteAllForPersonalSettingAccessTokenResult = AxiosResponse<void>
-export type PutAssociateLdapForPersonalSettingResult = AxiosResponse<PutAssociateLdapForPersonalSetting200>
-export type PutDisassociateLdapForPersonalSettingResult = AxiosResponse<PutDisassociateLdapForPersonalSetting200>
-export type PutEditorSettingsForPersonalSettingResult = AxiosResponse<PutEditorSettingsForPersonalSetting200>
-export type GetEditorSettingsForPersonalSettingResult = AxiosResponse<GetEditorSettingsForPersonalSetting200>
-export type PutInAppNotificationSettingsForPersonalSettingResult = AxiosResponse<PutInAppNotificationSettingsForPersonalSetting200>
-export type GetInAppNotificationSettingsForPersonalSettingResult = AxiosResponse<GetInAppNotificationSettingsForPersonalSetting200>
-export type GetListForRevisionsResult = AxiosResponse<GetListForRevisions200>
-export type GetRevisionsByIdResult = AxiosResponse<GetRevisionsById200>
-export type GetIndicesForSearchResult = AxiosResponse<GetIndicesForSearch200>
-export type PutIndicesForSearchResult = AxiosResponse<PutIndicesForSearch200>
-export type PostConnectionForSearchResult = AxiosResponse<void>
-export type GetSecuritySettingResult = AxiosResponse<GetSecuritySetting200>
-export type PutEnabledForSecuritySettingAuthenticationResult = AxiosResponse<PutEnabledForSecuritySettingAuthentication200>
-export type GetAuthenticationForSecuritySettingResult = AxiosResponse<GetAuthenticationForSecuritySetting200>
-export type PutGeneralSettingForSecuritySettingResult = AxiosResponse<GeneralSetting>
-export type PutShareLinkSettingForSecuritySettingResult = AxiosResponse<PutShareLinkSettingForSecuritySetting200>
-export type GetAllShareLinksForSecuritySettingResult = AxiosResponse<GetAllShareLinksForSecuritySetting200>
-export type DeleteAllShareLinksForSecuritySettingResult = AxiosResponse<DeleteAllShareLinksForSecuritySetting200>
-export type PutLocalSettingForSecuritySettingResult = AxiosResponse<PutLocalSettingForSecuritySetting200>
-export type PutLdapForSecuritySettingResult = AxiosResponse<PutLdapForSecuritySetting200>
-export type PutSamlForSecuritySettingResult = AxiosResponse<PutSamlForSecuritySetting200>
-export type PutOidcForSecuritySettingResult = AxiosResponse<PutOidcForSecuritySetting200>
-export type PutGoogleOauthForSecuritySettingResult = AxiosResponse<PutGoogleOauthForSecuritySetting200>
-export type PutGithubOauthForSecuritySettingResult = AxiosResponse<PutGithubOauthForSecuritySetting200>
-export type GetShareLinksResult = AxiosResponse<GetShareLinks200>
-export type PostShareLinksResult = AxiosResponse<ShareLinkSimple>
-export type DeleteShareLinksResult = AxiosResponse<ShareLinkSimple>
-export type DeleteAllForShareLinksResult = AxiosResponse<DeleteAllForShareLinks200>
-export type DeleteShareLinksByIdResult = AxiosResponse<void>
-export type GetSlackIntegrationLegacySettingResult = AxiosResponse<GetSlackIntegrationLegacySetting200>
-export type PutSlackIntegrationLegacySettingResult = AxiosResponse<PutSlackIntegrationLegacySetting200>
-export type GetSlackIntegrationSettingsResult = AxiosResponse<GetSlackIntegrationSettings200>
-export type PutBotTypeForSlackIntegrationSettingsResult = AxiosResponse<void>
-export type DeleteBotTypeForSlackIntegrationResult = AxiosResponse<void>
-export type PutUpdateSettingsForSlackIntegrationSettingsWithoutProxyResult = AxiosResponse<void>
-export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyResult = AxiosResponse<void>
-export type PostSlackAppIntegrationsForSlackIntegrationSettingsResult = AxiosResponse<PostSlackAppIntegrationsForSlackIntegrationSettings200>
-export type DeleteSlackAppIntegrationsByIdForSlackIntegrationSettingsResult = AxiosResponse<DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200>
-export type PutProxyUriForSlackIntegrationSettingsResult = AxiosResponse<PutProxyUriForSlackIntegrationSettings200>
-export type PutMakeprimaryByIdForSlackIntegrationSettingsSlackAppIntegrationsResult = AxiosResponse<void>
-export type PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrationsResult = AxiosResponse<PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200>
-export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsResult = AxiosResponse<PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200>
-export type PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsResult = AxiosResponse<void>
-export type PostTestForSlackIntegrationSettingsWithoutProxyResult = AxiosResponse<void>
-export type PostCommandsForSlackIntegrationResult = AxiosResponse<string>
-export type PostVerifyForSlackIntegrationProxiedResult = AxiosResponse<PostVerifyForSlackIntegrationProxied200>
-export type PostCommandsForSlackIntegrationProxiedResult = AxiosResponse<string>
-export type PostInteractionsForSlackIntegrationResult = AxiosResponse<void>
-export type PostInteractionsForSlackIntegrationProxiedResult = AxiosResponse<void>
-export type GetSupportedCommandsForSlackIntegrationResult = AxiosResponse<GetSupportedCommandsForSlackIntegration200>
-export type PostEventsForSlackIntegrationResult = AxiosResponse<PostEventsForSlackIntegration200>
-export type PostEventsForSlackIntegrationProxiedResult = AxiosResponse<PostEventsForSlackIntegrationProxied200>
-export type GetUserForStatisticsResult = AxiosResponse<StatisticsUserResponse>
-export type PostCompleteRegistrationResult = AxiosResponse<PostCompleteRegistration200>
-export type GetUserGroupRelationsResult = AxiosResponse<GetUserGroupRelations200>
-export type GetUserGroupsResult = AxiosResponse<GetUserGroups200>
-export type PostUserGroupsResult = AxiosResponse<PostUserGroups200>
-export type GetAncestorsForUserGroupsResult = AxiosResponse<GetAncestorsForUserGroups200>
-export type GetChildrenForUserGroupsResult = AxiosResponse<GetChildrenForUserGroups200>
-export type GetSelectableParentGroupsResult = AxiosResponse<GetSelectableParentGroups200>
-export type GetSelectableChildGroupsResult = AxiosResponse<GetSelectableChildGroups200>
-export type GetUserGroupsByIdResult = AxiosResponse<GetUserGroupsById200>
-export type DeleteUserGroupsByIdResult = AxiosResponse<DeleteUserGroupsById200>
-export type PutUserGroupsByIdResult = AxiosResponse<PutUserGroupsById200>
-export type GetUsersByIdForUserGroupsResult = AxiosResponse<GetUsersByIdForUserGroups200>
-export type GetUnrelatedUsersByIdForUserGroupsResult = AxiosResponse<GetUnrelatedUsersByIdForUserGroups200>
-export type PostUsersByUsernameByIdForUserGroupsResult = AxiosResponse<PostUsersByUsernameByIdForUserGroups200>
-export type DeleteUsersByUsernameByIdForUserGroupsResult = AxiosResponse<DeleteUsersByUsernameByIdForUserGroups200>
-export type GetUserGroupRelationsByIdForUserGroupsResult = AxiosResponse<GetUserGroupRelationsByIdForUserGroups200>
-export type GetPagesByIdForUserGroupsResult = AxiosResponse<GetPagesByIdForUserGroups200>
-export type PutUserUiSettingsResult = AxiosResponse<PutUserUiSettings200>
-export type GetUsersResult = AxiosResponse<GetUsers200>
-export type GetRecentByIdForUsersResult = AxiosResponse<GetRecentByIdForUsers200>
-export type PostInviteForUsersResult = AxiosResponse<PostInviteForUsers200>
-export type PutGrantAdminByIdForUsersResult = AxiosResponse<PutGrantAdminByIdForUsers200>
-export type PutRevokeAdminByIdForUsersResult = AxiosResponse<PutRevokeAdminByIdForUsers200>
-export type PutGrantReadOnlyByIdForUsersResult = AxiosResponse<PutGrantReadOnlyByIdForUsers200>
-export type PutRevokeReadOnlyByIdForUsersResult = AxiosResponse<PutRevokeReadOnlyByIdForUsers200>
-export type PutActivateByIdForUsersResult = AxiosResponse<PutActivateByIdForUsers200>
-export type PutDeactivateByIdForUsersResult = AxiosResponse<PutDeactivateByIdForUsers200>
-export type DeleteRemoveByIdForUsersResult = AxiosResponse<DeleteRemoveByIdForUsers200>
-export type GetExternalAccountsForUsersResult = AxiosResponse<GetExternalAccountsForUsers200>
-export type DeleteRemoveByIdForUsersExternalAccountsResult = AxiosResponse<DeleteRemoveByIdForUsersExternalAccounts200>
-export type PutUpdateImageUrlCacheForUsersResult = AxiosResponse<PutUpdateImageUrlCacheForUsers200>
-export type PutResetPasswordForUsersResult = AxiosResponse<PutResetPasswordForUsers200>
-export type PutResetPasswordEmailForUsersResult = AxiosResponse<void>
-export type PutSendInvitationEmailForUsersResult = AxiosResponse<PutSendInvitationEmailForUsers200>
-export type GetListForUsersResult = AxiosResponse<GetListForUsers200>
-export type GetUsernamesForUsersResult = AxiosResponse<GetUsernamesForUsers200>
-export type PostLoginResult = AxiosResponse<PostLogin200>
-export type PostRegisterResult = AxiosResponse<PostRegister200>
+export type GetExternalUserGroupRelationsResult =
+  AxiosResponse<GetExternalUserGroupRelations200>;
+export type GetExternalUserGroupsResult =
+  AxiosResponse<GetExternalUserGroups200>;
+export type GetAncestorsForExternalUserGroupsResult =
+  AxiosResponse<GetAncestorsForExternalUserGroups200>;
+export type GetChildrenForExternalUserGroupsResult =
+  AxiosResponse<GetChildrenForExternalUserGroups200>;
+export type GetExternalUserGroupsByIdResult =
+  AxiosResponse<GetExternalUserGroupsById200>;
+export type DeleteExternalUserGroupsByIdResult =
+  AxiosResponse<DeleteExternalUserGroupsById200>;
+export type PutExternalUserGroupsByIdResult =
+  AxiosResponse<PutExternalUserGroupsById200>;
+export type GetExternalUserGroupRelationsByIdForExternalUserGroupsResult =
+  AxiosResponse<GetExternalUserGroupRelationsByIdForExternalUserGroups200>;
+export type GetSyncSettingsForExternalUserGroupsLdapResult =
+  AxiosResponse<GetSyncSettingsForExternalUserGroupsLdap200>;
+export type PutSyncSettingsForExternalUserGroupsLdapResult =
+  AxiosResponse<PutSyncSettingsForExternalUserGroupsLdap204>;
+export type GetSyncSettingsForExternalUserGroupsKeycloakResult =
+  AxiosResponse<GetSyncSettingsForExternalUserGroupsKeycloak200>;
+export type PutSyncSettingsForExternalUserGroupsKeycloakResult =
+  AxiosResponse<PutSyncSettingsForExternalUserGroupsKeycloak204>;
+export type PutSyncForExternalUserGroupsLdapResult =
+  AxiosResponse<PutSyncForExternalUserGroupsLdap202>;
+export type PutSyncForExternalUserGroupsKeycloakResult =
+  AxiosResponse<PutSyncForExternalUserGroupsKeycloak202>;
+export type GetSyncStatusForExternalUserGroupsLdapResult =
+  AxiosResponse<SyncStatus>;
+export type GetTemplatesResult = AxiosResponse<GetTemplates200>;
+export type GetPresetTemplatesByLocaleByTemplateIdForTemplatesResult =
+  AxiosResponse<GetPresetTemplatesByLocaleByTemplateIdForTemplates200>;
+export type GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplatesResult =
+  AxiosResponse<GetPluginTemplatesByLocaleByTemplateIdByReposIdByOrganizationIdForTemplates200>;
+export type PostPluginsResult = AxiosResponse<PostPlugins200>;
+export type PutActivateByIdForPluginsResult =
+  AxiosResponse<PutActivateByIdForPlugins200>;
+export type DeleteRemoveByIdForPluginsResult =
+  AxiosResponse<DeleteRemoveByIdForPlugins200>;
+export type GetActivityResult = AxiosResponse<ActivityResponse>;
+export type GetAdminHomeResult = AxiosResponse<GetAdminHome200>;
+export type GetAppSettingsResult = AxiosResponse<GetAppSettings200>;
+export type PutAppSettingForAppSettingsResult =
+  AxiosResponse<PutAppSettingForAppSettings200>;
+export type PutSiteUrlSettingForAppSettingsResult =
+  AxiosResponse<PutSiteUrlSettingForAppSettings200>;
+export type PutSmtpSettingForAppSettingsResult =
+  AxiosResponse<PutSmtpSettingForAppSettings200>;
+export type PostSmtpTestForAppSettingsResult =
+  AxiosResponse<PostSmtpTestForAppSettings200>;
+export type PutSesSettingForAppSettingsResult =
+  AxiosResponse<SesSettingResponseParams>;
+export type PutFileUploadSettingsForAppSettingsResult =
+  AxiosResponse<PutFileUploadSettingsForAppSettings200>;
+export type PostV5SchemaMigrationForAppSettingsResult =
+  AxiosResponse<PostV5SchemaMigrationForAppSettings200>;
+export type PostMaintenanceModeForAppSettingsResult =
+  AxiosResponse<PostMaintenanceModeForAppSettings200>;
+export type GetListForAttachmentResult =
+  AxiosResponse<AttachmentPaginateResult>;
+export type GetLimitForAttachmentResult =
+  AxiosResponse<GetLimitForAttachment200>;
+export type PostAttachmentResult = AxiosResponse<PostAttachment200>;
+export type GetAttachmentByIdResult = AxiosResponse<GetAttachmentById200>;
+export type PostBookmarkFolderResult = AxiosResponse<PostBookmarkFolder200>;
+export type PutBookmarkFolderResult = AxiosResponse<PutBookmarkFolder200>;
+export type GetListByUserIdForBookmarkFolderResult =
+  AxiosResponse<GetListByUserIdForBookmarkFolder200>;
+export type DeleteBookmarkFolderByIdResult =
+  AxiosResponse<DeleteBookmarkFolderById200>;
+export type PostAddBookmarkToFolderForBookmarkFolderResult =
+  AxiosResponse<PostAddBookmarkToFolderForBookmarkFolder200>;
+export type PutUpdateBookmarkForBookmarkFolderResult =
+  AxiosResponse<PutUpdateBookmarkForBookmarkFolder200>;
+export type GetInfoForBookmarksResult = AxiosResponse<BookmarkInfo>;
+export type GetBookmarksByUserIdResult = AxiosResponse<Bookmarks>;
+export type PutBookmarksResult = AxiosResponse<PutBookmarks200>;
+export type GetCustomizeSettingResult = AxiosResponse<GetCustomizeSetting200>;
+export type GetLayoutForCustomizeSettingResult = AxiosResponse<CustomizeLayout>;
+export type PutLayoutForCustomizeSettingResult =
+  AxiosResponse<PutLayoutForCustomizeSetting200>;
+export type GetThemeForCustomizeSettingResult =
+  AxiosResponse<GetThemeForCustomizeSetting200>;
+export type PutThemeForCustomizeSettingResult =
+  AxiosResponse<PutThemeForCustomizeSetting200>;
+export type GetSidebarForCustomizeSettingResult =
+  AxiosResponse<CustomizeSidebar>;
+export type PutSidebarForCustomizeSettingResult =
+  AxiosResponse<PutSidebarForCustomizeSetting200>;
+export type PutFunctionForCustomizeSettingResult =
+  AxiosResponse<PutFunctionForCustomizeSetting200>;
+export type PutPresentationForCustomizeSettingResult =
+  AxiosResponse<PutPresentationForCustomizeSetting200>;
+export type PutHighlightForCustomizeSettingResult =
+  AxiosResponse<PutHighlightForCustomizeSetting200>;
+export type PutCustomizeTitleForCustomizeSettingResult =
+  AxiosResponse<PutCustomizeTitleForCustomizeSetting200>;
+export type PutCustomizeNoscriptForCustomizeSettingResult =
+  AxiosResponse<PutCustomizeNoscriptForCustomizeSetting200>;
+export type PutCustomizeCssForCustomizeSettingResult =
+  AxiosResponse<PutCustomizeCssForCustomizeSetting200>;
+export type PutCustomizeScriptForCustomizeSettingResult =
+  AxiosResponse<PutCustomizeScriptForCustomizeSetting200>;
+export type PutCustomizeLogoForCustomizeSettingResult =
+  AxiosResponse<PutCustomizeLogoForCustomizeSetting200>;
+export type PutUploadBrandLogoForCustomizeSettingResult =
+  AxiosResponse<PutUploadBrandLogoForCustomizeSetting200>;
+export type DeleteDeleteBrandLogoForCustomizeSettingResult =
+  AxiosResponse<unknown>;
+export type GetStatusForExportResult = AxiosResponse<GetStatusForExport200>;
+export type PostExportResult = AxiosResponse<PostExport200>;
+export type DeleteExportByFileNameResult =
+  AxiosResponse<DeleteExportByFileName200>;
+export type PostForgotPasswordResult = AxiosResponse<PostForgotPassword200>;
+export type PutForgotPasswordResult = AxiosResponse<PutForgotPassword200>;
+export type GetFilesForG2gTransferResult =
+  AxiosResponse<GetFilesForG2gTransfer200>;
+export type PostG2gTransferResult = AxiosResponse<PostG2gTransfer200>;
+export type PostAttachmentForG2gTransferResult =
+  AxiosResponse<PostAttachmentForG2gTransfer200>;
+export type GetGrowiInfoForG2gTransferResult =
+  AxiosResponse<GetGrowiInfoForG2gTransfer200>;
+export type PostGenerateKeyForG2gTransferResult =
+  AxiosResponse<PostGenerateKeyForG2gTransfer200>;
+export type PostTransferForG2gTransferResult =
+  AxiosResponse<PostTransferForG2gTransfer200>;
+export type GetHealthcheckResult = AxiosResponse<GetHealthcheck200>;
+export type GetImportResult = AxiosResponse<GetImport200>;
+export type PostImportResult = AxiosResponse<void>;
+export type GetStatusForImportResult = AxiosResponse<GetStatusForImport200>;
+export type PostUploadForImportResult = AxiosResponse<FileImportResponse>;
+export type DeleteAllForImportResult = AxiosResponse<void>;
+export type GetListForInAppNotificationResult =
+  AxiosResponse<InAppNotificationListResponse>;
+export type GetStatusForInAppNotificationResult =
+  AxiosResponse<GetStatusForInAppNotification200>;
+export type PostOpenForInAppNotificationResult =
+  AxiosResponse<PostOpenForInAppNotification200>;
+export type PutAllStatusesOpenForInAppNotificationResult = AxiosResponse<void>;
+export type PostInstallerResult = AxiosResponse<PostInstaller200>;
+export type PostInvitedResult = AxiosResponse<PostInvited200>;
+export type PostLogoutResult = AxiosResponse<void>;
+export type GetMarkdownSettingResult = AxiosResponse<GetMarkdownSetting200>;
+export type PutLineBreakForMarkdownSettingResult =
+  AxiosResponse<PutLineBreakForMarkdownSetting200>;
+export type PutIndentForMarkdownSettingResult =
+  AxiosResponse<PutIndentForMarkdownSetting200>;
+export type PutXssForMarkdownSettingResult = AxiosResponse<XssParams>;
+export type GetCollectionsForMongoResult =
+  AxiosResponse<GetCollectionsForMongo200>;
+export type GetNotificationSettingResult =
+  AxiosResponse<GetNotificationSetting200>;
+export type PostUserNotificationForNotificationSettingResult =
+  AxiosResponse<PostUserNotificationForNotificationSetting200>;
+export type DeleteUserNotificationByIdForNotificationSettingResult =
+  AxiosResponse<UserNotification>;
+export type GetGlobalNotificationByIdForNotificationSettingResult =
+  AxiosResponse<GetGlobalNotificationByIdForNotificationSetting200>;
+export type PutGlobalNotificationByIdForNotificationSettingResult =
+  AxiosResponse<PutGlobalNotificationByIdForNotificationSetting200>;
+export type DeleteGlobalNotificationByIdForNotificationSettingResult =
+  AxiosResponse<GlobalNotification>;
+export type PostGlobalNotificationForNotificationSettingResult =
+  AxiosResponse<PostGlobalNotificationForNotificationSetting200>;
+export type PutNotifyForPageGrantForNotificationSettingResult =
+  AxiosResponse<NotifyForPageGrant>;
+export type PutEnabledByIdForNotificationSettingGlobalNotificationResult =
+  AxiosResponse<PutEnabledByIdForNotificationSettingGlobalNotification200>;
+export type GetRootForPageListingResult =
+  AxiosResponse<GetRootForPageListing200>;
+export type GetAncestorsChildrenForPageListingResult =
+  AxiosResponse<GetAncestorsChildrenForPageListing200>;
+export type GetChildrenForPageListingResult =
+  AxiosResponse<GetChildrenForPageListing200>;
+export type GetInfoForPageListingResult =
+  AxiosResponse<GetInfoForPageListing200>;
+export type GetPageResult = AxiosResponse<Page>;
+export type PostPageResult = AxiosResponse<PostPage201>;
+export type PutPageResult = AxiosResponse<PutPage200>;
+export type GetExistForPageResult = AxiosResponse<GetExistForPage200>;
+export type PutLikesForPageResult = AxiosResponse<Page>;
+export type GetInfoForPageResult = AxiosResponse<PageInfoAll>;
+export type GetGrantDataForPageResult = AxiosResponse<GetGrantDataForPage200>;
+export type GetNonUserRelatedGroupsGrantedForPageResult =
+  AxiosResponse<GetNonUserRelatedGroupsGrantedForPage200>;
+export type GetApplicableGrantForPageResult =
+  AxiosResponse<GetApplicableGrantForPage200>;
+export type PutGrantByPageIdResult = AxiosResponse<Page>;
+export type GetExportByPageIdForPageResult = AxiosResponse<void>;
+export type GetExistPathsForPageResult = AxiosResponse<GetExistPathsForPage200>;
+export type PutSubscribeForPageResult = AxiosResponse<Page>;
+export type PutContentWidthByPageIdResult =
+  AxiosResponse<PutContentWidthByPageId200>;
+export type PutPublishByPageIdForPageResult = AxiosResponse<Page>;
+export type PutUnpublishByPageIdForPageResult = AxiosResponse<Page>;
+export type GetYjsDataByPageIdResult = AxiosResponse<GetYjsDataByPageId200>;
+export type PutSyncLatestRevisionBodyToYjsDraftByPageIdResult =
+  AxiosResponse<PutSyncLatestRevisionBodyToYjsDraftByPageId200>;
+export type GetRecentForPagesResult = AxiosResponse<void>;
+export type PutRenameForPagesResult = AxiosResponse<PutRenameForPages200>;
+export type PostResumeRenameForPagesResult =
+  AxiosResponse<PostResumeRenameForPages200>;
+export type DeleteEmptyTrashForPagesResult =
+  AxiosResponse<DeleteEmptyTrashForPages200>;
+export type GetListForPagesResult = AxiosResponse<GetListForPages200>;
+export type PostDuplicateForPagesResult =
+  AxiosResponse<PostDuplicateForPages200>;
+export type GetSubordinatedListForPagesResult =
+  AxiosResponse<GetSubordinatedListForPages200>;
+export type PostDeleteForPagesResult = AxiosResponse<PostDeleteForPages200>;
+export type PostConvertPagesByPathForPagesResult =
+  AxiosResponse<PostConvertPagesByPathForPages200>;
+export type PostLegacyPagesMigrationForPagesResult =
+  AxiosResponse<PostLegacyPagesMigrationForPages200>;
+export type GetV5MigrationStatusForPagesResult =
+  AxiosResponse<GetV5MigrationStatusForPages200>;
+export type GetPersonalSettingResult = AxiosResponse<GetPersonalSetting200>;
+export type PutPersonalSettingResult = AxiosResponse<PutPersonalSetting200>;
+export type GetIsPasswordSetForPersonalSettingResult =
+  AxiosResponse<GetIsPasswordSetForPersonalSetting200>;
+export type PutImageTypeForPersonalSettingResult =
+  AxiosResponse<PutImageTypeForPersonalSetting200>;
+export type GetExternalAccountsForPersonalSettingResult =
+  AxiosResponse<GetExternalAccountsForPersonalSetting200>;
+export type PutPasswordForPersonalSettingResult =
+  AxiosResponse<PutPasswordForPersonalSetting200>;
+export type PutApiTokenForPersonalSettingResult =
+  AxiosResponse<PutApiTokenForPersonalSetting200>;
+export type GetAccessTokenForPersonalSettingResult =
+  AxiosResponse<GetAccessTokenForPersonalSetting200>;
+export type PostAccessTokenForPersonalSettingResult =
+  AxiosResponse<PostAccessTokenForPersonalSetting200>;
+export type DeleteAccessTokenForPersonalSettingResult = AxiosResponse<void>;
+export type DeleteAllForPersonalSettingAccessTokenResult = AxiosResponse<void>;
+export type PutAssociateLdapForPersonalSettingResult =
+  AxiosResponse<PutAssociateLdapForPersonalSetting200>;
+export type PutDisassociateLdapForPersonalSettingResult =
+  AxiosResponse<PutDisassociateLdapForPersonalSetting200>;
+export type PutEditorSettingsForPersonalSettingResult =
+  AxiosResponse<PutEditorSettingsForPersonalSetting200>;
+export type GetEditorSettingsForPersonalSettingResult =
+  AxiosResponse<GetEditorSettingsForPersonalSetting200>;
+export type PutInAppNotificationSettingsForPersonalSettingResult =
+  AxiosResponse<PutInAppNotificationSettingsForPersonalSetting200>;
+export type GetInAppNotificationSettingsForPersonalSettingResult =
+  AxiosResponse<GetInAppNotificationSettingsForPersonalSetting200>;
+export type GetListForRevisionsResult = AxiosResponse<GetListForRevisions200>;
+export type GetRevisionsByIdResult = AxiosResponse<GetRevisionsById200>;
+export type GetIndicesForSearchResult = AxiosResponse<GetIndicesForSearch200>;
+export type PutIndicesForSearchResult = AxiosResponse<PutIndicesForSearch200>;
+export type PostConnectionForSearchResult = AxiosResponse<void>;
+export type GetSecuritySettingResult = AxiosResponse<GetSecuritySetting200>;
+export type PutEnabledForSecuritySettingAuthenticationResult =
+  AxiosResponse<PutEnabledForSecuritySettingAuthentication200>;
+export type GetAuthenticationForSecuritySettingResult =
+  AxiosResponse<GetAuthenticationForSecuritySetting200>;
+export type PutGeneralSettingForSecuritySettingResult =
+  AxiosResponse<GeneralSetting>;
+export type PutShareLinkSettingForSecuritySettingResult =
+  AxiosResponse<PutShareLinkSettingForSecuritySetting200>;
+export type GetAllShareLinksForSecuritySettingResult =
+  AxiosResponse<GetAllShareLinksForSecuritySetting200>;
+export type DeleteAllShareLinksForSecuritySettingResult =
+  AxiosResponse<DeleteAllShareLinksForSecuritySetting200>;
+export type PutLocalSettingForSecuritySettingResult =
+  AxiosResponse<PutLocalSettingForSecuritySetting200>;
+export type PutLdapForSecuritySettingResult =
+  AxiosResponse<PutLdapForSecuritySetting200>;
+export type PutSamlForSecuritySettingResult =
+  AxiosResponse<PutSamlForSecuritySetting200>;
+export type PutOidcForSecuritySettingResult =
+  AxiosResponse<PutOidcForSecuritySetting200>;
+export type PutGoogleOauthForSecuritySettingResult =
+  AxiosResponse<PutGoogleOauthForSecuritySetting200>;
+export type PutGithubOauthForSecuritySettingResult =
+  AxiosResponse<PutGithubOauthForSecuritySetting200>;
+export type GetShareLinksResult = AxiosResponse<GetShareLinks200>;
+export type PostShareLinksResult = AxiosResponse<ShareLinkSimple>;
+export type DeleteShareLinksResult = AxiosResponse<ShareLinkSimple>;
+export type DeleteAllForShareLinksResult =
+  AxiosResponse<DeleteAllForShareLinks200>;
+export type DeleteShareLinksByIdResult = AxiosResponse<void>;
+export type GetSlackIntegrationLegacySettingResult =
+  AxiosResponse<GetSlackIntegrationLegacySetting200>;
+export type PutSlackIntegrationLegacySettingResult =
+  AxiosResponse<PutSlackIntegrationLegacySetting200>;
+export type GetSlackIntegrationSettingsResult =
+  AxiosResponse<GetSlackIntegrationSettings200>;
+export type PutBotTypeForSlackIntegrationSettingsResult = AxiosResponse<void>;
+export type DeleteBotTypeForSlackIntegrationResult = AxiosResponse<void>;
+export type PutUpdateSettingsForSlackIntegrationSettingsWithoutProxyResult =
+  AxiosResponse<void>;
+export type PutUpdatePermissionsForSlackIntegrationSettingsWithoutProxyResult =
+  AxiosResponse<void>;
+export type PostSlackAppIntegrationsForSlackIntegrationSettingsResult =
+  AxiosResponse<PostSlackAppIntegrationsForSlackIntegrationSettings200>;
+export type DeleteSlackAppIntegrationsByIdForSlackIntegrationSettingsResult =
+  AxiosResponse<DeleteSlackAppIntegrationsByIdForSlackIntegrationSettings200>;
+export type PutProxyUriForSlackIntegrationSettingsResult =
+  AxiosResponse<PutProxyUriForSlackIntegrationSettings200>;
+export type PutMakeprimaryByIdForSlackIntegrationSettingsSlackAppIntegrationsResult =
+  AxiosResponse<void>;
+export type PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrationsResult =
+  AxiosResponse<PutRegenerateTokensByIdForSlackIntegrationSettingsSlackAppIntegrations200>;
+export type PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrationsResult =
+  AxiosResponse<PutPermissionsByIdForSlackIntegrationSettingsSlackAppIntegrations200>;
+export type PostRelationTestByIdForSlackIntegrationSettingsSlackAppIntegrationsResult =
+  AxiosResponse<void>;
+export type PostTestForSlackIntegrationSettingsWithoutProxyResult =
+  AxiosResponse<void>;
+export type PostCommandsForSlackIntegrationResult = AxiosResponse<string>;
+export type PostVerifyForSlackIntegrationProxiedResult =
+  AxiosResponse<PostVerifyForSlackIntegrationProxied200>;
+export type PostCommandsForSlackIntegrationProxiedResult =
+  AxiosResponse<string>;
+export type PostInteractionsForSlackIntegrationResult = AxiosResponse<void>;
+export type PostInteractionsForSlackIntegrationProxiedResult =
+  AxiosResponse<void>;
+export type GetSupportedCommandsForSlackIntegrationResult =
+  AxiosResponse<GetSupportedCommandsForSlackIntegration200>;
+export type PostEventsForSlackIntegrationResult =
+  AxiosResponse<PostEventsForSlackIntegration200>;
+export type PostEventsForSlackIntegrationProxiedResult =
+  AxiosResponse<PostEventsForSlackIntegrationProxied200>;
+export type GetUserForStatisticsResult = AxiosResponse<StatisticsUserResponse>;
+export type PostCompleteRegistrationResult =
+  AxiosResponse<PostCompleteRegistration200>;
+export type GetUserGroupRelationsResult =
+  AxiosResponse<GetUserGroupRelations200>;
+export type GetUserGroupsResult = AxiosResponse<GetUserGroups200>;
+export type PostUserGroupsResult = AxiosResponse<PostUserGroups200>;
+export type GetAncestorsForUserGroupsResult =
+  AxiosResponse<GetAncestorsForUserGroups200>;
+export type GetChildrenForUserGroupsResult =
+  AxiosResponse<GetChildrenForUserGroups200>;
+export type GetSelectableParentGroupsResult =
+  AxiosResponse<GetSelectableParentGroups200>;
+export type GetSelectableChildGroupsResult =
+  AxiosResponse<GetSelectableChildGroups200>;
+export type GetUserGroupsByIdResult = AxiosResponse<GetUserGroupsById200>;
+export type DeleteUserGroupsByIdResult = AxiosResponse<DeleteUserGroupsById200>;
+export type PutUserGroupsByIdResult = AxiosResponse<PutUserGroupsById200>;
+export type GetUsersByIdForUserGroupsResult =
+  AxiosResponse<GetUsersByIdForUserGroups200>;
+export type GetUnrelatedUsersByIdForUserGroupsResult =
+  AxiosResponse<GetUnrelatedUsersByIdForUserGroups200>;
+export type PostUsersByUsernameByIdForUserGroupsResult =
+  AxiosResponse<PostUsersByUsernameByIdForUserGroups200>;
+export type DeleteUsersByUsernameByIdForUserGroupsResult =
+  AxiosResponse<DeleteUsersByUsernameByIdForUserGroups200>;
+export type GetUserGroupRelationsByIdForUserGroupsResult =
+  AxiosResponse<GetUserGroupRelationsByIdForUserGroups200>;
+export type GetPagesByIdForUserGroupsResult =
+  AxiosResponse<GetPagesByIdForUserGroups200>;
+export type PutUserUiSettingsResult = AxiosResponse<PutUserUiSettings200>;
+export type GetUsersResult = AxiosResponse<GetUsers200>;
+export type GetRecentByIdForUsersResult =
+  AxiosResponse<GetRecentByIdForUsers200>;
+export type PostInviteForUsersResult = AxiosResponse<PostInviteForUsers200>;
+export type PutGrantAdminByIdForUsersResult =
+  AxiosResponse<PutGrantAdminByIdForUsers200>;
+export type PutRevokeAdminByIdForUsersResult =
+  AxiosResponse<PutRevokeAdminByIdForUsers200>;
+export type PutGrantReadOnlyByIdForUsersResult =
+  AxiosResponse<PutGrantReadOnlyByIdForUsers200>;
+export type PutRevokeReadOnlyByIdForUsersResult =
+  AxiosResponse<PutRevokeReadOnlyByIdForUsers200>;
+export type PutActivateByIdForUsersResult =
+  AxiosResponse<PutActivateByIdForUsers200>;
+export type PutDeactivateByIdForUsersResult =
+  AxiosResponse<PutDeactivateByIdForUsers200>;
+export type DeleteRemoveByIdForUsersResult =
+  AxiosResponse<DeleteRemoveByIdForUsers200>;
+export type GetExternalAccountsForUsersResult =
+  AxiosResponse<GetExternalAccountsForUsers200>;
+export type DeleteRemoveByIdForUsersExternalAccountsResult =
+  AxiosResponse<DeleteRemoveByIdForUsersExternalAccounts200>;
+export type PutUpdateImageUrlCacheForUsersResult =
+  AxiosResponse<PutUpdateImageUrlCacheForUsers200>;
+export type PutResetPasswordForUsersResult =
+  AxiosResponse<PutResetPasswordForUsers200>;
+export type PutResetPasswordEmailForUsersResult = AxiosResponse<void>;
+export type PutSendInvitationEmailForUsersResult =
+  AxiosResponse<PutSendInvitationEmailForUsers200>;
+export type GetListForUsersResult = AxiosResponse<GetListForUsers200>;
+export type GetUsernamesForUsersResult = AxiosResponse<GetUsernamesForUsers200>;
+export type PostLoginResult = AxiosResponse<PostLogin200>;
+export type PostRegisterResult = AxiosResponse<PostRegister200>;
