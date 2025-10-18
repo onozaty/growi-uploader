@@ -4,7 +4,11 @@ import { Command } from "commander";
 import { resolve } from "node:path";
 import { loadConfig } from "./config";
 import { scanMarkdownFiles } from "./scanner";
-import { createPage, uploadAttachment } from "./uploader";
+import {
+  configureAxios,
+  createPage,
+  uploadAttachment,
+} from "./uploader";
 import packageJson from "../package.json";
 
 const program = new Command();
@@ -21,6 +25,9 @@ program
       const config = loadConfig(options.config);
       const sourceDirPath = resolve(sourceDir);
 
+      // Configure axios once
+      configureAxios(config.url, config.token);
+
       // Scan Markdown files
       const files = await scanMarkdownFiles(sourceDirPath, config.basePath);
 
@@ -34,7 +41,7 @@ program
 
       // Upload pages and their attachments
       for (const file of files) {
-        const pageId = await createPage(file, config.url, config.token);
+        const pageId = await createPage(file);
 
         // Upload attachments for this page
         if (pageId && file.attachments.length > 0) {

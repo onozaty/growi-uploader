@@ -4,14 +4,14 @@ import { join } from "node:path";
 import { postPage, postAttachment, type PostPageBody } from "./growi";
 import type { MarkdownFile, AttachmentFile } from "./scanner";
 
-export const createPage = async (
-  file: MarkdownFile,
-  growiUrl: string,
-  token: string,
-): Promise<string | undefined> => {
-  // Configure axios with base URL and auth header
+export const configureAxios = (growiUrl: string, token: string): void => {
   axios.defaults.baseURL = `${growiUrl}/_api/v3`;
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+};
+
+export const createPage = async (
+  file: MarkdownFile,
+): Promise<string | undefined> => {
 
   const requestBody: PostPageBody = {
     path: file.growiPath,
