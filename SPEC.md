@@ -136,9 +136,12 @@ AAA/CCC/DDD_attachment_diagram.svg      →  /AAA/CCC/DDD に添付
 4. `POST /_api/v3/attachment` で添付ファイルをアップロード
 5. multipart/form-data でバイナリデータを送信
 
-#### 3.3.3 エラーハンドリング
-- ページが存在しない場合: エラーログ、スキップ
-- アップロード失敗: エラーログ、スキップ
+#### 3.3.3 エラーハンドリングと処理ルール
+- **ページが作成または更新された場合**: 添付ファイルをアップロード
+  - アップロード失敗: エラーログ、処理は継続
+- **ページがスキップまたはエラーの場合**: 添付ファイルもスキップ
+  - スキップログを出力
+  - 重複チェックは行わず、GROWIのAPI側の処理に任せる
 
 ## 4. コマンドラインインターフェース
 
@@ -189,9 +192,7 @@ growi-uploader <source-dir> [options]
 
 #### 5.1.2 更新判定
 - `update: true` の場合:
-  - 既存ページの内容と新しい内容を比較
-  - 差分がある場合のみ更新 (不要な更新を避ける)
-  - リビジョンIDを含めてPUT APIを呼び出し
+  - リビジョンIDを含めてPUT APIを呼び出し、ページを更新
 - `update: false` の場合:
   - 既存ページをスキップし、ログを出力
 
@@ -231,11 +232,14 @@ growi-uploader <source-dir> [options]
 
 **出力例:**
 ```
-[SUCCESS] docs/guide.md → /docs/guide
-[SUCCESS] docs/api/overview.md → /docs/api/overview
+[SUCCESS] docs/guide.md → /docs/guide (created)
+[SUCCESS] docs/api/overview.md → /docs/api/overview (updated)
 [SKIP] docs/api/auth.md → /docs/api/auth (page already exists)
+[SKIP] docs/api/auth_attachment_flow.svg → /docs/api/auth (attachment skipped)
 [ERROR] docs/bad.md → /docs/bad (403 Forbidden)
+[SKIP] docs/bad_attachment_file.txt → /docs/bad (attachment skipped)
 [SUCCESS] docs/api/overview_attachment_diagram.png → /docs/api/overview (attachment)
+[ERROR] docs/api/overview_attachment_large.png → /docs/api/overview (413 File too large)
 ```
 
 #### 5.3.2 処理サマリー
@@ -244,9 +248,11 @@ growi-uploader <source-dir> [options]
 Completed:
 - Pages created: 50
 - Pages updated: 10
+- Pages skipped: 3
+- Page errors: 1
 - Attachments uploaded: 25
-- Skipped: 3
-- Errors: 2
+- Attachments skipped: 5
+- Attachment errors: 2
 ```
 
 ## 6. ファイル命名規則とマッピング

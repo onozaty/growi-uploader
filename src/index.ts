@@ -6,7 +6,7 @@ import { loadConfig } from "./config";
 import { scanMarkdownFiles } from "./scanner";
 import {
   configureAxios,
-  createPage,
+  createOrUpdatePage,
   uploadAttachment,
 } from "./uploader";
 import packageJson from "../package.json";
@@ -39,24 +39,70 @@ program
         `Found ${files.length} Markdown file(s) and ${totalAttachments} attachment(s)\n`,
       );
 
+      // Statistics
+      let pagesCreated = 0;
+      let pagesUpdated = 0;
+      let pagesSkipped = 0;
+      let pageErrors = 0;
+      let attachmentsUploaded = 0;
+      let attachmentsSkipped = 0;
+      let attachmentErrors = 0;
+
       // Upload pages and their attachments
       for (const file of files) {
-        const pageId = await createPage(file);
+        const result = await createOrUpdatePage(file, config);
 
-        // Upload attachments for this page
-        if (pageId && file.attachments.length > 0) {
+        // Track statistics
+        if (result.action === "created") {
+          pagesCreated++;
+        } else if (result.action === "updated") {
+          pagesUpdated++;
+        } else if (result.action === "skipped") {
+          pagesSkipped++;
+        } else if (result.action === "error") {
+          pageErrors++;
+        }
+
+        // Upload attachments for this page (only if page was created or updated)
+        if (
+          result.pageId &&
+          (result.action === "created" || result.action === "updated") &&
+          file.attachments.length > 0
+        ) {
+          // Page was created or updated: upload attachments
           for (const attachment of file.attachments) {
-            await uploadAttachment(
+            const attachmentResult = await uploadAttachment(
               attachment,
-              pageId,
+              result.pageId,
               file.growiPath,
               sourceDirPath,
             );
+            if (attachmentResult.success) {
+              attachmentsUploaded++;
+            } else {
+              attachmentErrors++;
+            }
+          }
+        } else if (file.attachments.length > 0) {
+          // Page was skipped or error: skip attachments too
+          for (const attachment of file.attachments) {
+            console.log(
+              `[SKIP] ${attachment.localPath} → ${file.growiPath} (attachment skipped)`,
+            );
+            attachmentsSkipped++;
           }
         }
       }
 
-      console.log("\nCompleted");
+      // Display summary
+      console.log("\nCompleted:");
+      console.log(`- Pages created: ${pagesCreated}`);
+      console.log(`- Pages updated: ${pagesUpdated}`);
+      console.log(`- Pages skipped: ${pagesSkipped}`);
+      console.log(`- Page errors: ${pageErrors}`);
+      console.log(`- Attachments uploaded: ${attachmentsUploaded}`);
+      console.log(`- Attachments skipped: ${attachmentsSkipped}`);
+      console.log(`- Attachment errors: ${attachmentErrors}`);
     } catch (error) {
       console.error("Error:", error instanceof Error ? error.message : error);
       process.exit(1);
