@@ -6,6 +6,9 @@
   "bin": {
     "growi-uploader": "./dist/index.mjs"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsdown",
     "dev": "tsx src/index.ts",
