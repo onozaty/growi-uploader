@@ -22,45 +22,49 @@ export const scanMarkdownFiles = async (
   const mdFiles = await glob("**/*.md", {
     cwd: sourceDir,
     absolute: false,
+    // Sort files to ensure consistent processing order
   });
 
-  // Find all potential attachment files (*_attachment_*)
-  const allFiles = await glob("**/*_attachment_*", {
-    cwd: sourceDir,
-    absolute: false,
-  });
+  // Sort to process in alphabetical order (ensures parent pages before child pages)
+  mdFiles.sort();
 
-  return mdFiles.map((file) => {
-    const fullPath = join(sourceDir, file);
-    const content = readFileSync(fullPath, "utf-8");
+  const results = await Promise.all(
+    mdFiles.map(async (file) => {
+      const fullPath = join(sourceDir, file);
+      const content = readFileSync(fullPath, "utf-8");
 
-    // Convert file path to GROWI page path
-    // Example: docs/guide.md → /docs/guide
-    const pathWithoutExt = file.replace(/\.md$/, "");
-    const growiPath = join(basePath, pathWithoutExt).replace(/\\/g, "/");
+      // Convert file path to GROWI page path
+      // Example: docs/guide.md → /docs/guide
+      const pathWithoutExt = file.replace(/\.md$/, "");
+      const growiPath = join(basePath, pathWithoutExt).replace(/\\/g, "/");
 
-    // Find attachments for this markdown file
-    // Pattern: <page-name>_attachment_<filename>
-    const dir = dirname(file);
-    const pageName = basename(file, ".md");
-    const attachmentPrefix = `${pageName}_attachment_`;
+      // Find attachments for this markdown file
+      // Pattern: <page-name>_attachment_<filename>
+      const dir = dirname(file);
+      const pageName = basename(file, ".md");
+      const attachmentPattern =
+        dir === "."
+          ? `${pageName}_attachment_*`
+          : `${dir}/${pageName}_attachment_*`;
 
-    const attachments = allFiles
-      .filter((attachFile) => {
-        const attachDir = dirname(attachFile);
-        const attachBase = basename(attachFile);
-        return attachDir === dir && attachBase.startsWith(attachmentPrefix);
-      })
-      .map((attachFile) => ({
+      const attachmentFiles = await glob(attachmentPattern, {
+        cwd: sourceDir,
+        absolute: false,
+      });
+
+      const attachments = attachmentFiles.map((attachFile) => ({
         localPath: attachFile,
-        fileName: basename(attachFile).replace(attachmentPrefix, ""),
+        fileName: basename(attachFile).replace(`${pageName}_attachment_`, ""),
       }));
 
-    return {
-      localPath: file,
-      growiPath: growiPath.startsWith("/") ? growiPath : `/${growiPath}`,
-      content,
-      attachments,
-    };
-  });
+      return {
+        localPath: file,
+        growiPath: growiPath.startsWith("/") ? growiPath : `/${growiPath}`,
+        content,
+        attachments,
+      };
+    }),
+  );
+
+  return results;
 };
