@@ -5,13 +5,14 @@ import { resolve } from "node:path";
 import { loadConfig } from "./config";
 import { scanMarkdownFiles } from "./scanner";
 import { createPage, uploadAttachment } from "./uploader";
+import packageJson from "../package.json";
 
 const program = new Command();
 
 program
   .name("growi-uploader")
   .description("A content uploader for GROWI")
-  .version("1.0.0")
+  .version(packageJson.version)
   .argument("<source-dir>", "Source directory containing Markdown files")
   .option("-c, --config <path>", "Path to config file", "growi-uploader.json")
   .action(async (sourceDir: string, options: { config: string }) => {
