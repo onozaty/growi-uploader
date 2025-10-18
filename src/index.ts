@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
+import { basename } from "node:path";
 import { resolve } from "node:path";
 import { loadConfig } from "./config";
 import { scanMarkdownFiles } from "./scanner";
 import {
   configureAxios,
   createOrUpdatePage,
+  replaceAttachmentLinks,
+  updatePageContent,
   uploadAttachment,
 } from "./uploader";
 import packageJson from "../package.json";
@@ -48,8 +51,9 @@ program
       let attachmentsSkipped = 0;
       let attachmentErrors = 0;
 
-      // Upload pages and their attachments
+      // Upload pages and their attachments with 2-stage update flow
       for (const file of files) {
+        // Stage 1: Create or update page with original Markdown
         const result = await createOrUpdatePage(file, config);
 
         // Track statistics
@@ -63,13 +67,16 @@ program
           pageErrors++;
         }
 
-        // Upload attachments for this page (only if page was created or updated)
+        // Stage 2: Upload attachments and replace links (only if page was created or updated)
         if (
           result.pageId &&
           (result.action === "created" || result.action === "updated") &&
           file.attachments.length > 0
         ) {
-          // Page was created or updated: upload attachments
+          // Upload attachments and collect attachment IDs
+          let hasAttachments = false;
+          let latestRevisionId = result.revisionId;
+
           for (const attachment of file.attachments) {
             const attachmentResult = await uploadAttachment(
               attachment,
@@ -77,10 +84,43 @@ program
               file.growiPath,
               sourceDirPath,
             );
+
             if (attachmentResult.success) {
               attachmentsUploaded++;
+              // Store attachment ID for link replacement
+              if (attachmentResult.attachmentId) {
+                attachment.attachmentId = attachmentResult.attachmentId;
+                hasAttachments = true;
+              }
+              // Track the latest revision ID from attachment uploads
+              if (attachmentResult.revisionId) {
+                latestRevisionId = attachmentResult.revisionId;
+              }
             } else {
               attachmentErrors++;
+            }
+          }
+
+          // Stage 3: Replace attachment links in Markdown and update page
+          if (hasAttachments && latestRevisionId) {
+            const pageName = basename(file.localPath, ".md");
+            const { content: replacedContent, replaced } =
+              replaceAttachmentLinks(file.content, file.attachments, pageName);
+
+            // Stage 4: Re-update page only if links were replaced
+            if (replaced) {
+              const updated = await updatePageContent(
+                result.pageId,
+                latestRevisionId,
+                replacedContent,
+                file.growiPath,
+              );
+
+              if (updated) {
+                console.log(
+                  `[SUCCESS] ${file.localPath} → ${file.growiPath} (attachment links replaced)`,
+                );
+              }
             }
           }
         } else if (file.attachments.length > 0) {

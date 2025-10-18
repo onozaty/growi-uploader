@@ -2,6 +2,10 @@
 
 Overview of GROWI REST API endpoints used by the uploader.
 
+## Example Data
+
+See the example JSON file: [example.json](./endpoints_attachment_example.json)
+
 ## Page Creation
 
 ```

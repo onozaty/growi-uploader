@@ -28,10 +28,7 @@
      ```json
      {
        "body": "string (required) - Markdownコンテンツ",
-       "path": "string (required) - ページパス (例: /AAA/BBB)",
-       "grant": "number (optional) - アクセス権限",
-       "grantUserGroupIds": "array (optional) - ユーザーグループID",
-       "pageTags": "array (optional) - ページタグ"
+       "path": "string (required) - ページパス (例: /AAA/BBB)"
      }
      ```
    - レスポンス:
@@ -44,8 +41,7 @@
      {
        "body": "string (required) - Markdownコンテンツ",
        "pageId": "string (required) - ページID",
-       "revisionId": "string (required) - リビジョンID",
-       "grant": "number (optional) - アクセス権限"
+       "revisionId": "string (required) - リビジョンID"
      }
      ```
 
@@ -142,6 +138,91 @@ AAA/CCC/DDD_attachment_diagram.svg      →  /AAA/CCC/DDD に添付
 - **ページがスキップまたはエラーの場合**: 添付ファイルもスキップ
   - スキップログを出力
   - 重複チェックは行わず、GROWIのAPI側の処理に任せる
+
+### 3.4 添付ファイルリンクの自動置換
+
+#### 3.4.1 機能概要
+Markdown内の添付ファイルへのリンクを自動的にGROWI形式に置換します。
+これにより、ローカルでプレビューできるMarkdownがGROWI上でも正しく表示されます。
+
+#### 3.4.2 対応するリンク形式
+
+以下のパターンすべてに対応:
+
+**パターン1: ファイル名のみ**
+```markdown
+![画像](guide_attachment_image.png)
+[ファイル](guide_attachment_document.pdf)
+```
+
+**パターン2: 相対パス（./付き）**
+```markdown
+![画像](./guide_attachment_image.png)
+[ファイル](./guide_attachment_document.pdf)
+```
+
+いずれも同じページに添付された `<ページ名>_attachment_<ファイル名>` パターンのファイルへのリンクが対象です。
+
+#### 3.4.3 置換後の形式
+
+GROWI上では `/attachment/{attachment_id}` 形式に変換されます:
+
+```markdown
+![画像](/attachment/68f3a41c794f665ad2c0d322)
+[ファイル](/attachment/68f3a3fa794f665ad2c0d2b3)
+```
+
+#### 3.4.4 処理フロー
+
+1. **ページを作成/更新**（オリジナルのMarkdown）
+   - ページIDとリビジョンIDを取得
+2. **添付ファイルをアップロード**（ページIDを使用）
+   - 各添付ファイルのAttachment IDを取得
+3. **Markdown内のリンクを検索・置換**
+   - `<ページ名>_attachment_<ファイル名>` パターンのリンクを検出
+   - `/attachment/{attachment_id}` 形式に置換
+4. **リンクが置換された場合のみ、ページを再度更新**
+   - 置換後のMarkdownでページを更新
+   - 新しいリビジョンを作成
+
+#### 3.4.5 具体例
+
+**ローカルファイル構成:**
+```
+sample/
+  guide.md
+  guide_attachment_diagram.png
+  guide_attachment_document.pdf
+```
+
+**guide.md の内容（アップロード前）:**
+```markdown
+# User Guide
+
+## Overview
+
+![図](./guide_attachment_diagram.png)
+
+詳細は [資料](guide_attachment_document.pdf) を参照してください。
+```
+
+**GROWI上での結果（アップロード後）:**
+```markdown
+# User Guide
+
+## Overview
+
+![図](/attachment/68f3a41c794f665ad2c0d322)
+
+詳細は [資料](/attachment/68f3a3fa794f665ad2c0d2b3) を参照してください。
+```
+
+#### 3.4.6 注意事項
+
+- 同じページに添付されたファイル（`<ページ名>_attachment_*` パターン）へのリンクのみが置換対象
+- 他のページの添付ファイルや外部URLは置換されません
+- リンク置換に失敗してもエラーとはせず、警告ログを出力して処理を継続
+- リンクが1つも置換されなかった場合は、ページの再更新は行われません
 
 ## 4. コマンドラインインターフェース
 

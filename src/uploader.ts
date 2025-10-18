@@ -1,4 +1,5 @@
 import axios from "axios";
+import { lookup as mimeTypeLookup } from "mime-types";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "./config";
@@ -19,6 +20,7 @@ export const configureAxios = (growiUrl: string, token: string): void => {
 
 export type PageResult = {
   pageId: string | undefined;
+  revisionId: string | undefined;
   action: "created" | "updated" | "skipped" | "error";
 };
 
@@ -65,7 +67,7 @@ export const createOrUpdatePage = async (
         console.log(
           `[SKIP] ${file.localPath} → ${file.growiPath} (page already exists)`,
         );
-        return { pageId, action: "skipped" };
+        return { pageId, revisionId, action: "skipped" };
       }
 
       // Update existing page when update flag is true
@@ -75,9 +77,16 @@ export const createOrUpdatePage = async (
         revisionId: revisionId!,
       };
 
-      await putPage(updateBody);
+      const updateResponse = await putPage(updateBody);
+      // Get new revision ID from response (page.revision is a string)
+      const newRevisionId = updateResponse.data.page?.revision;
+
       console.log(`[SUCCESS] ${file.localPath} → ${file.growiPath} (updated)`);
-      return { pageId, action: "updated" };
+      return {
+        pageId,
+        revisionId: newRevisionId || revisionId,
+        action: "updated",
+      };
     }
   } catch (error) {
     // If 404, page doesn't exist, proceed to create
@@ -94,7 +103,7 @@ export const createOrUpdatePage = async (
           `[ERROR] ${file.localPath} → ${file.growiPath} (${error})`,
         );
       }
-      return { pageId: undefined, action: "error" };
+      return { pageId: undefined, revisionId: undefined, action: "error" };
     }
   }
 
@@ -107,8 +116,10 @@ export const createOrUpdatePage = async (
 
     const response = await postPage(requestBody);
     const pageId = response.data.page?._id;
+    // page.revision is a string (revision ID)
+    const revisionId = response.data.page?.revision;
     console.log(`[SUCCESS] ${file.localPath} → ${file.growiPath} (created)`);
-    return { pageId, action: "created" };
+    return { pageId, revisionId, action: "created" };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
@@ -119,12 +130,118 @@ export const createOrUpdatePage = async (
     } else {
       console.error(`[ERROR] ${file.localPath} → ${file.growiPath} (${error})`);
     }
-    return { pageId: undefined, action: "error" };
+    return { pageId: undefined, revisionId: undefined, action: "error" };
   }
 };
 
 export type AttachmentResult = {
   success: boolean;
+  attachmentId?: string;
+  revisionId?: string;
+};
+
+/**
+ * Replace attachment links in Markdown content with GROWI format
+ *
+ * Supports:
+ * - Filename only: guide_attachment_file.png
+ * - Relative path: ./guide_attachment_file.png
+ *
+ * @param markdown Original Markdown content
+ * @param attachments List of attachments with their IDs
+ * @param pageName Page name (without .md extension)
+ * @returns Object with replaced content and whether any replacement occurred
+ */
+export const replaceAttachmentLinks = (
+  markdown: string,
+  attachments: AttachmentFile[],
+  pageName: string,
+): { content: string; replaced: boolean } => {
+  let result = markdown;
+  let replaced = false;
+
+  for (const attachment of attachments) {
+    if (!attachment.attachmentId) continue;
+
+    // Local filename pattern: <pageName>_attachment_<fileName>
+    const localFileName = `${pageName}_attachment_${attachment.fileName}`;
+    const growiPath = `/attachment/${attachment.attachmentId}`;
+
+    // Escape special regex characters
+    const escapedFileName = localFileName.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&",
+    );
+
+    // Pattern 1: Filename only
+    // Pattern 2: Relative path with ./
+    const patterns = [
+      escapedFileName, // guide_attachment_file.png
+      `\\./${escapedFileName}`, // ./guide_attachment_file.png
+    ];
+
+    for (const pattern of patterns) {
+      // Image link: ![...](pattern) → ![...](/attachment/id)
+      const imgRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${pattern}\\)`, "g");
+      if (imgRegex.test(result)) {
+        replaced = true;
+        result = result.replace(imgRegex, `![$1](${growiPath})`);
+      }
+
+      // Regular link: [...](pattern) → [...](/attachment/id)
+      // Note: Negative lookbehind to exclude image links (with !)
+      const linkRegex = new RegExp(
+        `(?<!!)\\[([^\\]]*)\\]\\(${pattern}\\)`,
+        "g",
+      );
+      if (linkRegex.test(result)) {
+        replaced = true;
+        result = result.replace(linkRegex, `[$1](${growiPath})`);
+      }
+    }
+  }
+
+  return { content: result, replaced };
+};
+
+/**
+ * Update page content only (for re-updating after attachment link replacement)
+ *
+ * @param pageId Page ID
+ * @param revisionId Current revision ID
+ * @param content New Markdown content
+ * @param growiPath GROWI page path (for logging)
+ * @returns True if update succeeded
+ */
+export const updatePageContent = async (
+  pageId: string,
+  revisionId: string,
+  content: string,
+  growiPath: string,
+): Promise<boolean> => {
+  try {
+    const updateBody: PutPageBody = {
+      body: content,
+      pageId,
+      revisionId,
+    };
+
+    await putPage(updateBody);
+    return true;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      const message = error.response?.data?.message || error.message;
+      console.error(
+        `[WARN] Failed to update attachment links for ${growiPath} (${status} ${message})`,
+      );
+    } else {
+      console.error(
+        `[WARN] Failed to update attachment links for ${growiPath}`,
+      );
+    }
+    return false;
+  }
 };
 
 export const uploadAttachment = async (
@@ -137,18 +254,43 @@ export const uploadAttachment = async (
     const filePath = join(sourceDir, attachment.localPath);
     const fileBuffer = readFileSync(filePath);
 
+    // Get MIME type from file extension
+    const mimeType =
+      mimeTypeLookup(attachment.fileName) || "application/octet-stream";
+
     // Create FormData for multipart/form-data request
     const formData = new FormData();
     formData.append("page_id", pageId);
-    formData.append("file", new Blob([fileBuffer]), attachment.fileName);
+    formData.append(
+      "file",
+      new Blob([fileBuffer], { type: mimeType }),
+      attachment.fileName,
+    );
 
-    await postAttachment(
+    const response = await postAttachment(
       formData as unknown as { page_id: string; file: Blob },
     );
+
+    // Get attachment ID and new revision ID from response
+    const attachmentId = response.data.attachment?._id;
+    const revisionId =
+      typeof response.data.revision === "string"
+        ? response.data.revision
+        : undefined;
+
     console.log(
       `[SUCCESS] ${attachment.localPath} → ${growiPath} (attachment)`,
     );
-    return { success: true };
+
+    if (attachmentId && revisionId) {
+      return { success: true, attachmentId, revisionId };
+    } else if (attachmentId) {
+      return { success: true, attachmentId };
+    } else if (revisionId) {
+      return { success: true, revisionId };
+    } else {
+      return { success: true };
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;

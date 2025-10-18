@@ -12,6 +12,7 @@ export interface MarkdownFile {
 export interface AttachmentFile {
   localPath: string;
   fileName: string;
+  attachmentId?: string; // Set after upload
 }
 
 export const scanMarkdownFiles = async (
