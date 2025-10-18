@@ -4,7 +4,7 @@ import { Command } from "commander";
 import { resolve } from "node:path";
 import { loadConfig } from "./config";
 import { scanMarkdownFiles } from "./scanner";
-import { createPage } from "./uploader";
+import { createPage, uploadAttachment } from "./uploader";
 
 const program = new Command();
 
@@ -18,18 +18,34 @@ program
     try {
       // Load configuration
       const config = loadConfig(options.config);
+      const sourceDirPath = resolve(sourceDir);
 
       // Scan Markdown files
-      const files = await scanMarkdownFiles(
-        resolve(sourceDir),
-        config.basePath,
+      const files = await scanMarkdownFiles(sourceDirPath, config.basePath);
+
+      const totalAttachments = files.reduce(
+        (sum, file) => sum + file.attachments.length,
+        0,
+      );
+      console.log(
+        `Found ${files.length} Markdown file(s) and ${totalAttachments} attachment(s)\n`,
       );
 
-      console.log(`Found ${files.length} Markdown file(s)\n`);
-
-      // Upload pages
+      // Upload pages and their attachments
       for (const file of files) {
-        await createPage(file, config.url, config.token);
+        const pageId = await createPage(file, config.url, config.token);
+
+        // Upload attachments for this page
+        if (pageId && file.attachments.length > 0) {
+          for (const attachment of file.attachments) {
+            await uploadAttachment(
+              attachment,
+              pageId,
+              file.growiPath,
+              sourceDirPath,
+            );
+          }
+        }
       }
 
       console.log("\nCompleted");

@@ -1,0 +1,8 @@
+{
+  "example": "API request example",
+  "endpoint": "POST /_api/v3/page",
+  "body": {
+    "path": "/example",
+    "body": "Page content"
+  }
+}
