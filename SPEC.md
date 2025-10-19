@@ -108,8 +108,11 @@ AAA/CCC/DDD.md              →   /AAA/CCC/DDD (ページ)
 
 ### 3.3 添付ファイルの処理
 
-#### 3.3.1 命名規則
-添付ファイルは以下の命名規則で配置:
+#### 3.3.1 検出パターン
+
+添付ファイルは以下の2つの方法で自動検出されます:
+
+**パターン1: 命名規則ベース**
 ```
 <ページ名>_attachment_<ファイル名>
 ```
@@ -125,14 +128,73 @@ AAA/CCC/DDD.md                          →  /AAA/CCC/DDD ページ
 AAA/CCC/DDD_attachment_diagram.svg      →  /AAA/CCC/DDD に添付
 ```
 
-#### 3.3.2 処理フロー
-1. ディレクトリをスキャンし、`*_attachment_*` パターンのファイルを検出
-2. ファイル名から対応するページ名を抽出
-3. 該当ページのIDを取得
-4. `POST /_api/v3/attachment` で添付ファイルをアップロード
-5. multipart/form-data でバイナリデータを送信
+**パターン2: リンクベース（新規）**
 
-#### 3.3.3 エラーハンドリングと処理ルール
+Markdown内のリンク（画像・ファイル）から自動検出します。
+
+**例:**
+```
+ローカルファイルシステム                     Markdown内のリンク
+────────────────────────────────────────────────────────────────
+AAA/BBB.md
+  内容: ![Logo](./images/logo.png)     →  images/logo.png を添付ファイルとして検出
+AAA/images/logo.png                     →  /AAA/BBB に添付
+```
+
+#### 3.3.2 リンクベース検出の詳細
+
+**対象となるリンク形式:**
+```markdown
+![alt](./path/to/file.png)    # 画像（相対パス）
+![alt](path/to/file.png)      # 画像（相対パス、./なし）
+[text](./path/to/file.pdf)    # リンク（相対パス）
+[text](path/to/file.pdf)      # リンク（相対パス、./なし）
+```
+
+**除外されるリンク:**
+- `.md` ファイルへのリンク（ページリンクとして扱う）
+- 外部URL（`http://`, `https://`）
+- 絶対パス（`/`で始まるパス）
+
+**ファイル存在チェック:**
+- リンクされているファイルが実際に存在する場合のみ、添付ファイルとして検出
+- 存在しないファイルへのリンクは無視（エラーなし）
+
+#### 3.3.3 重複検出の処理
+
+同じファイルが命名規則パターンとリンクパターンの両方で検出された場合:
+
+1. **1つの添付ファイルとして扱う**（重複アップロードしない）
+2. **両方のリンク形式を記録**（置換時に両方のパターンを使用）
+
+**例:**
+```
+ファイル構成:
+  guide.md
+  guide_attachment_diagram.png
+
+guide.md の内容:
+  ![図](guide_attachment_diagram.png)   ← このリンクがある
+
+検出結果:
+  - 命名規則パターンで検出: guide_attachment_diagram.png
+  - リンクパターンでも検出: guide_attachment_diagram.png
+  → 1つの添付ファイルとしてマージされる
+```
+
+#### 3.3.4 処理フロー
+
+1. **Markdownファイルごとに添付ファイルを検出**
+   - 命名規則パターン: ディレクトリスキャンで `*_attachment_*` を検索
+   - リンクパターン: Markdown内容を解析してリンクを抽出
+2. **重複を除去してマージ**
+   - 同じファイルパスを持つものは1つにまとめる
+3. **該当ページのIDを取得**
+4. **`POST /_api/v3/attachment` で添付ファイルをアップロード**
+5. **multipart/form-data でバイナリデータを送信**
+
+#### 3.3.5 エラーハンドリングと処理ルール
+
 - **ページが作成または更新された場合**: 添付ファイルをアップロード
   - アップロード失敗: エラーログ、処理は継続
 - **ページがスキップまたはエラーの場合**: 添付ファイルもスキップ
@@ -145,23 +207,31 @@ AAA/CCC/DDD_attachment_diagram.svg      →  /AAA/CCC/DDD に添付
 Markdown内の添付ファイルへのリンクを自動的にGROWI形式に置換します。
 これにより、ローカルでプレビューできるMarkdownがGROWI上でも正しく表示されます。
 
+命名規則パターンとリンクパターンの両方に対応し、それぞれのリンク形式を適切に置換します。
+
 #### 3.4.2 対応するリンク形式
 
-以下のパターンすべてに対応:
+**パターン1: 命名規則ベース**
 
-**パターン1: ファイル名のみ**
+ファイル名のみ、または相対パス形式:
 ```markdown
 ![画像](guide_attachment_image.png)
-[ファイル](guide_attachment_document.pdf)
-```
-
-**パターン2: 相対パス（./付き）**
-```markdown
 ![画像](./guide_attachment_image.png)
+[ファイル](guide_attachment_document.pdf)
 [ファイル](./guide_attachment_document.pdf)
 ```
 
-いずれも同じページに添付された `<ページ名>_attachment_<ファイル名>` パターンのファイルへのリンクが対象です。
+**パターン2: リンクベース**
+
+Markdown内で実際にリンクされているパス形式:
+```markdown
+![Logo](./images/logo.png)
+![Logo](images/logo.png)
+[ドキュメント](./docs/manual.pdf)
+[ドキュメント](docs/manual.pdf)
+```
+
+リンクベースで検出された添付ファイルは、元のリンクパスがそのまま置換対象になります。
 
 #### 3.4.3 置換後の形式
 
@@ -187,6 +257,8 @@ GROWI上では `/attachment/{attachment_id}` 形式に変換されます:
 
 #### 3.4.5 具体例
 
+**例1: 命名規則パターン**
+
 **ローカルファイル構成:**
 ```
 sample/
@@ -199,10 +271,7 @@ sample/
 ```markdown
 # User Guide
 
-## Overview
-
 ![図](./guide_attachment_diagram.png)
-
 詳細は [資料](guide_attachment_document.pdf) を参照してください。
 ```
 
@@ -210,17 +279,55 @@ sample/
 ```markdown
 # User Guide
 
-## Overview
-
 ![図](/attachment/68f3a41c794f665ad2c0d322)
-
 詳細は [資料](/attachment/68f3a3fa794f665ad2c0d2b3) を参照してください。
+```
+
+**例2: リンクパターン**
+
+**ローカルファイル構成:**
+```
+sample/
+  guide.md
+  images/
+    logo.png
+    screenshot.png
+```
+
+**guide.md の内容（アップロード前）:**
+```markdown
+# User Guide
+
+![Logo](./images/logo.png)
+![Screenshot](images/screenshot.png)
+```
+
+**GROWI上での結果（アップロード後）:**
+```markdown
+# User Guide
+
+![Logo](/attachment/68f3a41c794f665ad2c0d322)
+![Screenshot](/attachment/68f3a3fa794f665ad2c0d2b3)
+```
+
+**例3: 混在パターン**
+
+命名規則とリンクベースが混在している場合でも、すべて正しく置換されます:
+
+```markdown
+# アップロード前
+![図1](guide_attachment_diagram.png)   # 命名規則パターン
+![図2](./images/photo.jpg)             # リンクパターン
+
+# アップロード後
+![図1](/attachment/xxx)
+![図2](/attachment/yyy)
 ```
 
 #### 3.4.6 注意事項
 
-- 同じページに添付されたファイル（`<ページ名>_attachment_*` パターン）へのリンクのみが置換対象
-- 他のページの添付ファイルや外部URLは置換されません
+- 検出された添付ファイルへのリンクのみが置換対象
+- 外部URL（`http://`, `https://`）は置換されません
 - リンク置換に失敗してもエラーとはせず、警告ログを出力して処理を継続
 - リンクが1つも置換されなかった場合は、ページの再更新は行われません
 

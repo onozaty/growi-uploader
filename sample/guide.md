@@ -26,6 +26,18 @@ Download the sample file: [sample.txt](guide_attachment_sample.txt)
 ### Pattern 2: Relative path with ./
 You can also access it with relative path: [sample.txt](./guide_attachment_sample.txt)
 
+## Link-based Attachments
+
+Images and files in subdirectories are automatically detected and uploaded as attachments:
+
+![Logo](./images/logo.svg)
+
+You can also use paths without `./`:
+
+![Screenshot](images/screenshot.svg)
+
+These files will be uploaded as attachments even though they don't follow the `_attachment_` naming convention. The links will be automatically converted to GROWI's `/attachment/{id}` format.
+
 ## Page Links
 
 You can link to other pages using relative paths. The `.md` extension will be automatically removed on GROWI:

@@ -143,9 +143,9 @@ export type AttachmentResult = {
 /**
  * Replace attachment links in Markdown content with GROWI format
  *
- * Supports:
- * - Filename only: guide_attachment_file.png
- * - Relative path: ./guide_attachment_file.png
+ * Supports two detection patterns:
+ * 1. Naming pattern: guide_attachment_file.png, ./guide_attachment_file.png
+ * 2. Link pattern: ./images/photo.jpg, images/photo.jpg (as found in markdown)
  *
  * @param markdown Original Markdown content
  * @param attachments List of attachments with their IDs
@@ -163,23 +163,49 @@ export const replaceAttachmentLinks = (
   for (const attachment of attachments) {
     if (!attachment.attachmentId) continue;
 
-    // Local filename pattern: <pageName>_attachment_<fileName>
-    const localFileName = `${pageName}_attachment_${attachment.fileName}`;
     const growiPath = `/attachment/${attachment.attachmentId}`;
+    const patterns: string[] = [];
 
-    // Escape special regex characters
-    const escapedFileName = localFileName.replace(
-      /[.*+?^${}()|[\]\\]/g,
-      "\\$&",
-    );
+    // Pattern 1: Naming convention (guide_attachment_file.png)
+    if (attachment.detectionPattern === "naming") {
+      const localFileName = `${pageName}_attachment_${attachment.fileName}`;
+      const escapedFileName = localFileName.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&",
+      );
 
-    // Pattern 1: Filename only
-    // Pattern 2: Relative path with ./
-    const patterns = [
-      escapedFileName, // guide_attachment_file.png
-      `\\./${escapedFileName}`, // ./guide_attachment_file.png
-    ];
+      patterns.push(
+        escapedFileName, // guide_attachment_file.png
+        `\\./${escapedFileName}`, // ./guide_attachment_file.png
+      );
+    }
 
+    // Pattern 2: Link-based (./images/photo.jpg)
+    if (
+      attachment.detectionPattern === "link" &&
+      attachment.originalLinkPaths
+    ) {
+      for (const linkPath of attachment.originalLinkPaths) {
+        const escapedPath = linkPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        patterns.push(escapedPath);
+
+        // Also add variations: ./path <-> path
+        if (linkPath.startsWith("./")) {
+          // Add version without ./
+          const withoutDot = linkPath.substring(2);
+          const escapedWithoutDot = withoutDot.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&",
+          );
+          patterns.push(escapedWithoutDot);
+        } else if (!linkPath.startsWith("../")) {
+          // Add version with ./
+          patterns.push(`\\./${escapedPath}`);
+        }
+      }
+    }
+
+    // Replace all patterns
     for (const pattern of patterns) {
       // Image link: ![...](pattern) → ![...](/attachment/id)
       const imgRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${pattern}\\)`, "g");

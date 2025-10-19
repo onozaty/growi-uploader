@@ -137,9 +137,11 @@ Create a `growi-uploader.json` file in your project root:
 
 ## Attachment Files
 
-### Naming Convention
+Attachments are automatically detected using two methods:
 
-Attachment files must follow this naming pattern:
+### Method 1: Naming Convention
+
+Files following this naming pattern are detected as attachments:
 
 ```
 <page-name>_attachment_<filename>
@@ -152,34 +154,58 @@ guide_attachment_image.png     → Attached to /guide
 guide_attachment_document.pdf  → Attached to /guide
 ```
 
-### Automatic Link Replacement
+### Method 2: Link-Based Detection
 
-Markdown links to attachments are automatically converted to GROWI format.
+Files referenced in markdown links are automatically detected as attachments:
 
-**Local Markdown (before upload):**
-```markdown
-# User Guide
-
-![Diagram](./guide_attachment_diagram.png)
-
-Download the [documentation](guide_attachment_document.pdf).
+**Local Directory:**
+```
+guide.md
+images/
+  logo.png
+  screenshot.png
 ```
 
-**GROWI Page (after upload):**
+**guide.md Content:**
 ```markdown
-# User Guide
+![Logo](./images/logo.png)
+![Screenshot](images/screenshot.png)
+```
 
+Both `logo.png` and `screenshot.png` will be uploaded as attachments to the `/guide` page, even though they don't follow the `_attachment_` naming convention.
+
+**Excluded from detection:**
+- `.md` files (treated as page links)
+- External URLs (`http://`, `https://`)
+- Non-existent files
+
+### Automatic Link Replacement
+
+Markdown links to attachments are automatically converted to GROWI format (`/attachment/{id}`).
+
+**Example (Naming Convention):**
+
+```markdown
+# Before upload
+![Diagram](./guide_attachment_diagram.png)
+Download the [documentation](guide_attachment_document.pdf).
+
+# After upload (on GROWI)
 ![Diagram](/attachment/68f3a41c794f665ad2c0d322)
-
 Download the [documentation](/attachment/68f3a3fa794f665ad2c0d2b3).
 ```
 
-### Supported Link Formats
+**Example (Link-Based):**
 
-Both formats are automatically detected and converted:
+```markdown
+# Before upload
+![Logo](./images/logo.png)
 
-1. **Filename only**: `![alt](guide_attachment_image.png)`
-2. **Relative path**: `![alt](./guide_attachment_image.png)`
+# After upload (on GROWI)
+![Logo](/attachment/68f3a41c794f665ad2c0d322)
+```
+
+Both detection methods support multiple link formats (with or without `./`).
 
 ## Advanced Usage
 
