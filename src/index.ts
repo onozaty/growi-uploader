@@ -68,68 +68,72 @@ program
           pageErrors++;
         }
 
-        // Stage 2: Upload attachments and replace links (only if page was created or updated)
+        // Stage 2: Upload attachments (only if page was created or updated)
         if (
           result.pageId &&
-          (result.action === "created" || result.action === "updated") &&
-          file.attachments.length > 0
+          (result.action === "created" || result.action === "updated")
         ) {
-          // Upload attachments and collect attachment IDs
-          let hasAttachments = false;
-          let latestRevisionId = result.revisionId;
-
-          for (const attachment of file.attachments) {
-            const attachmentResult = await uploadAttachment(
-              attachment,
-              result.pageId,
-              file.growiPath,
-              sourceDirPath,
-            );
-
-            if (attachmentResult.success) {
-              attachmentsUploaded++;
-              // Store attachment ID for link replacement
-              if (attachmentResult.attachmentId) {
-                attachment.attachmentId = attachmentResult.attachmentId;
-                hasAttachments = true;
-              }
-              // Track the latest revision ID from attachment uploads
-              if (attachmentResult.revisionId) {
-                latestRevisionId = attachmentResult.revisionId;
-              }
-            } else {
-              attachmentErrors++;
-            }
-          }
-
-          // Stage 3: Replace attachment links in Markdown and update page
+          // Initialize content and revision tracking
           let currentContent = file.content;
-          let currentRevisionId = latestRevisionId;
+          let currentRevisionId = result.revisionId;
 
-          if (hasAttachments && currentRevisionId) {
-            const pageName = basename(file.localPath, ".md");
-            const { content: replacedContent, replaced } =
-              replaceAttachmentLinks(
-                currentContent,
-                file.attachments,
-                pageName,
-              );
+          // Upload attachments if any
+          if (file.attachments.length > 0) {
+            let hasAttachments = false;
+            let latestRevisionId = result.revisionId;
 
-            // Re-update page only if links were replaced
-            if (replaced) {
-              const newRevisionId = await updatePageContent(
+            for (const attachment of file.attachments) {
+              const attachmentResult = await uploadAttachment(
+                attachment,
                 result.pageId,
-                currentRevisionId,
-                replacedContent,
                 file.growiPath,
+                sourceDirPath,
               );
 
-              if (newRevisionId) {
-                console.log(
-                  `[SUCCESS] ${file.localPath} → ${file.growiPath} (attachment links replaced)`,
+              if (attachmentResult.success) {
+                attachmentsUploaded++;
+                // Store attachment ID for link replacement
+                if (attachmentResult.attachmentId) {
+                  attachment.attachmentId = attachmentResult.attachmentId;
+                  hasAttachments = true;
+                }
+                // Track the latest revision ID from attachment uploads
+                if (attachmentResult.revisionId) {
+                  latestRevisionId = attachmentResult.revisionId;
+                }
+              } else {
+                attachmentErrors++;
+              }
+            }
+
+            // Stage 3: Replace attachment links in Markdown and update page
+            if (hasAttachments && latestRevisionId) {
+              currentRevisionId = latestRevisionId;
+
+              const pageName = basename(file.localPath, ".md");
+              const { content: replacedContent, replaced } =
+                replaceAttachmentLinks(
+                  currentContent,
+                  file.attachments,
+                  pageName,
                 );
-                currentContent = replacedContent;
-                currentRevisionId = newRevisionId;
+
+              // Re-update page only if links were replaced
+              if (replaced) {
+                const newRevisionId = await updatePageContent(
+                  result.pageId,
+                  currentRevisionId,
+                  replacedContent,
+                  file.growiPath,
+                );
+
+                if (newRevisionId) {
+                  console.log(
+                    `[SUCCESS] ${file.localPath} → ${file.growiPath} (attachment links replaced)`,
+                  );
+                  currentContent = replacedContent;
+                  currentRevisionId = newRevisionId;
+                }
               }
             }
           }
