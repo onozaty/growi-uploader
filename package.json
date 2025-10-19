@@ -10,7 +10,8 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "pnpm gen && tsdown",
+    "prepublishOnly": "pnpm run build",
     "dev": "tsx src/index.ts",
     "gen": "orval",
     "lint": "eslint .",
