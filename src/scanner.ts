@@ -26,11 +26,16 @@ export const scanMarkdownFiles = async (
     // Sort files to ensure consistent processing order
   });
 
+  // Filter out attachment files (files matching *_attachment_*.md pattern)
+  const pageFiles = mdFiles.filter(
+    (file) => !basename(file).includes("_attachment_"),
+  );
+
   // Sort to process in alphabetical order (ensures parent pages before child pages)
-  mdFiles.sort();
+  pageFiles.sort();
 
   const results = await Promise.all(
-    mdFiles.map(async (file) => {
+    pageFiles.map(async (file) => {
       const fullPath = join(sourceDir, file);
       const content = readFileSync(fullPath, "utf-8");
 
