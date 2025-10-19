@@ -205,20 +205,49 @@ export const replaceAttachmentLinks = (
 };
 
 /**
+ * Replace .md extension in page links with GROWI format
+ *
+ * Converts Markdown page links to GROWI-compatible format by removing .md extension.
+ * External URLs (http://, https://) are excluded from replacement.
+ *
+ * Supported patterns:
+ * - Relative path: [text](./page.md) → [text](./page)
+ * - Filename only: [text](page.md) → [text](page)
+ * - With anchor: [text](./page.md#section) → [text](./page#section)
+ *
+ * @param markdown Original Markdown content
+ * @returns Object with replaced content and whether any replacement occurred
+ */
+export const replaceMarkdownExtension = (
+  markdown: string,
+): { content: string; replaced: boolean } => {
+  // Match markdown links ending with .md (with optional anchor)
+  // Pattern: [text](path.md) or [text](path.md#anchor)
+  // Exclude external URLs starting with http:// or https://
+  const regex = /(\[[^\]]*\]\((?!https?:\/\/)[^)]*?)\.md((?:#[^)]*)?\))/g;
+  const result = markdown.replace(regex, "$1$2");
+
+  return {
+    content: result,
+    replaced: result !== markdown,
+  };
+};
+
+/**
  * Update page content only (for re-updating after attachment link replacement)
  *
  * @param pageId Page ID
  * @param revisionId Current revision ID
  * @param content New Markdown content
  * @param growiPath GROWI page path (for logging)
- * @returns True if update succeeded
+ * @returns New revision ID if update succeeded, undefined otherwise
  */
 export const updatePageContent = async (
   pageId: string,
   revisionId: string,
   content: string,
   growiPath: string,
-): Promise<boolean> => {
+): Promise<string | undefined> => {
   try {
     const updateBody: PutPageBody = {
       body: content,
@@ -226,21 +255,21 @@ export const updatePageContent = async (
       revisionId,
     };
 
-    await putPage(updateBody);
-    return true;
+    const response = await putPage(updateBody);
+    // Get new revision ID from response (page.revision is a string)
+    const newRevisionId = response.data.page?.revision;
+    return newRevisionId;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
       const message = error.response?.data?.message || error.message;
       console.error(
-        `[WARN] Failed to update attachment links for ${growiPath} (${status} ${message})`,
+        `[WARN] Failed to update page content for ${growiPath} (${status} ${message})`,
       );
     } else {
-      console.error(
-        `[WARN] Failed to update attachment links for ${growiPath}`,
-      );
+      console.error(`[WARN] Failed to update page content for ${growiPath}`);
     }
-    return false;
+    return undefined;
   }
 };
 

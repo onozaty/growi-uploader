@@ -26,6 +26,22 @@ Download the sample file: [sample.txt](guide_attachment_sample.txt)
 ### Pattern 2: Relative path with ./
 You can also access it with relative path: [sample.txt](./guide_attachment_sample.txt)
 
+## Page Links
+
+You can link to other pages using relative paths. The `.md` extension will be automatically removed on GROWI:
+
+- [Getting Started Guide](./getting-started.md)
+- [Getting Started (filename only)](getting-started.md)
+
+You can also use anchor links:
+
+- [Getting Started - Installation](./getting-started.md#installation)
+
+External URLs with `.md` extension are NOT converted (they remain unchanged):
+
+- [GitHub README](https://github.com/onozaty/growi-uploader/blob/main/README.md)
+- [External Documentation](http://example.com/docs/guide.md)
+
 ## Features
 
 - Easy to use
@@ -33,3 +49,4 @@ You can also access it with relative path: [sample.txt](./guide_attachment_sampl
 - Markdown formatting
 - Attachment link replacement (supports multiple path formats)
 - Image embedding with automatic link conversion
+- Page link conversion (`.md` extension auto-removal)

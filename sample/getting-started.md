@@ -15,3 +15,11 @@ npm install @onozaty/growi-uploader
 3. Run the uploader
 
 That's it!
+
+## Next Steps
+
+For more detailed information, see the [User Guide](./guide.md).
+
+You can also check specific sections:
+- [Features](./guide.md#features)
+- [Page Links](./guide.md#page-links)

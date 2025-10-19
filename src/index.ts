@@ -9,6 +9,7 @@ import {
   configureAxios,
   createOrUpdatePage,
   replaceAttachmentLinks,
+  replaceMarkdownExtension,
   updatePageContent,
   uploadAttachment,
 } from "./uploader";
@@ -102,23 +103,53 @@ program
           }
 
           // Stage 3: Replace attachment links in Markdown and update page
-          if (hasAttachments && latestRevisionId) {
+          let currentContent = file.content;
+          let currentRevisionId = latestRevisionId;
+
+          if (hasAttachments && currentRevisionId) {
             const pageName = basename(file.localPath, ".md");
             const { content: replacedContent, replaced } =
-              replaceAttachmentLinks(file.content, file.attachments, pageName);
+              replaceAttachmentLinks(
+                currentContent,
+                file.attachments,
+                pageName,
+              );
 
-            // Stage 4: Re-update page only if links were replaced
+            // Re-update page only if links were replaced
             if (replaced) {
-              const updated = await updatePageContent(
+              const newRevisionId = await updatePageContent(
                 result.pageId,
-                latestRevisionId,
+                currentRevisionId,
                 replacedContent,
                 file.growiPath,
               );
 
-              if (updated) {
+              if (newRevisionId) {
                 console.log(
                   `[SUCCESS] ${file.localPath} → ${file.growiPath} (attachment links replaced)`,
+                );
+                currentContent = replacedContent;
+                currentRevisionId = newRevisionId;
+              }
+            }
+          }
+
+          // Stage 4: Replace .md extension in page links
+          if (currentRevisionId) {
+            const { content: linkedContent, replaced: linkReplaced } =
+              replaceMarkdownExtension(currentContent);
+
+            if (linkReplaced) {
+              const newRevisionId = await updatePageContent(
+                result.pageId,
+                currentRevisionId,
+                linkedContent,
+                file.growiPath,
+              );
+
+              if (newRevisionId) {
+                console.log(
+                  `[SUCCESS] ${file.localPath} → ${file.growiPath} (page links replaced)`,
                 );
               }
             }
