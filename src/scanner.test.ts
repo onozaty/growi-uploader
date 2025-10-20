@@ -1,0 +1,528 @@
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { cleanupTempDir, createTempDir, createTestFiles } from "../test/utils";
+import { scanMarkdownFiles } from "./scanner";
+
+describe("scanMarkdownFiles", () => {
+  let tempDir: string;
+
+  beforeEach(async () => {
+    tempDir = await createTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanupTempDir(tempDir);
+  });
+
+  describe("basic scanning", () => {
+    it("should scan single markdown file without attachments", async () => {
+      await createTestFiles(tempDir, {
+        "README.md": "# Hello World",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "README.md",
+          growiPath: "/README",
+          content: "# Hello World",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should scan multiple markdown files in alphabetical order", async () => {
+      await createTestFiles(tempDir, {
+        "zebra.md": "# Zebra",
+        "alpha.md": "# Alpha",
+        "beta.md": "# Beta",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "alpha.md",
+          growiPath: "/alpha",
+          content: "# Alpha",
+          attachments: [],
+        },
+        {
+          localPath: "beta.md",
+          growiPath: "/beta",
+          content: "# Beta",
+          attachments: [],
+        },
+        {
+          localPath: "zebra.md",
+          growiPath: "/zebra",
+          content: "# Zebra",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should handle subdirectories correctly", async () => {
+      await createTestFiles(tempDir, {
+        "docs/guide.md": "# Guide",
+        "docs/api/reference.md": "# Reference",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "docs/api/reference.md",
+          growiPath: "/docs/api/reference",
+          content: "# Reference",
+          attachments: [],
+        },
+        {
+          localPath: "docs/guide.md",
+          growiPath: "/docs/guide",
+          content: "# Guide",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should apply basePath correctly", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide",
+      });
+
+      const results = await scanMarkdownFiles(tempDir, "/docs");
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/docs/guide",
+          content: "# Guide",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should handle empty directory", async () => {
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([]);
+    });
+  });
+
+  describe("naming pattern detection", () => {
+    it("should detect attachment with naming convention", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide",
+        "guide_attachment_image.png": "fake-image-data",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "# Guide",
+          attachments: [
+            {
+              localPath: "guide_attachment_image.png",
+              fileName: "image.png",
+              detectionPattern: "naming",
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should detect multiple attachments with naming convention", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide",
+        "guide_attachment_image1.png": "data1",
+        "guide_attachment_image2.png": "data2",
+        "guide_attachment_doc.pdf": "data3",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(3);
+      expect(results[0]!.attachments.map((a) => a.fileName).sort()).toEqual([
+        "doc.pdf",
+        "image1.png",
+        "image2.png",
+      ]);
+    });
+
+    it("should detect attachments in subdirectories with naming convention", async () => {
+      await createTestFiles(tempDir, {
+        "docs/guide.md": "# Guide",
+        "docs/guide_attachment_image.png": "data",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "docs/guide.md",
+          growiPath: "/docs/guide",
+          content: "# Guide",
+          attachments: [
+            {
+              localPath: "docs/guide_attachment_image.png",
+              fileName: "image.png",
+              detectionPattern: "naming",
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
+  describe("link pattern detection", () => {
+    it("should detect image link attachment", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Logo](./images/logo.png)",
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Logo](./images/logo.png)",
+          attachments: [
+            {
+              localPath: "images/logo.png",
+              fileName: "logo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["./images/logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should detect link without ./ prefix", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Logo](images/logo.png)",
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Logo](images/logo.png)",
+          attachments: [
+            {
+              localPath: "images/logo.png",
+              fileName: "logo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["images/logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should detect multiple links to different files", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![A](a.png)\n![B](b.png)",
+        "a.png": "data-a",
+        "b.png": "data-b",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(2);
+      expect(results[0]!.attachments.map((a) => a.fileName).sort()).toEqual([
+        "a.png",
+        "b.png",
+      ]);
+    });
+
+    it("should handle relative parent directory paths", async () => {
+      await createTestFiles(tempDir, {
+        "docs/guide.md": "![Logo](../images/logo.png)",
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "docs/guide.md",
+          growiPath: "/docs/guide",
+          content: "![Logo](../images/logo.png)",
+          attachments: [
+            {
+              localPath: "images/logo.png",
+              fileName: "logo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["../images/logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should detect both image and non-image links", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Image](./file.png)\n[Download](./doc.pdf)",
+        "file.png": "image",
+        "doc.pdf": "pdf",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(2);
+      expect(results[0]!.attachments.map((a) => a.fileName).sort()).toEqual([
+        "doc.pdf",
+        "file.png",
+      ]);
+    });
+  });
+
+  describe("pattern merging", () => {
+    it("should merge same file detected by both patterns", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Logo](./guide_attachment_logo.png)",
+        "guide_attachment_logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Logo](./guide_attachment_logo.png)",
+          attachments: [
+            {
+              localPath: "guide_attachment_logo.png",
+              fileName: "logo.png",
+              detectionPattern: "naming",
+              originalLinkPaths: ["./guide_attachment_logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should keep separate entries for different files", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Logo](./images/logo.png)",
+        "guide_attachment_other.png": "other-image",
+        "images/logo.png": "logo-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(2);
+      expect(results[0]!.attachments.map((a) => a.fileName).sort()).toEqual([
+        "logo.png",
+        "other.png",
+      ]);
+    });
+  });
+
+  describe("exclusion patterns", () => {
+    it("should exclude _attachment_ markdown files from pages", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide",
+        "guide_attachment_example.md": "# Example",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "# Guide",
+          attachments: [
+            {
+              localPath: "guide_attachment_example.md",
+              fileName: "example.md",
+              detectionPattern: "naming",
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should exclude .md files from link detection", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "[Other Page](./other.md)",
+        "other.md": "# Other",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "[Other Page](./other.md)",
+          attachments: [],
+        },
+        {
+          localPath: "other.md",
+          growiPath: "/other",
+          content: "# Other",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should exclude external URLs from link detection", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md":
+          "![External](https://example.com/image.png)\n[Link](http://example.com/page)",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content:
+            "![External](https://example.com/image.png)\n[Link](http://example.com/page)",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should exclude absolute paths from link detection", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Absolute](/absolute/path/image.png)",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Absolute](/absolute/path/image.png)",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should ignore links to non-existent files", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Missing](./missing.png)\n![Exists](./exists.png)",
+        "exists.png": "data",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Missing](./missing.png)\n![Exists](./exists.png)",
+          attachments: [
+            {
+              localPath: "exists.png",
+              fileName: "exists.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["./exists.png"],
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should handle empty markdown file", async () => {
+      await createTestFiles(tempDir, {
+        "empty.md": "",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "empty.md",
+          growiPath: "/empty",
+          content: "",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should handle markdown with no valid links", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Title\n\nSome text without links.",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "# Title\n\nSome text without links.",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should handle multiple links to the same file", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![Logo1](./logo.png)\n![Logo2](./logo.png)",
+        "logo.png": "image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![Logo1](./logo.png)\n![Logo2](./logo.png)",
+          attachments: [
+            {
+              localPath: "logo.png",
+              fileName: "logo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["./logo.png", "./logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should handle complex directory structure", async () => {
+      await createTestFiles(tempDir, {
+        "README.md": "# Root",
+        "docs/guide.md": "# Guide",
+        "docs/api/reference.md": "# Reference",
+        "docs/guide_attachment_file.pdf": "pdf-data",
+        "docs/api/reference_attachment_image.png": "image-data",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(3);
+      expect(results[0]!.growiPath).toBe("/README");
+      expect(results[0]!.attachments).toHaveLength(0);
+      expect(results[1]!.growiPath).toBe("/docs/api/reference");
+      expect(results[1]!.attachments).toHaveLength(1);
+      expect(results[2]!.growiPath).toBe("/docs/guide");
+      expect(results[2]!.attachments).toHaveLength(1);
+    });
+  });
+});

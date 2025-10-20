@@ -5,7 +5,6 @@
     "target": "esnext",
     "types": [],
     "outDir": "./dist",
-    "rootDir": "./src",
     "sourceMap": true,
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true,
@@ -16,5 +15,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
