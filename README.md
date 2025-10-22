@@ -257,6 +257,7 @@ Completed:
 - Attachments uploaded: 2
 - Attachments skipped: 0
 - Attachment errors: 0
+- Link replacement errors: 0
 ```
 
 ## Requirements

@@ -58,6 +58,7 @@ describe("uploadFiles", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 0,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
@@ -119,6 +120,7 @@ describe("uploadFiles", () => {
       attachmentsUploaded: 1,
       attachmentsSkipped: 0,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
 
     expect(growiClient.uploadAttachment).toHaveBeenCalled();
@@ -174,6 +176,7 @@ describe("uploadFiles", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 1,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
 
     expect(uploadAttachmentSpy).not.toHaveBeenCalled();
@@ -231,12 +234,90 @@ describe("uploadFiles", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 0,
       attachmentErrors: 1,
+      linkReplacementErrors: 0,
     });
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
     );
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[ERROR] guide_attachment_image.png → /guide (failed to upload attachment)",
+    );
+  });
+
+  it("should handle attachment link update failure", async () => {
+    const files: MarkdownFile[] = [
+      {
+        localPath: "guide.md",
+        growiPath: "/guide",
+        content: "# Guide\n\n![image](./image.png)",
+        attachments: [
+          {
+            localPath: "image.png",
+            fileName: "image.png",
+            detectionPattern: "link",
+            originalLinkPaths: ["./image.png"],
+          },
+        ],
+      },
+    ];
+
+    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+      pageId: "page123",
+      revisionId: "rev456",
+      action: "created",
+    });
+
+    vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+      success: true,
+      attachmentId: "attach789",
+      revisionId: "rev999",
+    });
+
+    vi.spyOn(markdown, "replaceAttachmentLinks").mockReturnValue({
+      content: "# Guide\n\n![image](/attachment/attach789)",
+      replaced: true,
+    });
+
+    const updatePageContentSpy = vi
+      .spyOn(growiClient, "updatePageContent")
+      .mockResolvedValue({
+        success: false,
+        errorMessage: "Update failed",
+      });
+
+    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
+      content: "# Guide\n\n![image](/attachment/attach789)",
+      replaced: false,
+    });
+
+    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    const stats = await uploadFiles(files, "/source", mockConfig);
+
+    expect(stats.pagesCreated).toBe(1);
+    expect(stats.attachmentsUploaded).toBe(1);
+    expect(stats.linkReplacementErrors).toBe(1);
+    expect(updatePageContentSpy).toHaveBeenCalledWith(
+      "page123",
+      "rev999",
+      "# Guide\n\n![image](/attachment/attach789)",
+    );
+    expect(consoleLogSpy).toHaveBeenCalledWith(
+      "[SUCCESS] guide.md → /guide (created)",
+    );
+    expect(consoleLogSpy).toHaveBeenCalledWith(
+      "[SUCCESS] image.png → /guide (attachment)",
+    );
+    // Should NOT log success for attachment links replacement
+    expect(consoleLogSpy).not.toHaveBeenCalledWith(
+      "[SUCCESS] guide.md → /guide (attachment links replaced)",
+    );
+    // Should log error with error message
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "[ERROR] guide.md → /guide (failed to update attachment links: Update failed)",
     );
   });
 
@@ -270,6 +351,7 @@ describe("uploadFiles", () => {
     const stats = await uploadFiles(files, "/source", mockConfig);
 
     expect(stats.pagesCreated).toBe(1);
+    expect(stats.linkReplacementErrors).toBe(0);
     expect(updatePageContentSpy).toHaveBeenCalledWith(
       "page123",
       "rev456",
@@ -280,6 +362,61 @@ describe("uploadFiles", () => {
     );
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (page links replaced)",
+    );
+  });
+
+  it("should handle page link update failure", async () => {
+    const files: MarkdownFile[] = [
+      {
+        localPath: "guide.md",
+        growiPath: "/guide",
+        content: "# Guide\n\n[Link](./other.md)",
+        attachments: [],
+      },
+    ];
+
+    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+      pageId: "page123",
+      revisionId: "rev456",
+      action: "created",
+    });
+
+    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
+      content: "# Guide\n\n[Link](./other)",
+      replaced: true,
+    });
+
+    const updatePageContentSpy = vi
+      .spyOn(growiClient, "updatePageContent")
+      .mockResolvedValue({
+        success: false,
+        errorMessage: "Update failed",
+      });
+
+    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    const stats = await uploadFiles(files, "/source", mockConfig);
+
+    expect(stats.pagesCreated).toBe(1);
+    expect(stats.linkReplacementErrors).toBe(1);
+    expect(updatePageContentSpy).toHaveBeenCalledWith(
+      "page123",
+      "rev456",
+      "# Guide\n\n[Link](./other)",
+    );
+    expect(consoleLogSpy).toHaveBeenCalledWith(
+      "[SUCCESS] guide.md → /guide (created)",
+    );
+    // Should NOT log success for page links replacement
+    expect(consoleLogSpy).not.toHaveBeenCalledWith(
+      "[SUCCESS] guide.md → /guide (page links replaced)",
+    );
+    // Should log error with error message
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "[ERROR] guide.md → /guide (failed to update page links: Update failed)",
     );
   });
 
@@ -340,6 +477,7 @@ describe("uploadFiles", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 0,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
 
     expect(createOrUpdatePageSpy).toHaveBeenCalledTimes(3);

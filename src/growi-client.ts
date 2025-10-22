@@ -162,7 +162,7 @@ export type UpdatePageContentResult = {
 };
 
 /**
- * Update page content only (for re-updating after attachment link replacement)
+ * Update page content with new Markdown content
  *
  * @param pageId Page ID
  * @param revisionId Current revision ID

@@ -220,7 +220,9 @@ describe("uploadAttachment", () => {
         revision: "rev789",
       },
     };
-    vi.spyOn(growi, "postAttachment").mockResolvedValue(postAttachmentResponse);
+    const postAttachmentSpy = vi
+      .spyOn(growi, "postAttachment")
+      .mockResolvedValue(postAttachmentResponse);
 
     const result = await uploadAttachment(mockAttachment, "page123", "/source");
 
@@ -230,6 +232,16 @@ describe("uploadAttachment", () => {
       revisionId: "rev789",
     });
     expect(fs.readFileSync).toHaveBeenCalledWith("/source/images/photo.jpg");
+
+    // Verify FormData content
+    const formDataArg = postAttachmentSpy.mock.calls[0]?.[0] as FormData;
+    expect(formDataArg).toBeInstanceOf(FormData);
+    expect(formDataArg.get("page_id")).toBe("page123");
+
+    const fileEntry = formDataArg.get("file");
+    expect(fileEntry).toBeInstanceOf(Blob);
+    expect((fileEntry as Blob).type).toBe("image/jpeg");
+    expect((fileEntry as File).name).toBe("photo.jpg");
   });
 
   it("should handle different MIME types correctly", async () => {
@@ -248,12 +260,21 @@ describe("uploadAttachment", () => {
         revision: "rev999",
       },
     };
-    vi.spyOn(growi, "postAttachment").mockResolvedValue(postAttachmentResponse);
+    const postAttachmentSpy = vi
+      .spyOn(growi, "postAttachment")
+      .mockResolvedValue(postAttachmentResponse);
 
     await uploadAttachment(pdfAttachment, "page123", "/source");
 
-    const formDataCall = vi.mocked(growi.postAttachment).mock.calls[0]?.[0];
-    expect(formDataCall).toBeDefined();
+    // Verify FormData content with PDF MIME type
+    const formDataArg = postAttachmentSpy.mock.calls[0]?.[0] as FormData;
+    expect(formDataArg).toBeInstanceOf(FormData);
+    expect(formDataArg.get("page_id")).toBe("page123");
+
+    const fileEntry = formDataArg.get("file");
+    expect(fileEntry).toBeInstanceOf(Blob);
+    expect((fileEntry as Blob).type).toBe("application/pdf");
+    expect((fileEntry as File).name).toBe("document.pdf");
   });
 
   it("should handle file read errors", async () => {

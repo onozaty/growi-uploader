@@ -44,6 +44,7 @@ export const main = async (
   console.log(`- Attachments uploaded: ${stats.attachmentsUploaded}`);
   console.log(`- Attachments skipped: ${stats.attachmentsSkipped}`);
   console.log(`- Attachment errors: ${stats.attachmentErrors}`);
+  console.log(`- Link replacement errors: ${stats.linkReplacementErrors}`);
 };
 
 program

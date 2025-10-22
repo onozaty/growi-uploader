@@ -16,6 +16,7 @@ export type UploadStats = {
   attachmentsUploaded: number;
   attachmentsSkipped: number;
   attachmentErrors: number;
+  linkReplacementErrors: number;
 };
 
 /**
@@ -46,6 +47,7 @@ export const uploadFiles = async (
     attachmentsUploaded: 0,
     attachmentsSkipped: 0,
     attachmentErrors: 0,
+    linkReplacementErrors: 0,
   };
 
   // Upload pages and their attachments with 4-stage update flow
@@ -142,8 +144,9 @@ export const uploadFiles = async (
               currentRevisionId = updateResult.revisionId;
             } else {
               console.error(
-                `[WARN] ${file.localPath} → ${file.growiPath} (failed to update attachment links: ${updateResult.errorMessage || "unknown error"})`,
+                `[ERROR] ${file.localPath} → ${file.growiPath} (failed to update attachment links: ${updateResult.errorMessage || "unknown error"})`,
               );
+              stats.linkReplacementErrors++;
             }
           }
         }
@@ -155,20 +158,22 @@ export const uploadFiles = async (
           replaceMarkdownExtension(currentContent);
 
         if (linkReplaced) {
-          const newRevisionId = await updatePageContent(
+          const updateResult = await updatePageContent(
             result.pageId,
             currentRevisionId,
             linkedContent,
           );
 
-          if (newRevisionId) {
+          if (updateResult.success && updateResult.revisionId) {
             console.log(
               `[SUCCESS] ${file.localPath} → ${file.growiPath} (page links replaced)`,
             );
+            currentRevisionId = updateResult.revisionId;
           } else {
             console.error(
-              `[WARN] ${file.localPath} → ${file.growiPath} (failed to update page links)`,
+              `[ERROR] ${file.localPath} → ${file.growiPath} (failed to update page links: ${updateResult.errorMessage || "unknown error"})`,
             );
+            stats.linkReplacementErrors++;
           }
         }
       }

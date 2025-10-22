@@ -55,6 +55,7 @@ describe("main", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 0,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -122,6 +123,7 @@ describe("main", () => {
       attachmentsUploaded: 0,
       attachmentsSkipped: 0,
       attachmentErrors: 0,
+      linkReplacementErrors: 0,
     });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -161,6 +163,7 @@ describe("main", () => {
       attachmentsUploaded: 10,
       attachmentsSkipped: 3,
       attachmentErrors: 2,
+      linkReplacementErrors: 0,
     });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});

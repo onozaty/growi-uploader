@@ -539,6 +539,7 @@ Completed:
 - Attachments uploaded: 25
 - Attachments skipped: 5
 - Attachment errors: 2
+- Link replacement errors: 0
 ```
 
 ## 6. ファイル命名規則とマッピング
