@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanupTempDir, createTempDir } from "../test/utils";
-import * as config from "./config";
+import { cleanupTempDir, createTempDir, createTestFiles } from "../test/utils";
 import { main } from "./index";
-import * as scanner from "./scanner";
+import * as growiClient from "./growi-client";
 import * as uploader from "./uploader";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
-// Mock dependencies
-vi.mock("./config");
-vi.mock("./scanner");
+// Mock only growi-client (external API calls) and uploader
+vi.mock("./growi-client");
 vi.mock("./uploader");
 
 describe("main", () => {
@@ -23,424 +23,156 @@ describe("main", () => {
     await cleanupTempDir(tempDir);
   });
 
-  it("should process single page with no attachments", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
+  it("should load config, configure axios, scan files, and call uploadFiles", async () => {
+    // Create real config file
+    const configPath = join(tempDir, "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/",
+        update: false,
+      }),
+      "utf-8",
+    );
 
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide",
-        attachments: [],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
+    // Create real markdown file
+    await createTestFiles(tempDir, {
+      "guide.md": "# Guide",
+    });
 
+    // Mock functions
     const configureAxiosSpy = vi
-      .spyOn(uploader, "configureAxios")
+      .spyOn(growiClient, "configureAxios")
       .mockImplementation(() => {});
-    const createOrUpdatePageSpy = vi
-      .spyOn(uploader, "createOrUpdatePage")
-      .mockResolvedValue({
-        pageId: "page123",
-        revisionId: "rev456",
-        action: "created",
-      });
 
-    vi.spyOn(uploader, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide",
-      replaced: false,
+    const uploadFilesSpy = vi.spyOn(uploader, "uploadFiles").mockResolvedValue({
+      pagesCreated: 1,
+      pagesUpdated: 0,
+      pagesSkipped: 0,
+      pageErrors: 0,
+      attachmentsUploaded: 0,
+      attachmentsSkipped: 0,
+      attachmentErrors: 0,
     });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-    await main(tempDir, "config.json");
+    await main(tempDir, configPath);
 
-    expect(config.loadConfig).toHaveBeenCalledWith("config.json");
+    // Verify axios was configured
     expect(configureAxiosSpy).toHaveBeenCalledWith(
       "https://growi.example.com",
       "test-token",
     );
-    expect(scanner.scanMarkdownFiles).toHaveBeenCalledWith(tempDir, "/");
-    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
-      mockFiles[0],
-      mockConfig,
+
+    // Verify uploadFiles was called with scanned files
+    expect(uploadFilesSpy).toHaveBeenCalledWith(
+      [
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "# Guide",
+          attachments: [],
+        },
+      ],
+      tempDir,
+      {
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/",
+        update: false,
+      },
     );
+
+    // Verify summary was displayed
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "Found 1 Markdown file(s) and 0 attachment(s)\n",
     );
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should process page with attachments (full flow)", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: true,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide\n\n![image](guide_attachment_image.png)",
-        attachments: [
-          {
-            localPath: "guide_attachment_image.png",
-            fileName: "image.png",
-            detectionPattern: "naming" as const,
-          },
-        ],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
-
-    const uploadAttachmentSpy = vi
-      .spyOn(uploader, "uploadAttachment")
-      .mockResolvedValue({
-        success: true,
-        attachmentId: "attach789",
-        revisionId: "rev999",
-      });
-
-    vi.spyOn(uploader, "replaceAttachmentLinks").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: true,
-    });
-
-    const updatePageContentSpy = vi
-      .spyOn(uploader, "updatePageContent")
-      .mockResolvedValue("rev1000");
-
-    vi.spyOn(uploader, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: false,
-    });
-
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
-    expect(uploadAttachmentSpy).toHaveBeenCalledWith(
-      mockFiles[0]?.attachments[0],
-      "page123",
-      "/guide",
-      tempDir,
-    );
-    expect(uploader.replaceAttachmentLinks).toHaveBeenCalled();
-    expect(updatePageContentSpy).toHaveBeenCalledWith(
-      "page123",
-      "rev999",
-      "# Guide\n\n![image](/attachment/attach789)",
-      "/guide",
-    );
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should skip page when update=false and page exists", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide",
-        attachments: [
-          {
-            localPath: "guide_attachment_image.png",
-            fileName: "image.png",
-            detectionPattern: "naming" as const,
-          },
-        ],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "skipped",
-    });
-
-    const uploadAttachmentSpy = vi.spyOn(uploader, "uploadAttachment");
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
-    expect(uploadAttachmentSpy).not.toHaveBeenCalled();
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      "[SKIP] guide_attachment_image.png → /guide (attachment skipped)",
-    );
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should handle page creation error", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide",
-        attachments: [],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: undefined,
-      revisionId: undefined,
-      action: "error",
-    });
-
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
     expect(consoleLogSpy).toHaveBeenCalledWith("\nCompleted:");
-    expect(consoleLogSpy).toHaveBeenCalledWith("- Page errors: 1");
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should skip attachments when page creation fails", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide",
-        attachments: [
-          {
-            localPath: "guide_attachment_image.png",
-            fileName: "image.png",
-            detectionPattern: "naming" as const,
-          },
-        ],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: undefined,
-      revisionId: undefined,
-      action: "error",
-    });
-
-    const uploadAttachmentSpy = vi.spyOn(uploader, "uploadAttachment");
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
-    expect(uploadAttachmentSpy).not.toHaveBeenCalled();
-    expect(consoleLogSpy).toHaveBeenCalledWith(
-      "[SKIP] guide_attachment_image.png → /guide (attachment skipped)",
-    );
-    expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments skipped: 1");
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should handle attachment upload error", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide",
-        attachments: [
-          {
-            localPath: "guide_attachment_image.png",
-            fileName: "image.png",
-            detectionPattern: "naming" as const,
-          },
-        ],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
-
-    vi.spyOn(uploader, "uploadAttachment").mockResolvedValue({
-      success: false,
-    });
-
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
-    expect(consoleLogSpy).toHaveBeenCalledWith("- Attachment errors: 1");
-
-    consoleLogSpy.mockRestore();
-  });
-
-  it("should process multiple pages with different outcomes", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: true,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
-
-    const mockFiles = [
-      {
-        localPath: "guide1.md",
-        growiPath: "/guide1",
-        content: "# Guide 1",
-        attachments: [],
-      },
-      {
-        localPath: "guide2.md",
-        growiPath: "/guide2",
-        content: "# Guide 2",
-        attachments: [],
-      },
-      {
-        localPath: "guide3.md",
-        growiPath: "/guide3",
-        content: "# Guide 3",
-        attachments: [],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-
-    const createOrUpdatePageSpy = vi
-      .spyOn(uploader, "createOrUpdatePage")
-      .mockResolvedValueOnce({
-        pageId: "page1",
-        revisionId: "rev1",
-        action: "created",
-      })
-      .mockResolvedValueOnce({
-        pageId: "page2",
-        revisionId: "rev2",
-        action: "updated",
-      })
-      .mockResolvedValueOnce({
-        pageId: undefined,
-        revisionId: undefined,
-        action: "error",
-      });
-
-    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    await main(tempDir, "config.json");
-
-    expect(createOrUpdatePageSpy).toHaveBeenCalledTimes(3);
     expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 1");
-    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages updated: 1");
-    expect(consoleLogSpy).toHaveBeenCalledWith("- Page errors: 1");
-
-    consoleLogSpy.mockRestore();
   });
 
-  it("should replace page links (.md extension) after attachments", async () => {
-    const mockConfig = {
-      url: "https://growi.example.com",
-      token: "test-token",
-      basePath: "/",
-      update: false,
-    };
-    vi.spyOn(config, "loadConfig").mockReturnValue(mockConfig);
+  it("should handle multiple markdown files", async () => {
+    const configPath = join(tempDir, "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/docs",
+        update: true,
+      }),
+      "utf-8",
+    );
 
-    const mockFiles = [
-      {
-        localPath: "guide.md",
-        growiPath: "/guide",
-        content: "# Guide\n\n[Link](./other.md)",
-        attachments: [],
-      },
-    ];
-    vi.spyOn(scanner, "scanMarkdownFiles").mockResolvedValue(mockFiles);
-
-    vi.spyOn(uploader, "configureAxios").mockImplementation(() => {});
-    vi.spyOn(uploader, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
+    await createTestFiles(tempDir, {
+      "guide1.md": "# Guide 1",
+      "guide2.md": "# Guide 2",
+      "guide3.md": "# Guide 3",
     });
 
-    vi.spyOn(uploader, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n[Link](./other)",
-      replaced: true,
+    vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+    vi.spyOn(uploader, "uploadFiles").mockResolvedValue({
+      pagesCreated: 1,
+      pagesUpdated: 2,
+      pagesSkipped: 0,
+      pageErrors: 0,
+      attachmentsUploaded: 0,
+      attachmentsSkipped: 0,
+      attachmentErrors: 0,
     });
-
-    const updatePageContentSpy = vi
-      .spyOn(uploader, "updatePageContent")
-      .mockResolvedValue("rev789");
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
-    await main(tempDir, "config.json");
+    await main(tempDir, configPath);
 
-    expect(uploader.replaceMarkdownExtension).toHaveBeenCalledWith(
-      "# Guide\n\n[Link](./other.md)",
-    );
-    expect(updatePageContentSpy).toHaveBeenCalledWith(
-      "page123",
-      "rev456",
-      "# Guide\n\n[Link](./other)",
-      "/guide",
-    );
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      "[SUCCESS] guide.md → /guide (page links replaced)",
+      "Found 3 Markdown file(s) and 0 attachment(s)\n",
+    );
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 1");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages updated: 2");
+  });
+
+  it("should display all statistics from uploadFiles", async () => {
+    const configPath = join(tempDir, "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/",
+        update: false,
+      }),
+      "utf-8",
     );
 
-    consoleLogSpy.mockRestore();
+    await createTestFiles(tempDir, {
+      "guide.md": "# Guide",
+    });
+
+    vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+    vi.spyOn(uploader, "uploadFiles").mockResolvedValue({
+      pagesCreated: 5,
+      pagesUpdated: 3,
+      pagesSkipped: 2,
+      pageErrors: 1,
+      attachmentsUploaded: 10,
+      attachmentsSkipped: 3,
+      attachmentErrors: 2,
+    });
+
+    const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    await main(tempDir, configPath);
+
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 5");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages updated: 3");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Pages skipped: 2");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Page errors: 1");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments uploaded: 10");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments skipped: 3");
+    expect(consoleLogSpy).toHaveBeenCalledWith("- Attachment errors: 2");
   });
 });

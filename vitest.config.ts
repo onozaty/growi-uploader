@@ -5,7 +5,7 @@ export default defineConfig({
     globals: true,
     coverage: {
       include: ["src/**/*.ts"],
-      exclude: ["**/*.test.ts"],
+      exclude: ["**/*.test.ts", "src/generated/**"],
       reporter: ["json", "text"],
     },
   },

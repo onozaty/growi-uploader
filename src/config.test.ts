@@ -1,20 +1,21 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { loadConfig } from "./config";
-import * as fs from "node:fs";
-
-// Mock fs module
-vi.mock("node:fs");
+import { createTempDir, cleanupTempDir } from "../test/utils";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 describe("loadConfig", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  let tempDir: string;
+
+  beforeEach(async () => {
+    tempDir = await createTempDir();
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
+  afterEach(async () => {
+    await cleanupTempDir(tempDir);
   });
 
-  it("should load valid config with all fields", () => {
+  it("should load valid config with all fields", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
@@ -22,9 +23,10 @@ describe("loadConfig", () => {
       update: true,
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
     expect(config.url).toBe("https://example.com");
     expect(config.token).toBe("test-token");
@@ -32,15 +34,16 @@ describe("loadConfig", () => {
     expect(config.update).toBe(true);
   });
 
-  it("should load config with required fields only and apply defaults", () => {
+  it("should load config with required fields only and apply defaults", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
     expect(config.url).toBe("https://example.com");
     expect(config.token).toBe("test-token");
@@ -48,50 +51,44 @@ describe("loadConfig", () => {
     expect(config.update).toBe(false);
   });
 
-  it("should throw error when url is missing", () => {
+  it("should throw error when url is missing", async () => {
     const mockConfig = {
       token: "test-token",
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    expect(() => loadConfig("test-config.json")).toThrow(
-      "Missing required field: url",
-    );
+    expect(() => loadConfig(configPath)).toThrow("Missing required field: url");
   });
 
-  it("should throw error when token is missing", () => {
+  it("should throw error when token is missing", async () => {
     const mockConfig = {
       url: "https://example.com",
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    expect(() => loadConfig("test-config.json")).toThrow(
+    expect(() => loadConfig(configPath)).toThrow(
       "Missing required field: token",
     );
   });
 
-  it("should throw error for invalid JSON", () => {
-    vi.spyOn(fs, "readFileSync").mockReturnValue("{ invalid json }");
+  it("should throw error for invalid JSON", async () => {
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, "{ invalid json }", "utf-8");
 
-    expect(() => loadConfig("test-config.json")).toThrow();
+    expect(() => loadConfig(configPath)).toThrow();
   });
 
   it("should throw error when config file not found", () => {
-    const error = new Error("ENOENT") as NodeJS.ErrnoException;
-    error.code = "ENOENT";
+    const missingPath = join(tempDir, "missing-config.json");
 
-    vi.spyOn(fs, "readFileSync").mockImplementation(() => {
-      throw error;
-    });
-
-    expect(() => loadConfig("missing-config.json")).toThrow(
-      /Config file not found/,
-    );
+    expect(() => loadConfig(missingPath)).toThrow(/Config file not found/);
   });
 
-  it("should apply default basePath when set to undefined explicitly", () => {
+  it("should apply default basePath when set to undefined explicitly", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
@@ -99,14 +96,15 @@ describe("loadConfig", () => {
       update: true,
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
     expect(config.basePath).toBe("/");
   });
 
-  it("should apply default update when set to undefined explicitly", () => {
+  it("should apply default update when set to undefined explicitly", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
@@ -114,39 +112,42 @@ describe("loadConfig", () => {
       update: undefined,
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
     expect(config.update).toBe(false);
   });
 
-  it("should preserve false value for update field", () => {
+  it("should preserve false value for update field", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
       update: false,
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
     expect(config.update).toBe(false);
   });
 
-  it("should handle empty string basePath", () => {
+  it("should normalize empty string basePath to default", async () => {
     const mockConfig = {
       url: "https://example.com",
       token: "test-token",
       basePath: "",
     };
 
-    vi.spyOn(fs, "readFileSync").mockReturnValue(JSON.stringify(mockConfig));
+    const configPath = join(tempDir, "config.json");
+    await writeFile(configPath, JSON.stringify(mockConfig), "utf-8");
 
-    const config = loadConfig("test-config.json");
+    const config = loadConfig(configPath);
 
-    // Empty string basePath is preserved (not replaced with default)
-    expect(config.basePath).toBe("");
+    // Empty string basePath should be normalized to "/"
+    expect(config.basePath).toBe("/");
   });
 });

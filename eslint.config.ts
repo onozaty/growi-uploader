@@ -13,7 +13,7 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   {
-    ignores: ["src/growi.ts"], // orval generated file
+    ignores: ["src/generated/**"], // orval generated file
   },
   {
     files: ["**/*.test.ts"],
