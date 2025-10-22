@@ -288,6 +288,42 @@ describe("scanMarkdownFiles", () => {
         "file.png",
       ]);
     });
+
+    it("should detect link with angle brackets for special chars", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](<./images/photo(1).png>)",
+        "images/photo(1).png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/photo(1).png",
+        fileName: "photo(1).png",
+        detectionPattern: "link",
+        originalLinkPaths: ["<./images/photo(1).png>"],
+      });
+    });
+
+    it("should detect link with escaped parentheses", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/photo\\(1\\).png)",
+        "images/photo(1).png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/photo(1).png",
+        fileName: "photo(1).png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/photo\\(1\\).png"],
+      });
+    });
   });
 
   describe("pattern merging", () => {

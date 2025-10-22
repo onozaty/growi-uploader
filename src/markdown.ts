@@ -46,7 +46,8 @@ export const replaceAttachmentLinks = (
       attachment.originalLinkPaths
     ) {
       for (const linkPath of attachment.originalLinkPaths) {
-        const escapedPath = linkPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // Escape special regex chars including angle brackets
+        const escapedPath = linkPath.replace(/[.*+?^${}()|[\]\\<>]/g, "\\$&");
         patterns.push(escapedPath);
 
         // Also add variations: ./path <-> path

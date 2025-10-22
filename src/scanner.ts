@@ -36,17 +36,28 @@ const extractLinkedAttachments = (
   const attachments: AttachmentFile[] = [];
 
   // Match markdown links: ![alt](path) or [text](path)
+  // Supports angle brackets for special chars: ![alt](<path(1).png>)
+  // Supports backslash escapes: ![alt](path\(1\).png)
+  // Two capture groups: group 2 for <...>, group 3 for regular path
+  // Regular path: matches escaped chars (\.) or non-) chars
   // Exclude external URLs (http://, https://)
-  const linkRegex = /!?\[([^\]]*)\]\(([^)]+)\)/g;
+  const linkRegex = /!?\[([^\]]*)\]\((?:<([^>]+)>|((?:[^)\\]+|\\.)*))\)/g;
 
   let match;
   while ((match = linkRegex.exec(content)) !== null) {
-    const linkPath = match[2];
+    // match[2] = angle bracket path, match[3] = regular path
+    const angleBracketPath = match[2];
+    const regularPath = match[3];
+    const linkPath = angleBracketPath || regularPath;
 
     // Skip if linkPath is undefined
     if (!linkPath) {
       continue;
     }
+
+    const originalLinkPath = angleBracketPath
+      ? `<${angleBracketPath}>`
+      : regularPath!; // regularPath is defined because linkPath check passed
 
     // Skip external URLs
     if (linkPath.startsWith("http://") || linkPath.startsWith("https://")) {
@@ -63,9 +74,13 @@ const extractLinkedAttachments = (
       continue;
     }
 
+    // Unescape Markdown escape sequences for file path resolution
+    // e.g., photo\(1\).png → photo(1).png
+    const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
+
     // Resolve relative path
     const markdownDir = dirname(join(sourceDir, markdownFilePath));
-    const absolutePath = resolve(markdownDir, linkPath);
+    const absolutePath = resolve(markdownDir, unescapedPath);
 
     // Check if file exists
     if (!existsSync(absolutePath)) {
@@ -82,7 +97,7 @@ const extractLinkedAttachments = (
       localPath: normalizedPath,
       fileName: basename(normalizedPath),
       detectionPattern: "link",
-      originalLinkPaths: [linkPath],
+      originalLinkPaths: [originalLinkPath], // Keep original format for replacement
     });
   }
 

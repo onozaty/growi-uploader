@@ -103,6 +103,38 @@ describe("replaceAttachmentLinks", () => {
       );
       expect(result.replaced).toBe(true);
     });
+
+    it("should replace link pattern with angle brackets for parentheses", () => {
+      const markdown = "![image](<./images/photo(1).png>)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/photo(1).png",
+          fileName: "photo(1).png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["<./images/photo(1).png>"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![image](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace link pattern with escaped parentheses", () => {
+      const markdown = "![image](./images/photo\\(1\\).png)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/photo(1).png",
+          fileName: "photo(1).png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/photo\\(1\\).png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![image](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
   });
 
   describe("mixed patterns", () => {

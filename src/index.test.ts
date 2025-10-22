@@ -175,4 +175,277 @@ describe("main", () => {
     expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments skipped: 3");
     expect(consoleLogSpy).toHaveBeenCalledWith("- Attachment errors: 2");
   });
+
+  describe("end-to-end integration tests", () => {
+    // These tests use real scanner, uploader, and markdown implementations
+    // Only growi-client is mocked
+
+    beforeEach(() => {
+      // Restore uploader.uploadFiles to use real implementation
+      vi.restoreAllMocks();
+    });
+
+    it("should handle normal filenames with standard link format", async () => {
+      const configPath = join(tempDir, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          url: "https://growi.example.com",
+          token: "test-token",
+          basePath: "/",
+          update: false,
+        }),
+        "utf-8",
+      );
+
+      await createTestFiles(tempDir, {
+        "guide.md":
+          "# Guide\n\n![image](./images/photo.png)\n\n[document](./docs/file.pdf)",
+        "images/photo.png": "fake-image-data",
+        "docs/file.pdf": "fake-pdf-data",
+      });
+
+      vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+      vi.spyOn(growiClient, "uploadAttachment")
+        .mockResolvedValueOnce({
+          success: true,
+          attachmentId: "attach_img",
+          revisionId: "rev789",
+        })
+        .mockResolvedValueOnce({
+          success: true,
+          attachmentId: "attach_pdf",
+          revisionId: "rev999",
+        });
+      vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
+        success: true,
+        revisionId: "rev1000",
+      });
+
+      const consoleLogSpy = vi
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
+
+      await main(tempDir, configPath);
+
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "Found 1 Markdown file(s) and 2 attachment(s)\n",
+      );
+
+      expect(growiClient.createOrUpdatePage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content:
+            "# Guide\n\n![image](./images/photo.png)\n\n[document](./docs/file.pdf)",
+        }),
+        false,
+      );
+
+      expect(growiClient.uploadAttachment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          localPath: "images/photo.png",
+          fileName: "photo.png",
+          originalLinkPaths: ["./images/photo.png"],
+        }),
+        "page123",
+        tempDir,
+      );
+
+      expect(growiClient.uploadAttachment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          localPath: "docs/file.pdf",
+          fileName: "file.pdf",
+          originalLinkPaths: ["./docs/file.pdf"],
+        }),
+        "page123",
+        tempDir,
+      );
+
+      expect(growiClient.updatePageContent).toHaveBeenCalledWith(
+        "page123",
+        "rev999",
+        "# Guide\n\n![image](/attachment/attach_img)\n\n[document](/attachment/attach_pdf)",
+      );
+
+      expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 1");
+      expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments uploaded: 2");
+    });
+
+    it("should handle filenames with parentheses using angle brackets", async () => {
+      const configPath = join(tempDir, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          url: "https://growi.example.com",
+          token: "test-token",
+          basePath: "/",
+          update: false,
+        }),
+        "utf-8",
+      );
+
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](<./images/photo(1).png>)",
+        "images/photo(1).png": "fake-image-data",
+      });
+
+      vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+      vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+        success: true,
+        attachmentId: "attach789",
+        revisionId: "rev999",
+      });
+      vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
+        success: true,
+        revisionId: "rev1000",
+      });
+
+      const consoleLogSpy = vi
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
+
+      await main(tempDir, configPath);
+
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "Found 1 Markdown file(s) and 1 attachment(s)\n",
+      );
+
+      expect(growiClient.createOrUpdatePage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          localPath: "guide.md",
+          growiPath: "/guide",
+          content: "![image](<./images/photo(1).png>)",
+        }),
+        false,
+      );
+
+      expect(growiClient.uploadAttachment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          localPath: "images/photo(1).png",
+          fileName: "photo(1).png",
+          originalLinkPaths: ["<./images/photo(1).png>"],
+        }),
+        "page123",
+        tempDir,
+      );
+
+      expect(growiClient.updatePageContent).toHaveBeenCalledWith(
+        "page123",
+        "rev999",
+        "![image](/attachment/attach789)",
+      );
+
+      expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 1");
+      expect(consoleLogSpy).toHaveBeenCalledWith("- Attachments uploaded: 1");
+    });
+
+    it("should handle filenames with escaped parentheses", async () => {
+      const configPath = join(tempDir, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          url: "https://growi.example.com",
+          token: "test-token",
+          basePath: "/",
+          update: false,
+        }),
+        "utf-8",
+      );
+
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/photo\\(1\\).png)",
+        "images/photo(1).png": "fake-image-data",
+      });
+
+      vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+      vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+        success: true,
+        attachmentId: "attach789",
+        revisionId: "rev999",
+      });
+      vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
+        success: true,
+        revisionId: "rev1000",
+      });
+
+      vi.spyOn(console, "log").mockImplementation(() => {});
+
+      await main(tempDir, configPath);
+
+      expect(growiClient.uploadAttachment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          originalLinkPaths: ["./images/photo\\(1\\).png"],
+        }),
+        "page123",
+        tempDir,
+      );
+
+      expect(growiClient.updatePageContent).toHaveBeenCalledWith(
+        "page123",
+        "rev999",
+        "![image](/attachment/attach789)",
+      );
+    });
+
+    it("should handle filenames with parentheses using naming pattern", async () => {
+      const configPath = join(tempDir, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          url: "https://growi.example.com",
+          token: "test-token",
+          basePath: "/",
+          update: false,
+        }),
+        "utf-8",
+      );
+
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](guide_attachment_photo(1).png)",
+        "guide_attachment_photo(1).png": "fake-image-data",
+      });
+
+      vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+      vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+        success: true,
+        attachmentId: "attach789",
+        revisionId: "rev999",
+      });
+      vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
+        success: true,
+        revisionId: "rev1000",
+      });
+
+      vi.spyOn(console, "log").mockImplementation(() => {});
+
+      await main(tempDir, configPath);
+
+      expect(growiClient.updatePageContent).toHaveBeenCalledWith(
+        "page123",
+        "rev999",
+        "![image](/attachment/attach789)",
+      );
+    });
+  });
 });
