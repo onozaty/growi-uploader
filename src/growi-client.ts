@@ -72,11 +72,13 @@ interface ActualGetPageResponse {
  * Create a new page or update an existing page in GROWI
  *
  * @param file Markdown file to upload
+ * @param content Markdown content
  * @param shouldUpdate If true, update existing pages; if false, skip existing pages
  * @returns Result containing page ID, revision ID, and action taken
  */
 export const createOrUpdatePage = async (
   file: MarkdownFile,
+  content: string,
   shouldUpdate: boolean,
 ): Promise<PageResult> => {
   try {
@@ -98,7 +100,7 @@ export const createOrUpdatePage = async (
 
       // Update existing page when update flag is true
       const updateBody: PutPageBody = {
-        body: file.content,
+        body: content,
         pageId: pageId!,
         revisionId: revisionId!,
       };
@@ -130,7 +132,7 @@ export const createOrUpdatePage = async (
   try {
     const requestBody: PostPageBody = {
       path: file.growiPath,
-      body: file.content,
+      body: content,
     };
 
     const response = await postPage(requestBody);

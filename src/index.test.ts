@@ -74,7 +74,6 @@ describe("main", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "# Guide",
           attachments: [],
         },
       ],
@@ -244,9 +243,8 @@ describe("main", () => {
         expect.objectContaining({
           localPath: "guide.md",
           growiPath: "/guide",
-          content:
-            "# Guide\n\n![image](./images/photo.png)\n\n[document](./docs/file.pdf)",
         }),
+        "# Guide\n\n![image](./images/photo.png)\n\n[document](./docs/file.pdf)",
         false,
       );
 
@@ -328,8 +326,8 @@ describe("main", () => {
         expect.objectContaining({
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![image](<./images/photo(1).png>)",
         }),
+        "![image](<./images/photo(1).png>)",
         false,
       );
 

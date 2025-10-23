@@ -1,17 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as growiClient from "./growi-client";
-import * as markdown from "./markdown";
 import type { MarkdownFile } from "./scanner";
 import { uploadFiles } from "./uploader";
 import type { Config } from "./config";
+import * as fs from "node:fs";
 
 // Mock dependencies
 vi.mock("./growi-client");
-vi.mock("./markdown");
+vi.mock("node:fs");
 
 describe("uploadFiles", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock readFileSync for all tests - return a default content
+    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide");
   });
 
   afterEach(() => {
@@ -30,21 +32,17 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide",
         attachments: [],
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
-
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide",
-      replaced: false,
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
@@ -60,6 +58,11 @@ describe("uploadFiles", () => {
       attachmentErrors: 0,
       linkReplacementErrors: 0,
     });
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide",
+      false,
+    );
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
     );
@@ -70,7 +73,6 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide\n\n![image](guide_attachment_image.png)",
         attachments: [
           {
             localPath: "guide_attachment_image.png",
@@ -81,32 +83,33 @@ describe("uploadFiles", () => {
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
+    // Override default readFileSync to return content with naming pattern reference
+    vi.spyOn(fs, "readFileSync").mockReturnValue(
+      "# Guide\n\n![image](guide_attachment_image.png)",
+    );
 
-    vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
-      success: true,
-      attachmentId: "attach789",
-      revisionId: "rev999",
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
-    vi.spyOn(markdown, "replaceAttachmentLinks").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: true,
-    });
+    const uploadAttachmentSpy = vi
+      .spyOn(growiClient, "uploadAttachment")
+      .mockResolvedValue({
+        success: true,
+        attachmentId: "attach789",
+        revisionId: "rev999",
+      });
 
-    vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
-      success: true,
-      revisionId: "rev1000",
-    });
-
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: false,
-    });
+    const updatePageContentSpy = vi
+      .spyOn(growiClient, "updatePageContent")
+      .mockResolvedValue({
+        success: true,
+        revisionId: "rev1000",
+      });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
@@ -123,9 +126,17 @@ describe("uploadFiles", () => {
       linkReplacementErrors: 0,
     });
 
-    expect(growiClient.uploadAttachment).toHaveBeenCalled();
-    expect(markdown.replaceAttachmentLinks).toHaveBeenCalled();
-    expect(growiClient.updatePageContent).toHaveBeenCalled();
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide\n\n![image](guide_attachment_image.png)",
+      false,
+    );
+    expect(uploadAttachmentSpy).toHaveBeenCalled();
+    expect(updatePageContentSpy).toHaveBeenCalledWith(
+      "page123",
+      "rev999",
+      "# Guide\n\n![image](/attachment/attach789)",
+    );
 
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
@@ -143,7 +154,6 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide",
         attachments: [
           {
             localPath: "guide_attachment_image.png",
@@ -154,11 +164,13 @@ describe("uploadFiles", () => {
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: undefined,
-      revisionId: undefined,
-      action: "error",
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: undefined,
+        revisionId: undefined,
+        action: "error",
+      });
 
     const uploadAttachmentSpy = vi.spyOn(growiClient, "uploadAttachment");
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -179,6 +191,7 @@ describe("uploadFiles", () => {
       linkReplacementErrors: 0,
     });
 
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(files[0], "# Guide", false);
     expect(uploadAttachmentSpy).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[ERROR] guide.md → /guide (unknown error)",
@@ -193,7 +206,6 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide",
         attachments: [
           {
             localPath: "guide_attachment_image.png",
@@ -204,19 +216,16 @@ describe("uploadFiles", () => {
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
     vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
       success: false,
-    });
-
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide",
-      replaced: false,
     });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -236,6 +245,7 @@ describe("uploadFiles", () => {
       attachmentErrors: 1,
       linkReplacementErrors: 0,
     });
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(files[0], "# Guide", false);
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
     );
@@ -249,7 +259,6 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide\n\n![image](./image.png)",
         attachments: [
           {
             localPath: "image.png",
@@ -261,21 +270,21 @@ describe("uploadFiles", () => {
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
+    // Override default readFileSync to return content with image link
+    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n![image](./image.png)");
+
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
     vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
       success: true,
       attachmentId: "attach789",
       revisionId: "rev999",
-    });
-
-    vi.spyOn(markdown, "replaceAttachmentLinks").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: true,
     });
 
     const updatePageContentSpy = vi
@@ -284,11 +293,6 @@ describe("uploadFiles", () => {
         success: false,
         errorMessage: "Update failed",
       });
-
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n![image](/attachment/attach789)",
-      replaced: false,
-    });
 
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     const consoleErrorSpy = vi
@@ -300,6 +304,11 @@ describe("uploadFiles", () => {
     expect(stats.pagesCreated).toBe(1);
     expect(stats.attachmentsUploaded).toBe(1);
     expect(stats.linkReplacementErrors).toBe(1);
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide\n\n![image](./image.png)",
+      false,
+    );
     expect(updatePageContentSpy).toHaveBeenCalledWith(
       "page123",
       "rev999",
@@ -326,21 +335,20 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide\n\n[Link](./other.md)",
         attachments: [],
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
+    // Override default readFileSync to return content with .md link
+    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n[Link](./other.md)");
 
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n[Link](./other)",
-      replaced: true,
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
     const updatePageContentSpy = vi
       .spyOn(growiClient, "updatePageContent")
@@ -352,6 +360,11 @@ describe("uploadFiles", () => {
 
     expect(stats.pagesCreated).toBe(1);
     expect(stats.linkReplacementErrors).toBe(0);
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide\n\n[Link](./other.md)",
+      false,
+    );
     expect(updatePageContentSpy).toHaveBeenCalledWith(
       "page123",
       "rev456",
@@ -370,21 +383,20 @@ describe("uploadFiles", () => {
       {
         localPath: "guide.md",
         growiPath: "/guide",
-        content: "# Guide\n\n[Link](./other.md)",
         attachments: [],
       },
     ];
 
-    vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
-      pageId: "page123",
-      revisionId: "rev456",
-      action: "created",
-    });
+    // Override default readFileSync to return content with .md link
+    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n[Link](./other.md)");
 
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide\n\n[Link](./other)",
-      replaced: true,
-    });
+    const createOrUpdatePageSpy = vi
+      .spyOn(growiClient, "createOrUpdatePage")
+      .mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
 
     const updatePageContentSpy = vi
       .spyOn(growiClient, "updatePageContent")
@@ -402,6 +414,11 @@ describe("uploadFiles", () => {
 
     expect(stats.pagesCreated).toBe(1);
     expect(stats.linkReplacementErrors).toBe(1);
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide\n\n[Link](./other.md)",
+      false,
+    );
     expect(updatePageContentSpy).toHaveBeenCalledWith(
       "page123",
       "rev456",
@@ -425,19 +442,16 @@ describe("uploadFiles", () => {
       {
         localPath: "guide1.md",
         growiPath: "/guide1",
-        content: "# Guide 1",
         attachments: [],
       },
       {
         localPath: "guide2.md",
         growiPath: "/guide2",
-        content: "# Guide 2",
         attachments: [],
       },
       {
         localPath: "guide3.md",
         growiPath: "/guide3",
-        content: "# Guide 3",
         attachments: [],
       },
     ];
@@ -460,11 +474,6 @@ describe("uploadFiles", () => {
         action: "skipped",
       });
 
-    vi.spyOn(markdown, "replaceMarkdownExtension").mockReturnValue({
-      content: "# Guide",
-      replaced: false,
-    });
-
     const consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     const stats = await uploadFiles(files, "/source", mockConfig);
@@ -481,6 +490,9 @@ describe("uploadFiles", () => {
     });
 
     expect(createOrUpdatePageSpy).toHaveBeenCalledTimes(3);
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(1, files[0], "# Guide", false);
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(2, files[1], "# Guide", false);
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(3, files[2], "# Guide", false);
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide1.md → /guide1 (created)",
     );

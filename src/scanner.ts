@@ -5,7 +5,6 @@ import { join, dirname, basename, resolve, relative } from "node:path";
 export interface MarkdownFile {
   localPath: string;
   growiPath: string;
-  content: string;
   attachments: AttachmentFile[];
 }
 
@@ -223,7 +222,6 @@ export const scanMarkdownFiles = async (
       return {
         localPath: file,
         growiPath: growiPath.startsWith("/") ? growiPath : `/${growiPath}`,
-        content,
         attachments,
       };
     }),

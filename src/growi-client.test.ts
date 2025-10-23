@@ -43,9 +43,9 @@ describe("createOrUpdatePage", () => {
   const mockFile: MarkdownFile = {
     localPath: "guide.md",
     growiPath: "/guide",
-    content: "# Guide\n\nContent here",
     attachments: [],
   };
+  const mockContent = "# Guide\n\nContent here";
 
   it("should create new page when page does not exist", async () => {
     const axiosError = {
@@ -65,7 +65,7 @@ describe("createOrUpdatePage", () => {
     };
     vi.spyOn(growi, "postPage").mockResolvedValue(postPageResponse);
 
-    const result = await createOrUpdatePage(mockFile, false);
+    const result = await createOrUpdatePage(mockFile, mockContent, false);
 
     expect(result).toEqual({
       pageId: "page123",
@@ -98,7 +98,7 @@ describe("createOrUpdatePage", () => {
     };
     vi.spyOn(growi, "putPage").mockResolvedValue(putPageResponse);
 
-    const result = await createOrUpdatePage(mockFile, true);
+    const result = await createOrUpdatePage(mockFile, mockContent, true);
 
     expect(result).toEqual({
       pageId: "page123",
@@ -125,7 +125,7 @@ describe("createOrUpdatePage", () => {
 
     const putPageSpy = vi.spyOn(growi, "putPage");
 
-    const result = await createOrUpdatePage(mockFile, false);
+    const result = await createOrUpdatePage(mockFile, mockContent, false);
 
     expect(result).toEqual({
       pageId: "page123",
@@ -144,7 +144,7 @@ describe("createOrUpdatePage", () => {
     vi.spyOn(growi, "getPage").mockRejectedValue(axiosError);
     vi.spyOn(axios, "isAxiosError").mockReturnValue(true);
 
-    const result = await createOrUpdatePage(mockFile, false);
+    const result = await createOrUpdatePage(mockFile, mockContent, false);
 
     expect(result).toEqual({
       pageId: undefined,
@@ -169,7 +169,7 @@ describe("createOrUpdatePage", () => {
     };
     vi.spyOn(growi, "postPage").mockRejectedValue(createError);
 
-    const result = await createOrUpdatePage(mockFile, false);
+    const result = await createOrUpdatePage(mockFile, mockContent, false);
 
     expect(result).toEqual({
       pageId: undefined,
@@ -191,7 +191,7 @@ describe("createOrUpdatePage", () => {
     vi.spyOn(growi, "postPage").mockRejectedValue(nonAxiosError);
     vi.spyOn(axios, "isAxiosError").mockReturnValueOnce(false);
 
-    const result = await createOrUpdatePage(mockFile, false);
+    const result = await createOrUpdatePage(mockFile, mockContent, false);
 
     expect(result).toEqual({
       pageId: undefined,

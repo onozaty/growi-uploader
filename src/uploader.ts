@@ -1,4 +1,5 @@
-import { basename } from "node:path";
+import { readFileSync } from "node:fs";
+import { basename, join } from "node:path";
 import type { Config } from "./config";
 import {
   createOrUpdatePage,
@@ -52,8 +53,11 @@ export const uploadFiles = async (
 
   // Upload pages and their attachments with 4-stage update flow
   for (const file of files) {
+    // Read file content
+    const content = readFileSync(join(sourceDir, file.localPath), "utf-8");
+
     // Stage 1: Create or update page with original Markdown
-    const result = await createOrUpdatePage(file, config.update);
+    const result = await createOrUpdatePage(file, content, config.update);
 
     // Track statistics and log result
     if (result.action === "created") {
@@ -80,7 +84,7 @@ export const uploadFiles = async (
       (result.action === "created" || result.action === "updated")
     ) {
       // Initialize content and revision tracking
-      let currentContent = file.content;
+      let currentContent = content;
       let currentRevisionId = result.revisionId;
 
       // Upload attachments if any

@@ -25,7 +25,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "README.md",
           growiPath: "/README",
-          content: "# Hello World",
           attachments: [],
         },
       ]);
@@ -44,19 +43,16 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "alpha.md",
           growiPath: "/alpha",
-          content: "# Alpha",
           attachments: [],
         },
         {
           localPath: "beta.md",
           growiPath: "/beta",
-          content: "# Beta",
           attachments: [],
         },
         {
           localPath: "zebra.md",
           growiPath: "/zebra",
-          content: "# Zebra",
           attachments: [],
         },
       ]);
@@ -74,13 +70,11 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "docs/api/reference.md",
           growiPath: "/docs/api/reference",
-          content: "# Reference",
           attachments: [],
         },
         {
           localPath: "docs/guide.md",
           growiPath: "/docs/guide",
-          content: "# Guide",
           attachments: [],
         },
       ]);
@@ -97,7 +91,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/docs/guide",
-          content: "# Guide",
           attachments: [],
         },
       ]);
@@ -123,7 +116,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "# Guide",
           attachments: [
             {
               localPath: "guide_attachment_image.png",
@@ -166,7 +158,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "docs/guide.md",
           growiPath: "/docs/guide",
-          content: "# Guide",
           attachments: [
             {
               localPath: "docs/guide_attachment_image.png",
@@ -192,7 +183,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Logo](./images/logo.png)",
           attachments: [
             {
               localPath: "images/logo.png",
@@ -217,7 +207,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Logo](images/logo.png)",
           attachments: [
             {
               localPath: "images/logo.png",
@@ -259,7 +248,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "docs/guide.md",
           growiPath: "/docs/guide",
-          content: "![Logo](../images/logo.png)",
           attachments: [
             {
               localPath: "images/logo.png",
@@ -339,7 +327,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Logo](./guide_attachment_logo.png)",
           attachments: [
             {
               localPath: "guide_attachment_logo.png",
@@ -383,7 +370,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "# Guide",
           attachments: [
             {
               localPath: "guide_attachment_example.md",
@@ -407,13 +393,11 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "[Other Page](./other.md)",
           attachments: [],
         },
         {
           localPath: "other.md",
           growiPath: "/other",
-          content: "# Other",
           attachments: [],
         },
       ]);
@@ -431,8 +415,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content:
-            "![External](https://example.com/image.png)\n[Link](http://example.com/page)",
           attachments: [],
         },
       ]);
@@ -449,7 +431,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Absolute](/absolute/path/image.png)",
           attachments: [],
         },
       ]);
@@ -467,7 +448,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Missing](./missing.png)\n![Exists](./exists.png)",
           attachments: [
             {
               localPath: "exists.png",
@@ -493,7 +473,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "empty.md",
           growiPath: "/empty",
-          content: "",
           attachments: [],
         },
       ]);
@@ -510,7 +489,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "# Title\n\nSome text without links.",
           attachments: [],
         },
       ]);
@@ -528,7 +506,6 @@ describe("scanMarkdownFiles", () => {
         {
           localPath: "guide.md",
           growiPath: "/guide",
-          content: "![Logo1](./logo.png)\n![Logo2](./logo.png)",
           attachments: [
             {
               localPath: "logo.png",
