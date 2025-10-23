@@ -109,7 +109,7 @@ export const createOrUpdatePage = async (
 
       return {
         pageId,
-        revisionId: newRevisionId || revisionId,
+        revisionId: newRevisionId,
         action: "updated",
       };
     }
