@@ -1,6 +1,15 @@
 import type { AttachmentFile } from "./scanner";
 
 /**
+ * Escape special regex characters for safe use in RegExp
+ * Escapes: . * + ? ^ $ { } ( ) | [ ] \ < >
+ * Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
+ */
+const escapeRegex = (str: string): string => {
+  return str.replace(/[.*+?^${}()|[\]\\<>]/g, "\\$&");
+};
+
+/**
  * Replace attachment links in Markdown content with GROWI format
  *
  * Supports two detection patterns:
@@ -29,10 +38,7 @@ export const replaceAttachmentLinks = (
     // Pattern 1: Naming convention (guide_attachment_file.png)
     if (attachment.detectionPattern === "naming") {
       const localFileName = `${pageName}_attachment_${attachment.fileName}`;
-      const escapedFileName = localFileName.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        "\\$&",
-      );
+      const escapedFileName = escapeRegex(localFileName);
 
       patterns.push(
         escapedFileName, // guide_attachment_file.png
@@ -46,18 +52,14 @@ export const replaceAttachmentLinks = (
       attachment.originalLinkPaths
     ) {
       for (const linkPath of attachment.originalLinkPaths) {
-        // Escape special regex chars including angle brackets
-        const escapedPath = linkPath.replace(/[.*+?^${}()|[\]\\<>]/g, "\\$&");
+        const escapedPath = escapeRegex(linkPath);
         patterns.push(escapedPath);
 
         // Also add variations: ./path <-> path
         if (linkPath.startsWith("./")) {
           // Add version without ./
           const withoutDot = linkPath.substring(2);
-          const escapedWithoutDot = withoutDot.replace(
-            /[.*+?^${}()|[\]\\]/g,
-            "\\$&",
-          );
+          const escapedWithoutDot = escapeRegex(withoutDot);
           patterns.push(escapedWithoutDot);
         } else if (!linkPath.startsWith("../")) {
           // Add version with ./
@@ -108,9 +110,15 @@ export const replaceAttachmentLinks = (
 export const replaceMarkdownExtension = (
   markdown: string,
 ): { content: string; replaced: boolean } => {
-  // Match markdown links ending with .md (with optional anchor)
-  // Pattern: [text](path.md) or [text](path.md#anchor)
-  // Exclude external URLs starting with http:// or https://
+  // Match markdown links ending with .md extension
+  // Pattern breakdown:
+  // - (\[[^\]]*\]                     Group 1: [link text]
+  // - \(                              Opening parenthesis (
+  // - (?!https?:\/\/)                 Negative lookahead: not http:// or https://
+  // - [^)]*?)                         Path (non-greedy, anything except ))
+  // - \.md                            The .md extension to remove
+  // - ((?:#[^)]*)?\))                 Group 2: optional anchor + closing )
+  // Example: [text](./page.md#anchor) → [text](./page#anchor)
   const regex = /(\[[^\]]*\]\((?!https?:\/\/)[^)]*?)\.md((?:#[^)]*)?\))/g;
   const result = markdown.replace(regex, "$1$2");
 

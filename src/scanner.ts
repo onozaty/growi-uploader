@@ -38,26 +38,36 @@ const extractLinkedAttachments = (
   // Match markdown links: ![alt](path) or [text](path)
   // Supports angle brackets for special chars: ![alt](<path(1).png>)
   // Supports backslash escapes: ![alt](path\(1\).png)
-  // Two capture groups: group 2 for <...>, group 3 for regular path
-  // Regular path: matches escaped chars (\.) or non-) chars
-  // Exclude external URLs (http://, https://)
-  const linkRegex = /!?\[([^\]]*)\]\((?:<([^>]+)>|((?:[^)\\]+|\\.)*))\)/g;
+  // Named capture groups for clarity:
+  // - alt: alt text or link text
+  // - anglePath: path inside angle brackets <...>
+  // - regularPath: regular path with escape support
+  const linkRegex = new RegExp(
+    [
+      "!?", // Optional ! for image links
+      "\\[(?<alt>[^\\]]*)\\]", // [alt text] or [link text]
+      "\\(", // Opening parenthesis
+      "(?:", // Non-capturing group for path alternatives
+      "<(?<anglePath>[^>]+)>", // Pattern 1: <path> with angle brackets
+      "|", // OR
+      "(?<regularPath>(?:[^)\\\\]+|\\\\.)*)", // Pattern 2: regular path with escape support
+      ")", // End of alternatives
+      "\\)", // Closing parenthesis
+    ].join(""),
+    "g",
+  );
 
   let match;
   while ((match = linkRegex.exec(content)) !== null) {
-    // match[2] = angle bracket path, match[3] = regular path
-    const angleBracketPath = match[2];
-    const regularPath = match[3];
-    const linkPath = angleBracketPath || regularPath;
+    const { anglePath, regularPath } = match.groups!;
+    const linkPath = anglePath || regularPath;
 
     // Skip if linkPath is undefined
     if (!linkPath) {
       continue;
     }
 
-    const originalLinkPath = angleBracketPath
-      ? `<${angleBracketPath}>`
-      : regularPath!; // regularPath is defined because linkPath check passed
+    const originalLinkPath = anglePath ? `<${anglePath}>` : regularPath!;
 
     // Skip external URLs
     if (linkPath.startsWith("http://") || linkPath.startsWith("https://")) {
@@ -75,7 +85,10 @@ const extractLinkedAttachments = (
     }
 
     // Unescape Markdown escape sequences for file path resolution
-    // e.g., photo\(1\).png → photo(1).png
+    // Markdown allows escaping these ASCII punctuation characters:
+    // \ ` * _ { } [ ] ( ) # + - . !
+    // Reference: https://spec.commonmark.org/0.30/#backslash-escapes
+    // Example: photo\(1\).png → photo(1).png
     const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
 
     // Resolve relative path
