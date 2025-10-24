@@ -159,7 +159,7 @@ export const uploadFiles = async (
       // Stage 4: Replace .md extension in page links
       if (currentRevisionId) {
         const { content: linkedContent, replaced: linkReplaced } =
-          replaceMarkdownExtension(currentContent);
+          replaceMarkdownExtension(currentContent, config.basePath);
 
         if (linkReplaced) {
           const updateResult = await updatePageContent(

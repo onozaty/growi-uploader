@@ -347,4 +347,59 @@ describe("replaceMarkdownExtension", () => {
       expect(result.replaced).toBe(true);
     });
   });
+
+  describe("basePath handling", () => {
+    it("should prepend basePath to absolute paths when basePath is not /", () => {
+      const markdown = "[Guide](/docs/guide.md)";
+      const result = replaceMarkdownExtension(markdown, "/imported");
+      expect(result.content).toBe("[Guide](/imported/docs/guide)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should not prepend basePath when basePath is /", () => {
+      const markdown = "[Guide](/docs/guide.md)";
+      const result = replaceMarkdownExtension(markdown, "/");
+      expect(result.content).toBe("[Guide](/docs/guide)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should not prepend basePath to relative paths", () => {
+      const markdown = "[Guide](./guide.md)";
+      const result = replaceMarkdownExtension(markdown, "/imported");
+      expect(result.content).toBe("[Guide](./guide)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should handle absolute paths with anchors", () => {
+      const markdown = "[Section](/docs/guide.md#intro)";
+      const result = replaceMarkdownExtension(markdown, "/imported");
+      expect(result.content).toBe("[Section](/imported/docs/guide#intro)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should handle multiple absolute paths", () => {
+      const markdown = "[A](/docs/a.md) and [B](/api/b.md)";
+      const result = replaceMarkdownExtension(markdown, "/imported");
+      expect(result.content).toBe(
+        "[A](/imported/docs/a) and [B](/imported/api/b)",
+      );
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should handle mix of relative and absolute paths", () => {
+      const markdown = "[Relative](./guide.md) and [Absolute](/docs/api.md)";
+      const result = replaceMarkdownExtension(markdown, "/imported");
+      expect(result.content).toBe(
+        "[Relative](./guide) and [Absolute](/imported/docs/api)",
+      );
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should handle basePath with trailing slash", () => {
+      const markdown = "[Guide](/docs/guide.md)";
+      const result = replaceMarkdownExtension(markdown, "/imported/");
+      expect(result.content).toBe("[Guide](/imported/docs/guide)");
+      expect(result.replaced).toBe(true);
+    });
+  });
 });

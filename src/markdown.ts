@@ -97,30 +97,45 @@ export const replaceAttachmentLinks = (
  * Replace .md extension in page links with GROWI format
  *
  * Converts Markdown page links to GROWI-compatible format by removing .md extension.
+ * For absolute paths (starting with /), prepends basePath to the link.
  * External URLs (http://, https://) are excluded from replacement.
  *
  * Supported patterns:
  * - Relative path: [text](./page.md) → [text](./page)
  * - Filename only: [text](page.md) → [text](page)
+ * - Absolute path: [text](/docs/page.md) → [text](/basePath/docs/page)
  * - With anchor: [text](./page.md#section) → [text](./page#section)
  *
  * @param markdown Original Markdown content
+ * @param basePath Base path for GROWI pages (default: "/")
  * @returns Object with replaced content and whether any replacement occurred
  */
 export const replaceMarkdownExtension = (
   markdown: string,
+  basePath: string = "/",
 ): { content: string; replaced: boolean } => {
   // Match markdown links ending with .md extension
   // Pattern breakdown:
-  // - (\[[^\]]*\]                     Group 1: [link text]
-  // - \(                              Opening parenthesis (
+  // - (\[[^\]]*\]\(                   Group 1: [link text](
   // - (?!https?:\/\/)                 Negative lookahead: not http:// or https://
-  // - [^)]*?)                         Path (non-greedy, anything except ))
+  // - ([^)]*?)                        Group 2: Path (non-greedy, anything except ))
   // - \.md                            The .md extension to remove
-  // - ((?:#[^)]*)?\))                 Group 2: optional anchor + closing )
+  // - ((?:#[^)]*)?\))                 Group 3: optional anchor + closing )
   // Example: [text](./page.md#anchor) → [text](./page#anchor)
-  const regex = /(\[[^\]]*\]\((?!https?:\/\/)[^)]*?)\.md((?:#[^)]*)?\))/g;
-  const result = markdown.replace(regex, "$1$2");
+  const regex = /(\[[^\]]*\]\((?!https?:\/\/))([^)]*?)\.md((?:#[^)]*)?\))/g;
+
+  const result = markdown.replace(regex, (match, prefix, path, suffix) => {
+    // If path starts with /, prepend basePath (unless basePath is just "/")
+    if (path.startsWith("/") && basePath !== "/") {
+      // Ensure basePath doesn't end with / to avoid double slashes
+      const normalizedBasePath = basePath.endsWith("/")
+        ? basePath.slice(0, -1)
+        : basePath;
+      return `${prefix}${normalizedBasePath}${path}${suffix}`;
+    }
+    // Otherwise, just remove .md extension
+    return `${prefix}${path}${suffix}`;
+  });
 
   return {
     content: result,
