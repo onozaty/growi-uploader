@@ -161,6 +161,8 @@ Files referenced in markdown links are automatically detected as attachments:
 **Local Directory:**
 ```
 guide.md
+assets/
+  banner.png
 images/
   logo.png
   screenshot.png
@@ -170,9 +172,15 @@ images/
 ```markdown
 ![Logo](./images/logo.png)
 ![Screenshot](images/screenshot.png)
+![Banner](/assets/banner.png)
 ```
 
-Both `logo.png` and `screenshot.png` will be uploaded as attachments to the `/guide` page, even though they don't follow the `_attachment_` naming convention.
+All referenced files (`logo.png`, `screenshot.png`, and `banner.png`) will be uploaded as attachments to the `/guide` page, even though they don't follow the `_attachment_` naming convention.
+
+**Path resolution:**
+- Relative paths (`./`, `../`, or no prefix): Resolved from the Markdown file's directory
+- Absolute paths (starting with `/`): Resolved from the source directory root
+  - Example: `/assets/banner.png` → `<source-dir>/assets/banner.png`
 
 **Excluded from detection:**
 - `.md` files (treated as page links)

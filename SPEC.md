@@ -147,14 +147,20 @@ AAA/images/logo.png                     →  /AAA/BBB に添付
 ```markdown
 ![alt](./path/to/file.png)    # 画像（相対パス）
 ![alt](path/to/file.png)      # 画像（相対パス、./なし）
+![alt](/images/logo.png)      # 画像（絶対パス、source-dir起点）
 [text](./path/to/file.pdf)    # リンク（相対パス）
 [text](path/to/file.pdf)      # リンク（相対パス、./なし）
+[text](/docs/manual.pdf)      # リンク（絶対パス、source-dir起点）
 ```
+
+**パスの解決:**
+- 相対パス（`./` または `../` で始まる、または何も付かない）: Markdownファイルのディレクトリからの相対パス
+- 絶対パス（`/` で始まる）: 処理対象フォルダ（source-dir）を起点とした絶対パス
+  - 例: `/images/logo.png` → `<source-dir>/images/logo.png`
 
 **除外されるリンク:**
 - `.md` ファイルへのリンク（ページリンクとして扱う）
 - 外部URL（`http://`, `https://`）
-- 絶対パス（`/`で始まるパス）
 
 **ファイル存在チェック:**
 - リンクされているファイルが実際に存在する場合のみ、添付ファイルとして検出

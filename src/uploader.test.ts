@@ -191,7 +191,11 @@ describe("uploadFiles", () => {
       linkReplacementErrors: 0,
     });
 
-    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(files[0], "# Guide", false);
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide",
+      false,
+    );
     expect(uploadAttachmentSpy).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[ERROR] guide.md → /guide (unknown error)",
@@ -245,7 +249,11 @@ describe("uploadFiles", () => {
       attachmentErrors: 1,
       linkReplacementErrors: 0,
     });
-    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(files[0], "# Guide", false);
+    expect(createOrUpdatePageSpy).toHaveBeenCalledWith(
+      files[0],
+      "# Guide",
+      false,
+    );
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide.md → /guide (created)",
     );
@@ -271,7 +279,9 @@ describe("uploadFiles", () => {
     ];
 
     // Override default readFileSync to return content with image link
-    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n![image](./image.png)");
+    vi.spyOn(fs, "readFileSync").mockReturnValue(
+      "# Guide\n\n![image](./image.png)",
+    );
 
     const createOrUpdatePageSpy = vi
       .spyOn(growiClient, "createOrUpdatePage")
@@ -340,7 +350,9 @@ describe("uploadFiles", () => {
     ];
 
     // Override default readFileSync to return content with .md link
-    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n[Link](./other.md)");
+    vi.spyOn(fs, "readFileSync").mockReturnValue(
+      "# Guide\n\n[Link](./other.md)",
+    );
 
     const createOrUpdatePageSpy = vi
       .spyOn(growiClient, "createOrUpdatePage")
@@ -388,7 +400,9 @@ describe("uploadFiles", () => {
     ];
 
     // Override default readFileSync to return content with .md link
-    vi.spyOn(fs, "readFileSync").mockReturnValue("# Guide\n\n[Link](./other.md)");
+    vi.spyOn(fs, "readFileSync").mockReturnValue(
+      "# Guide\n\n[Link](./other.md)",
+    );
 
     const createOrUpdatePageSpy = vi
       .spyOn(growiClient, "createOrUpdatePage")
@@ -490,9 +504,24 @@ describe("uploadFiles", () => {
     });
 
     expect(createOrUpdatePageSpy).toHaveBeenCalledTimes(3);
-    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(1, files[0], "# Guide", false);
-    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(2, files[1], "# Guide", false);
-    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(3, files[2], "# Guide", false);
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(
+      1,
+      files[0],
+      "# Guide",
+      false,
+    );
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(
+      2,
+      files[1],
+      "# Guide",
+      false,
+    );
+    expect(createOrUpdatePageSpy).toHaveBeenNthCalledWith(
+      3,
+      files[2],
+      "# Guide",
+      false,
+    );
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SUCCESS] guide1.md → /guide1 (created)",
     );

@@ -78,11 +78,6 @@ const extractLinkedAttachments = (
       continue;
     }
 
-    // Skip absolute paths (we only handle relative paths)
-    if (linkPath.startsWith("/")) {
-      continue;
-    }
-
     // Unescape Markdown escape sequences for file path resolution
     // Markdown allows escaping these ASCII punctuation characters:
     // \ ` * _ { } [ ] ( ) # + - . !
@@ -90,9 +85,17 @@ const extractLinkedAttachments = (
     // Example: photo\(1\).png → photo(1).png
     const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
 
-    // Resolve relative path
-    const markdownDir = dirname(join(sourceDir, markdownFilePath));
-    const absolutePath = resolve(markdownDir, unescapedPath);
+    // Resolve path: absolute paths (starting with /) are relative to sourceDir,
+    // other paths are relative to the markdown file's directory
+    let absolutePath: string;
+    if (linkPath.startsWith("/")) {
+      // Treat /path as sourceDir/path (remove leading /)
+      absolutePath = resolve(sourceDir, unescapedPath.slice(1));
+    } else {
+      // Resolve relative path from markdown file's directory
+      const markdownDir = dirname(join(sourceDir, markdownFilePath));
+      absolutePath = resolve(markdownDir, unescapedPath);
+    }
 
     // Check if file exists
     if (!existsSync(absolutePath)) {

@@ -420,18 +420,26 @@ describe("scanMarkdownFiles", () => {
       ]);
     });
 
-    it("should exclude absolute paths from link detection", async () => {
+    it("should treat absolute paths as relative to source directory", async () => {
       await createTestFiles(tempDir, {
-        "guide.md": "![Absolute](/absolute/path/image.png)",
+        "docs/guide.md": "![Image](/images/photo.png)",
+        "images/photo.png": "data",
       });
 
       const results = await scanMarkdownFiles(tempDir);
 
       expect(results).toEqual([
         {
-          localPath: "guide.md",
-          growiPath: "/guide",
-          attachments: [],
+          localPath: "docs/guide.md",
+          growiPath: "/docs/guide",
+          attachments: [
+            {
+              localPath: "images/photo.png",
+              fileName: "photo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["/images/photo.png"],
+            },
+          ],
         },
       ]);
     });
