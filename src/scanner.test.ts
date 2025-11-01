@@ -312,6 +312,78 @@ describe("scanMarkdownFiles", () => {
         originalLinkPaths: ["./images/photo\\(1\\).png"],
       });
     });
+
+    it("should detect link with URL-encoded spaces", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/photo%20with%20spaces.png)",
+        "images/photo with spaces.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/photo with spaces.png",
+        fileName: "photo with spaces.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/photo%20with%20spaces.png"],
+      });
+    });
+
+    it("should detect link with URL-encoded Japanese characters", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/%E7%94%BB%E5%83%8F.png)",
+        "images/画像.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/画像.png",
+        fileName: "画像.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/%E7%94%BB%E5%83%8F.png"],
+      });
+    });
+
+    it("should detect link with fully URL-encoded path including parentheses", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/my%20file%20%281%29.png)",
+        "images/my file (1).png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/my file (1).png",
+        fileName: "my file (1).png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/my%20file%20%281%29.png"],
+      });
+    });
+
+    it("should handle malformed URL encoding gracefully", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![image](./images/bad%2.png)",
+        "images/bad%2.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/bad%2.png",
+        fileName: "bad%2.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/bad%2.png"],
+      });
+    });
   });
 
   describe("pattern merging", () => {
@@ -333,6 +405,30 @@ describe("scanMarkdownFiles", () => {
               fileName: "logo.png",
               detectionPattern: "naming",
               originalLinkPaths: ["./guide_attachment_logo.png"],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("should merge naming pattern with URL-encoded link", async () => {
+      await createTestFiles(tempDir, {
+        "添付.md": "[file](%E6%B7%BB%E4%BB%98_attachment_file.pdf)",
+        "添付_attachment_file.pdf": "fake-pdf",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "添付.md",
+          growiPath: "/添付",
+          attachments: [
+            {
+              localPath: "添付_attachment_file.pdf",
+              fileName: "file.pdf",
+              detectionPattern: "naming",
+              originalLinkPaths: ["%E6%B7%BB%E4%BB%98_attachment_file.pdf"],
             },
           ],
         },

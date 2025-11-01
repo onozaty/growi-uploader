@@ -145,18 +145,27 @@ AAA/images/logo.png                     →  /AAA/BBB に添付
 
 **対象となるリンク形式:**
 ```markdown
-![alt](./path/to/file.png)    # 画像（相対パス）
-![alt](path/to/file.png)      # 画像（相対パス、./なし）
-![alt](/images/logo.png)      # 画像（絶対パス、source-dir起点）
-[text](./path/to/file.pdf)    # リンク（相対パス）
-[text](path/to/file.pdf)      # リンク（相対パス、./なし）
-[text](/docs/manual.pdf)      # リンク（絶対パス、source-dir起点）
+![alt](./path/to/file.png)       # 画像（相対パス）
+![alt](path/to/file.png)         # 画像（相対パス、./なし）
+![alt](/images/logo.png)         # 画像（絶対パス、source-dir起点）
+[text](./path/to/file.pdf)       # リンク（相対パス）
+[text](path/to/file.pdf)         # リンク（相対パス、./なし）
+[text](/docs/manual.pdf)         # リンク（絶対パス、source-dir起点）
+
+# URLエンコード（パーセントエンコーディング）にも対応
+![画像](./images/%E7%94%BB%E5%83%8F.png)          # 日本語ファイル名（URLエンコード済み）
+[file](./docs/my%20file.pdf)                     # スペースを含むファイル名
+[file](<./path/to/file (1).png>)                 # 特殊文字を含む（angle brackets使用）
+![image](./path/to/file\\(1\\).png)              # 特殊文字を含む（エスケープ使用）
 ```
 
 **パスの解決:**
+- Markdownエスケープシーケンスを解除（`\(` → `(`）
+- URLエンコード（パーセントエンコーディング）をデコード（`%20` → スペース、`%E7%94%BB%E5%83%8F` → `画像`）
 - 相対パス（`./` または `../` で始まる、または何も付かない）: Markdownファイルのディレクトリからの相対パス
 - 絶対パス（`/` で始まる）: 処理対象フォルダ（source-dir）を起点とした絶対パス
   - 例: `/images/logo.png` → `<source-dir>/images/logo.png`
+- デコード後のパスでファイルの存在を確認
 
 **除外されるリンク:**
 - `.md` ファイルへのリンク（ページリンクとして扱う）

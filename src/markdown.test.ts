@@ -135,6 +135,54 @@ describe("replaceAttachmentLinks", () => {
       expect(result.content).toBe("![image](/attachment/abc123)");
       expect(result.replaced).toBe(true);
     });
+
+    it("should replace link pattern with URL-encoded spaces", () => {
+      const markdown = "![image](./images/photo%20with%20spaces.png)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/photo with spaces.png",
+          fileName: "photo with spaces.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/photo%20with%20spaces.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![image](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace link pattern with URL-encoded Japanese characters", () => {
+      const markdown = "![image](./images/%E7%94%BB%E5%83%8F.png)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/画像.png",
+          fileName: "画像.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/%E7%94%BB%E5%83%8F.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![image](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace link pattern with fully URL-encoded path", () => {
+      const markdown = "![image](./images/my%20file%20%281%29.png)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/my file (1).png",
+          fileName: "my file (1).png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/my%20file%20%281%29.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![image](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
   });
 
   describe("mixed patterns", () => {
@@ -160,6 +208,22 @@ describe("replaceAttachmentLinks", () => {
       expect(result.content).toBe(
         "![diagram](/attachment/abc123)\n![logo](/attachment/def456)",
       );
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace naming pattern with URL-encoded link from merge", () => {
+      const markdown = "[file](%E6%B7%BB%E4%BB%98_attachment_file.pdf)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "添付_attachment_file.pdf",
+          fileName: "file.pdf",
+          attachmentId: "abc123",
+          detectionPattern: "naming",
+          originalLinkPaths: ["%E6%B7%BB%E4%BB%98_attachment_file.pdf"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "添付");
+      expect(result.content).toBe("[file](/attachment/abc123)");
       expect(result.replaced).toBe(true);
     });
   });

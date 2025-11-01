@@ -180,9 +180,21 @@ images/
 All referenced files (`logo.png`, `screenshot.png`, and `banner.png`) will be uploaded as attachments to the `/guide` page, even though they don't follow the `_attachment_` naming convention.
 
 **Path resolution:**
+- Markdown escape sequences are unescaped (`\(` → `(`)
+- URL encoding (percent-encoding) is decoded (`%20` → space, `%E7%94%BB%E5%83%8F` → `画像`)
 - Relative paths (`./`, `../`, or no prefix): Resolved from the Markdown file's directory
 - Absolute paths (starting with `/`): Resolved from the source directory root
   - Example: `/assets/banner.png` → `<source-dir>/assets/banner.png`
+
+**Supported link formats:**
+```markdown
+![Logo](./images/logo.png)                # Standard relative path
+![Logo](images/logo.png)                  # Relative path without ./
+![Image](./images/%E7%94%BB%E5%83%8F.png) # URL-encoded Japanese filename
+[File](./docs/my%20file.pdf)              # URL-encoded space
+[File](<./path/file (1).png>)             # Special chars with angle brackets
+![Image](./path/file\\(1\\).png)          # Special chars with escaping
+```
 
 **Excluded from detection:**
 - `.md` files (treated as page links)

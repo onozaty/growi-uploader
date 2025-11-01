@@ -85,16 +85,27 @@ const extractLinkedAttachments = (
     // Example: photo\(1\).png → photo(1).png
     const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
 
+    // Decode URL encoding (percent-encoding) in the path
+    // Example: photo%20(1).png → photo (1).png
+    // Example: %E7%94%BB%E5%83%8F.png → 画像.png
+    let decodedPath: string;
+    try {
+      decodedPath = decodeURIComponent(unescapedPath);
+    } catch {
+      // If decodeURIComponent fails (malformed URI), use the original path
+      decodedPath = unescapedPath;
+    }
+
     // Resolve path: absolute paths (starting with /) are relative to sourceDir,
     // other paths are relative to the markdown file's directory
     let absolutePath: string;
     if (linkPath.startsWith("/")) {
       // Treat /path as sourceDir/path (remove leading /)
-      absolutePath = resolve(sourceDir, unescapedPath.slice(1));
+      absolutePath = resolve(sourceDir, decodedPath.slice(1));
     } else {
       // Resolve relative path from markdown file's directory
       const markdownDir = dirname(join(sourceDir, markdownFilePath));
-      absolutePath = resolve(markdownDir, unescapedPath);
+      absolutePath = resolve(markdownDir, decodedPath);
     }
 
     // Check if file exists

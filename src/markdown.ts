@@ -35,22 +35,22 @@ export const replaceAttachmentLinks = (
     const growiPath = `/attachment/${attachment.attachmentId}`;
     const patterns: string[] = [];
 
-    // Pattern 1: Naming convention (guide_attachment_file.png)
+    // Pattern 1: Naming convention - add default patterns for non-linked files
     if (attachment.detectionPattern === "naming") {
       const localFileName = `${pageName}_attachment_${attachment.fileName}`;
       const escapedFileName = escapeRegex(localFileName);
 
+      // Add default patterns (for backward compatibility and non-linked files)
       patterns.push(
         escapedFileName, // guide_attachment_file.png
         `\\./${escapedFileName}`, // ./guide_attachment_file.png
       );
     }
 
-    // Pattern 2: Link-based (./images/photo.jpg)
-    if (
-      attachment.detectionPattern === "link" &&
-      attachment.originalLinkPaths
-    ) {
+    // Pattern 2: originalLinkPaths - for both naming and link patterns
+    // Naming pattern gets this from merging with link pattern
+    // Link pattern always has this from scanning
+    if (attachment.originalLinkPaths) {
       for (const linkPath of attachment.originalLinkPaths) {
         const escapedPath = escapeRegex(linkPath);
         patterns.push(escapedPath);
@@ -61,7 +61,7 @@ export const replaceAttachmentLinks = (
           const withoutDot = linkPath.substring(2);
           const escapedWithoutDot = escapeRegex(withoutDot);
           patterns.push(escapedWithoutDot);
-        } else if (!linkPath.startsWith("../")) {
+        } else if (!linkPath.startsWith("../") && !linkPath.startsWith("<")) {
           // Add version with ./
           patterns.push(`\\./${escapedPath}`);
         }
