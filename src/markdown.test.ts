@@ -228,6 +228,118 @@ describe("replaceAttachmentLinks", () => {
     });
   });
 
+  describe("HTML img tag", () => {
+    it("should replace img tag src with double quotes", () => {
+      const markdown = '<img src="./images/logo.png" alt="Logo">';
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/logo.png",
+          fileName: "logo.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/logo.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe('<img src="/attachment/abc123" alt="Logo">');
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace img tag src with single quotes", () => {
+      const markdown = "<img src='./images/logo.png' alt='Logo'>";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/logo.png",
+          fileName: "logo.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/logo.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("<img src='/attachment/abc123' alt='Logo'>");
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace img tag with additional attributes", () => {
+      const markdown =
+        '<img class="responsive" src="./images/logo.png" alt="Logo" width="100">';
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/logo.png",
+          fileName: "logo.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/logo.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe(
+        '<img class="responsive" src="/attachment/abc123" alt="Logo" width="100">',
+      );
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace img tag without ./ prefix", () => {
+      const markdown = '<img src="images/logo.png" alt="Logo">';
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/logo.png",
+          fileName: "logo.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/logo.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe('<img src="/attachment/abc123" alt="Logo">');
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace img tag with URL-encoded path", () => {
+      const markdown =
+        '<img src="./images/photo%20with%20spaces.png" alt="Photo">';
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/photo with spaces.png",
+          fileName: "photo with spaces.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/photo%20with%20spaces.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe('<img src="/attachment/abc123" alt="Photo">');
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace both markdown and HTML img tags", () => {
+      const markdown =
+        '![markdown](./images/md.png)\n<img src="./images/html.png" alt="HTML">';
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/md.png",
+          fileName: "md.png",
+          attachmentId: "md123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/md.png"],
+        },
+        {
+          localPath: "images/html.png",
+          fileName: "html.png",
+          attachmentId: "html123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/html.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe(
+        '![markdown](/attachment/md123)\n<img src="/attachment/html123" alt="HTML">',
+      );
+      expect(result.replaced).toBe(true);
+    });
+  });
+
   describe("edge cases", () => {
     it("should not replace when attachment has no ID", () => {
       const markdown = "![image](guide_attachment_image.png)";

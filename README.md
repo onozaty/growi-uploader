@@ -194,6 +194,8 @@ All referenced files (`logo.png`, `screenshot.png`, and `banner.png`) will be up
 [File](./docs/my%20file.pdf)              # URL-encoded space
 [File](<./path/file (1).png>)             # Special chars with angle brackets
 ![Image](./path/file\\(1\\).png)          # Special chars with escaping
+<img src="./images/logo.png" alt="Logo">  # HTML img tag (double quotes)
+<img src='./images/logo.png' alt='Logo'>  # HTML img tag (single quotes)
 ```
 
 **Excluded from detection:**

@@ -386,6 +386,127 @@ describe("scanMarkdownFiles", () => {
     });
   });
 
+  describe("HTML img tag detection", () => {
+    it("should detect img tag with double quotes", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": '<img src="./images/logo.png" alt="Logo">',
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/logo.png",
+        fileName: "logo.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/logo.png"],
+      });
+    });
+
+    it("should detect img tag with single quotes", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "<img src='./images/logo.png' alt='Logo'>",
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/logo.png",
+        fileName: "logo.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/logo.png"],
+      });
+    });
+
+    it("should detect img tag with additional attributes", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md":
+          '<img class="responsive" src="./images/logo.png" alt="Logo" width="100">',
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/logo.png",
+        fileName: "logo.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/logo.png"],
+      });
+    });
+
+    it("should detect img tag without ./ prefix", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": '<img src="images/logo.png" alt="Logo">',
+        "images/logo.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/logo.png",
+        fileName: "logo.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["images/logo.png"],
+      });
+    });
+
+    it("should detect img tag with URL-encoded path", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md":
+          '<img src="./images/photo%20with%20spaces.png" alt="Photo">',
+        "images/photo with spaces.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/photo with spaces.png",
+        fileName: "photo with spaces.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/photo%20with%20spaces.png"],
+      });
+    });
+
+    it("should skip external URLs in img tags", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": '<img src="https://example.com/logo.png" alt="Logo">',
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(0);
+    });
+
+    it("should detect both markdown and HTML img tags", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md":
+          '![markdown](./images/md.png)\n<img src="./images/html.png" alt="HTML">',
+        "images/md.png": "fake-md-image",
+        "images/html.png": "fake-html-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(2);
+      const fileNames = results[0]!.attachments.map((a) => a.fileName).sort();
+      expect(fileNames).toEqual(["html.png", "md.png"]);
+    });
+  });
+
   describe("pattern merging", () => {
     it("should merge same file detected by both patterns", async () => {
       await createTestFiles(tempDir, {

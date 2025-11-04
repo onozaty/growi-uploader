@@ -152,6 +152,10 @@ AAA/images/logo.png                     →  /AAA/BBB に添付
 [text](path/to/file.pdf)         # リンク（相対パス、./なし）
 [text](/docs/manual.pdf)         # リンク（絶対パス、source-dir起点）
 
+# HTMLのimgタグにも対応
+<img src="./images/logo.png" alt="Logo">         # imgタグ（ダブルクォート）
+<img src='./images/logo.png' alt='Logo'>         # imgタグ（シングルクォート）
+
 # URLエンコード（パーセントエンコーディング）にも対応
 ![画像](./images/%E7%94%BB%E5%83%8F.png)          # 日本語ファイル名（URLエンコード済み）
 [file](./docs/my%20file.pdf)                     # スペースを含むファイル名
@@ -246,7 +250,15 @@ Markdown内で実際にリンクされているパス形式:
 [ドキュメント](docs/manual.pdf)
 ```
 
-リンクベースで検出された添付ファイルは、元のリンクパスがそのまま置換対象になります。
+**パターン3: HTMLのimgタグ**
+
+HTMLのimgタグ形式:
+```markdown
+<img src="./images/logo.png" alt="Logo">
+<img src='./images/logo.png' alt='Logo'>
+```
+
+リンクベースおよびimgタグで検出された添付ファイルは、元のリンクパスがそのまま置換対象になります。
 
 #### 3.4.3 置換後の形式
 
@@ -255,6 +267,7 @@ GROWI上では `/attachment/{attachment_id}` 形式に変換されます:
 ```markdown
 ![画像](/attachment/68f3a41c794f665ad2c0d322)
 [ファイル](/attachment/68f3a3fa794f665ad2c0d2b3)
+<img src="/attachment/68f3a41c794f665ad2c0d322" alt="Logo">
 ```
 
 #### 3.4.4 処理フロー

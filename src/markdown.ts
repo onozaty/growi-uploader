@@ -87,6 +87,17 @@ export const replaceAttachmentLinks = (
         replaced = true;
         result = result.replace(linkRegex, `[$1](${growiPath})`);
       }
+
+      // HTML img tag: <img src="pattern" ...> → <img src="/attachment/id" ...>
+      // Supports both single and double quotes
+      const imgTagRegex = new RegExp(
+        `(<img\\s+[^>]*src=)(["'])${pattern}\\2([^>]*>)`,
+        "gi",
+      );
+      if (imgTagRegex.test(result)) {
+        replaced = true;
+        result = result.replace(imgTagRegex, `$1$2${growiPath}$2$3`);
+      }
     }
   }
 

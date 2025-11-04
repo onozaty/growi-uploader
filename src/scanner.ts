@@ -17,6 +17,80 @@ export interface AttachmentFile {
 }
 
 /**
+ * Process a link path and convert it to an AttachmentFile if it exists
+ *
+ * @param linkPath The link path from markdown
+ * @param originalLinkPath The original format of the link (for replacement)
+ * @param markdownFilePath Path to the markdown file (relative to sourceDir)
+ * @param sourceDir Source directory (absolute path)
+ * @returns AttachmentFile if the path resolves to an existing file, null otherwise
+ */
+const processLinkPath = (
+  linkPath: string,
+  originalLinkPath: string,
+  markdownFilePath: string,
+  sourceDir: string,
+): AttachmentFile | null => {
+  // Skip external URLs
+  if (linkPath.startsWith("http://") || linkPath.startsWith("https://")) {
+    return null;
+  }
+
+  // Skip .md files (these are page links, not attachments)
+  if (linkPath.endsWith(".md")) {
+    return null;
+  }
+
+  // Unescape Markdown escape sequences for file path resolution
+  // Markdown allows escaping these ASCII punctuation characters:
+  // \ ` * _ { } [ ] ( ) # + - . !
+  // Reference: https://spec.commonmark.org/0.30/#backslash-escapes
+  // Example: photo\(1\).png → photo(1).png
+  const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
+
+  // Decode URL encoding (percent-encoding) in the path
+  // Example: photo%20(1).png → photo (1).png
+  // Example: %E7%94%BB%E5%83%8F.png → 画像.png
+  let decodedPath: string;
+  try {
+    decodedPath = decodeURIComponent(unescapedPath);
+  } catch {
+    // If decodeURIComponent fails (malformed URI), use the original path
+    decodedPath = unescapedPath;
+  }
+
+  // Resolve path: absolute paths (starting with /) are relative to sourceDir,
+  // other paths are relative to the markdown file's directory
+  let absolutePath: string;
+  if (linkPath.startsWith("/")) {
+    // Treat /path as sourceDir/path (remove leading /)
+    absolutePath = resolve(sourceDir, decodedPath.slice(1));
+  } else {
+    // Resolve relative path from markdown file's directory
+    const markdownDir = dirname(join(sourceDir, markdownFilePath));
+    absolutePath = resolve(markdownDir, decodedPath);
+  }
+
+  // Check if file exists
+  if (!existsSync(absolutePath)) {
+    return null;
+  }
+
+  // Convert back to path relative to sourceDir
+  const relativePath = relative(sourceDir, absolutePath);
+
+  // Normalize path separators to forward slashes
+  const normalizedPath = relativePath.replace(/\\/g, "/");
+
+  return {
+    localPath: normalizedPath,
+    fileName: basename(normalizedPath),
+    detectionPattern: "link",
+    originalLinkPaths: [originalLinkPath], // Keep original format for replacement
+  };
+};
+
+/**
  * Extract attachment files from markdown links
  *
  * Scans markdown content for image and link references, resolves their paths,
@@ -68,63 +142,37 @@ const extractLinkedAttachments = (
 
     const originalLinkPath = anglePath ? `<${anglePath}>` : regularPath!;
 
-    // Skip external URLs
-    if (linkPath.startsWith("http://") || linkPath.startsWith("https://")) {
+    const attachment = processLinkPath(
+      linkPath,
+      originalLinkPath,
+      markdownFilePath,
+      sourceDir,
+    );
+    if (attachment) {
+      attachments.push(attachment);
+    }
+  }
+
+  // Match HTML img tags: <img src="path" ...>
+  // Supports both single and double quotes
+  // Named capture groups:
+  // - quote: the quote character used (single or double)
+  // - src: the src attribute value
+  const imgTagRegex =
+    /<img\s+[^>]*src=(?<quote>["'])(?<src>.*?)\k<quote>[^>]*>/gi;
+
+  while ((match = imgTagRegex.exec(content)) !== null) {
+    const { src } = match.groups!;
+
+    // Skip if src is undefined
+    if (!src) {
       continue;
     }
 
-    // Skip .md files (these are page links, not attachments)
-    if (linkPath.endsWith(".md")) {
-      continue;
+    const attachment = processLinkPath(src, src, markdownFilePath, sourceDir);
+    if (attachment) {
+      attachments.push(attachment);
     }
-
-    // Unescape Markdown escape sequences for file path resolution
-    // Markdown allows escaping these ASCII punctuation characters:
-    // \ ` * _ { } [ ] ( ) # + - . !
-    // Reference: https://spec.commonmark.org/0.30/#backslash-escapes
-    // Example: photo\(1\).png → photo(1).png
-    const unescapedPath = linkPath.replace(/\\([\\`*_{}[\]()#+\-.!])/g, "$1");
-
-    // Decode URL encoding (percent-encoding) in the path
-    // Example: photo%20(1).png → photo (1).png
-    // Example: %E7%94%BB%E5%83%8F.png → 画像.png
-    let decodedPath: string;
-    try {
-      decodedPath = decodeURIComponent(unescapedPath);
-    } catch {
-      // If decodeURIComponent fails (malformed URI), use the original path
-      decodedPath = unescapedPath;
-    }
-
-    // Resolve path: absolute paths (starting with /) are relative to sourceDir,
-    // other paths are relative to the markdown file's directory
-    let absolutePath: string;
-    if (linkPath.startsWith("/")) {
-      // Treat /path as sourceDir/path (remove leading /)
-      absolutePath = resolve(sourceDir, decodedPath.slice(1));
-    } else {
-      // Resolve relative path from markdown file's directory
-      const markdownDir = dirname(join(sourceDir, markdownFilePath));
-      absolutePath = resolve(markdownDir, decodedPath);
-    }
-
-    // Check if file exists
-    if (!existsSync(absolutePath)) {
-      continue;
-    }
-
-    // Convert back to path relative to sourceDir
-    const relativePath = relative(sourceDir, absolutePath);
-
-    // Normalize path separators to forward slashes
-    const normalizedPath = relativePath.replace(/\\/g, "/");
-
-    attachments.push({
-      localPath: normalizedPath,
-      fileName: basename(normalizedPath),
-      detectionPattern: "link",
-      originalLinkPaths: [originalLinkPath], // Keep original format for replacement
-    });
   }
 
   return attachments;
