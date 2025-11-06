@@ -3,6 +3,7 @@ import { basename, join } from "node:path";
 import type { Config } from "./config";
 import {
   createOrUpdatePage,
+  formatDetailedError,
   updatePageContent,
   uploadAttachment,
 } from "./growi-client";
@@ -76,6 +77,9 @@ export const uploadFiles = async (
       console.error(
         `[ERROR] ${file.localPath} → ${file.growiPath} (${result.errorMessage || "unknown error"})`,
       );
+      if (config.verbose && result.error) {
+        console.error(formatDetailedError(result.error));
+      }
     }
 
     // Stage 2: Upload attachments (only if page was created or updated)
@@ -118,6 +122,9 @@ export const uploadFiles = async (
             console.error(
               `[ERROR] ${attachment.localPath} → ${file.growiPath} (${attachmentResult.errorMessage || "failed to upload attachment"})`,
             );
+            if (config.verbose && attachmentResult.error) {
+              console.error(formatDetailedError(attachmentResult.error));
+            }
           }
         }
 
@@ -150,6 +157,9 @@ export const uploadFiles = async (
               console.error(
                 `[ERROR] ${file.localPath} → ${file.growiPath} (failed to update attachment links: ${updateResult.errorMessage || "unknown error"})`,
               );
+              if (config.verbose && updateResult.error) {
+                console.error(formatDetailedError(updateResult.error));
+              }
               stats.linkReplacementErrors++;
             }
           }
@@ -177,6 +187,9 @@ export const uploadFiles = async (
             console.error(
               `[ERROR] ${file.localPath} → ${file.growiPath} (failed to update page links: ${updateResult.errorMessage || "unknown error"})`,
             );
+            if (config.verbose && updateResult.error) {
+              console.error(formatDetailedError(updateResult.error));
+            }
             stats.linkReplacementErrors++;
           }
         }

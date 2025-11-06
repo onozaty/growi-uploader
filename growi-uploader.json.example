@@ -2,5 +2,6 @@
   "url": "https://your-growi-instance.example.com",
   "token": "your-access-token-here",
   "basePath": "/",
-  "update": false
+  "update": false,
+  "verbose": false
 }

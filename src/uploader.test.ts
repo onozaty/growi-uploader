@@ -25,6 +25,7 @@ describe("uploadFiles", () => {
     token: "test-token",
     basePath: "/",
     update: false,
+    verbose: false,
   };
 
   it("should upload a single page without attachments", async () => {
@@ -531,5 +532,207 @@ describe("uploadFiles", () => {
     expect(consoleLogSpy).toHaveBeenCalledWith(
       "[SKIP] guide3.md → /guide3 (page already exists)",
     );
+  });
+
+  describe("verbose mode", () => {
+    it("should call formatDetailedError when verbose is true and page creation fails", async () => {
+      const verboseConfig: Config = {
+        ...mockConfig,
+        verbose: true,
+      };
+
+      const files: MarkdownFile[] = [
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          attachments: [],
+        },
+      ];
+
+      const mockError = new Error("API Error");
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: undefined,
+        revisionId: undefined,
+        action: "error",
+        errorMessage: "HTTP 500 Server Error",
+        error: mockError,
+      });
+
+      const formatDetailedErrorSpy = vi
+        .spyOn(growiClient, "formatDetailedError")
+        .mockReturnValue("  Details:\n  HTTP Status: 500");
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await uploadFiles(files, "/source", verboseConfig);
+
+      expect(formatDetailedErrorSpy).toHaveBeenCalledWith(mockError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[ERROR] guide.md → /guide (HTTP 500 Server Error)",
+      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "  Details:\n  HTTP Status: 500",
+      );
+    });
+
+    it("should NOT call formatDetailedError when verbose is false and page creation fails", async () => {
+      const files: MarkdownFile[] = [
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          attachments: [],
+        },
+      ];
+
+      const mockError = new Error("API Error");
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: undefined,
+        revisionId: undefined,
+        action: "error",
+        errorMessage: "HTTP 500 Server Error",
+        error: mockError,
+      });
+
+      const formatDetailedErrorSpy = vi
+        .spyOn(growiClient, "formatDetailedError")
+        .mockReturnValue("  Details:\n  HTTP Status: 500");
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await uploadFiles(files, "/source", mockConfig);
+
+      expect(formatDetailedErrorSpy).not.toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[ERROR] guide.md → /guide (HTTP 500 Server Error)",
+      );
+      expect(consoleErrorSpy).not.toHaveBeenCalledWith(
+        "  Details:\n  HTTP Status: 500",
+      );
+    });
+
+    it("should call formatDetailedError when verbose is true and attachment upload fails", async () => {
+      const verboseConfig: Config = {
+        ...mockConfig,
+        verbose: true,
+      };
+
+      const files: MarkdownFile[] = [
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          attachments: [
+            {
+              localPath: "guide_attachment_image.png",
+              fileName: "image.png",
+              detectionPattern: "naming",
+            },
+          ],
+        },
+      ];
+
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+
+      const mockError = new Error("Upload failed");
+      vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+        success: false,
+        errorMessage: "HTTP 413 File too large",
+        error: mockError,
+      });
+
+      const formatDetailedErrorSpy = vi
+        .spyOn(growiClient, "formatDetailedError")
+        .mockReturnValue("  Details:\n  HTTP Status: 413");
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await uploadFiles(files, "/source", verboseConfig);
+
+      expect(formatDetailedErrorSpy).toHaveBeenCalledWith(mockError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[ERROR] guide_attachment_image.png → /guide (HTTP 413 File too large)",
+      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "  Details:\n  HTTP Status: 413",
+      );
+    });
+
+    it("should call formatDetailedError when verbose is true and link replacement fails", async () => {
+      const verboseConfig: Config = {
+        ...mockConfig,
+        verbose: true,
+      };
+
+      const files: MarkdownFile[] = [
+        {
+          localPath: "guide.md",
+          growiPath: "/guide",
+          attachments: [
+            {
+              localPath: "images/logo.png",
+              fileName: "logo.png",
+              detectionPattern: "link",
+              originalLinkPaths: ["./images/logo.png"],
+              attachmentId: "attach123",
+            },
+          ],
+        },
+      ];
+
+      vi.spyOn(growiClient, "createOrUpdatePage").mockResolvedValue({
+        pageId: "page123",
+        revisionId: "rev456",
+        action: "created",
+      });
+
+      vi.spyOn(growiClient, "uploadAttachment").mockResolvedValue({
+        success: true,
+        attachmentId: "attach123",
+        revisionId: "rev789",
+      });
+
+      // Mock replaceAttachmentLinks
+      vi.spyOn(
+        await import("./markdown"),
+        "replaceAttachmentLinks",
+      ).mockReturnValue({
+        content: "![Logo](/attachment/attach123)",
+        replaced: true,
+      });
+
+      const mockError = new Error("Update failed");
+      vi.spyOn(growiClient, "updatePageContent").mockResolvedValue({
+        success: false,
+        errorMessage: "HTTP 409 Conflict",
+        error: mockError,
+      });
+
+      const formatDetailedErrorSpy = vi
+        .spyOn(growiClient, "formatDetailedError")
+        .mockReturnValue("  Details:\n  HTTP Status: 409");
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await uploadFiles(files, "/source", verboseConfig);
+
+      expect(formatDetailedErrorSpy).toHaveBeenCalledWith(mockError);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[ERROR] guide.md → /guide (failed to update attachment links: HTTP 409 Conflict)",
+      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "  Details:\n  HTTP Status: 409",
+      );
+    });
   });
 });

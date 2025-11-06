@@ -3,24 +3,26 @@ import { resolve } from "node:path";
 
 /**
  * Config file format (JSON input)
- * basePath and update are optional in the file
+ * basePath, update, and verbose are optional in the file
  */
 interface ConfigInput {
   url: string;
   token: string;
   basePath?: string;
   update?: boolean;
+  verbose?: boolean;
 }
 
 /**
  * Runtime config (with defaults applied)
- * basePath and update are always present
+ * basePath, update, and verbose are always present
  */
 export interface Config {
   url: string;
   token: string;
   basePath: string;
   update: boolean;
+  verbose: boolean;
 }
 
 /**
@@ -30,6 +32,7 @@ export interface Config {
  * @returns Configuration object with defaults applied:
  *   - basePath defaults to "/" if not specified or empty
  *   - update defaults to false if not specified
+ *   - verbose defaults to false if not specified
  * @throws Error if config file is not found or required fields (url, token) are missing
  */
 export const loadConfig = (configPath: string): Config => {
@@ -53,6 +56,7 @@ export const loadConfig = (configPath: string): Config => {
       token: input.token,
       basePath: input.basePath || "/",
       update: input.update ?? false,
+      verbose: input.verbose ?? false,
     };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {

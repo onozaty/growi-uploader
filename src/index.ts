@@ -13,9 +13,16 @@ const program = new Command();
 export const main = async (
   sourceDir: string,
   configPath: string,
+  verboseOverride?: boolean,
 ): Promise<void> => {
   // Load configuration
   const config = loadConfig(configPath);
+
+  // Override verbose setting if CLI option is provided
+  if (verboseOverride !== undefined) {
+    config.verbose = verboseOverride;
+  }
+
   const sourceDirPath = resolve(sourceDir);
 
   // Configure axios once
@@ -53,14 +60,23 @@ program
   .version(packageJson.version)
   .argument("<source-dir>", "Source directory containing Markdown files")
   .option("-c, --config <path>", "Path to config file", "growi-uploader.json")
-  .action(async (sourceDir: string, options: { config: string }) => {
-    try {
-      await main(sourceDir, options.config);
-    } catch (error) {
-      console.error("Error:", error instanceof Error ? error.message : error);
-      process.exit(1);
-    }
-  });
+  .option(
+    "-v, --verbose",
+    "Enable verbose error output with detailed information",
+  )
+  .action(
+    async (
+      sourceDir: string,
+      options: { config: string; verbose?: boolean },
+    ) => {
+      try {
+        await main(sourceDir, options.config, options.verbose);
+      } catch (error) {
+        console.error("Error:", error instanceof Error ? error.message : error);
+        process.exit(1);
+      }
+    },
+  );
 
 // Only parse command line arguments if not in test mode
 if (process.env.NODE_ENV !== "test" && !process.env.VITEST) {

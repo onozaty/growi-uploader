@@ -69,6 +69,7 @@ growi-uploader <source-dir> [options]
 
 **Options:**
 - `-c, --config <path>`: Path to config file (default: `growi-uploader.json`)
+- `-v, --verbose`: Enable verbose error output with detailed information
 - `-V, --version`: Output the version number
 - `-h, --help`: Display help information
 
@@ -80,6 +81,9 @@ npx @onozaty/growi-uploader ./docs
 
 # Upload with custom config file
 npx @onozaty/growi-uploader ./docs -c my-config.json
+
+# Upload with verbose error output
+npx @onozaty/growi-uploader ./docs --verbose
 ```
 
 ## Directory Structure Example
@@ -117,7 +121,8 @@ Create a `growi-uploader.json` file in your project root:
   "url": "https://your-growi-instance.com",
   "token": "your-api-token",
   "basePath": "/imported",
-  "update": true
+  "update": true,
+  "verbose": false
 }
 ```
 
@@ -129,6 +134,7 @@ Create a `growi-uploader.json` file in your project root:
 | `token` | string | ✅ | - | GROWI API access token |
 | `basePath` | string | ❌ | `/` | Base path for imported pages |
 | `update` | boolean | ❌ | `false` | Update existing pages if true, skip if false |
+| `verbose` | boolean | ❌ | `false` | Enable verbose error output with detailed information |
 
 ### Getting an API Token
 

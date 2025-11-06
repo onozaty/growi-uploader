@@ -83,6 +83,7 @@ describe("main", () => {
         token: "test-token",
         basePath: "/",
         update: false,
+        verbose: false,
       },
     );
 

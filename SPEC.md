@@ -470,6 +470,7 @@ growi-uploader <source-dir> [options]
 ### 4.3 オプション
 
 - `--config <path>`, `-c <path>`: 設定ファイルのパス (デフォルト: カレントディレクトリの `growi-uploader.json`)
+- `--verbose`, `-v`: 詳細なエラー出力を有効化 (スタックトレース、レスポンス内容などを表示)
 
 ### 4.4 設定ファイル (必須)
 `growi-uploader.json` (JSON形式)
@@ -478,7 +479,8 @@ growi-uploader <source-dir> [options]
   "url": "https://wiki.example.com",
   "token": "your-access-token",
   "basePath": "/",
-  "update": false
+  "update": false,
+  "verbose": false
 }
 ```
 
@@ -492,6 +494,10 @@ growi-uploader <source-dir> [options]
 - `update`: 既存ページを更新するかどうか (デフォルト: `false`)
   - `true`: 既存ページを更新
   - `false`: 既存ページをスキップ
+- `verbose`: 詳細なエラー出力を有効化するかどうか (デフォルト: `false`)
+  - `true`: エラー発生時にHTTPステータス、レスポンス内容、スタックトレースなどの詳細情報を出力
+  - `false`: 簡潔なエラーメッセージのみ表示
+  - コマンドラインオプション `--verbose` で設定ファイルの値を上書き可能
 
 設定ファイルが見つからない場合はエラーで終了します。
 
