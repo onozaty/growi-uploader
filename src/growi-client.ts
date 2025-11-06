@@ -19,7 +19,9 @@ import type { AttachmentFile, MarkdownFile } from "./scanner";
  * @param token API token for authentication
  */
 export const configureAxios = (growiUrl: string, token: string): void => {
-  axios.defaults.baseURL = `${growiUrl}/_api/v3`;
+  // Remove trailing slashes from URL to avoid double slashes
+  const baseUrl = growiUrl.replace(/\/+$/, "");
+  axios.defaults.baseURL = `${baseUrl}/_api/v3`;
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 

@@ -38,6 +38,18 @@ describe("configureAxios", () => {
       "Bearer test-token-123",
     );
   });
+
+  it("should remove trailing slash from URL", () => {
+    configureAxios("https://growi.example.com/", "test-token");
+
+    expect(axios.defaults.baseURL).toBe("https://growi.example.com/_api/v3");
+  });
+
+  it("should handle URL with multiple trailing slashes", () => {
+    configureAxios("https://growi.example.com///", "test-token");
+
+    expect(axios.defaults.baseURL).toBe("https://growi.example.com/_api/v3");
+  });
 });
 
 describe("createOrUpdatePage", () => {
