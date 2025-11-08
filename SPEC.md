@@ -91,6 +91,7 @@ AAA/CCC/DDD.md              →   /AAA/CCC/DDD (ページ)
      - `*` → `-asterisk-`
      - `$` → `-dollar-`
      - `^` → `-caret-`
+     - `%` → `-percent-`
    - 例: `C++ / Python?.md` → `/C-plus--plus-_/_Python-question-`
 
 #### 3.1.3 処理対象ファイル

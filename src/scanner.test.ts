@@ -861,6 +861,22 @@ describe("scanMarkdownFiles", () => {
       ]);
     });
 
+    it("should replace % with -percent-", async () => {
+      await createTestFiles(tempDir, {
+        "50%.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "50%.md",
+          growiPath: "/50-percent-",
+          attachments: [],
+        },
+      ]);
+    });
+
     it("should handle multiple special characters", async () => {
       await createTestFiles(tempDir, {
         "C++ / Python?.md": "# Content",

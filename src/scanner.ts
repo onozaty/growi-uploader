@@ -238,7 +238,8 @@ const normalizeGrowiPath = (path: string): string => {
     .replace(/\?/g, "-question-")
     .replace(/\*/g, "-asterisk-")
     .replace(/\$/g, "-dollar-")
-    .replace(/\^/g, "-caret-");
+    .replace(/\^/g, "-caret-")
+    .replace(/%/g, "-percent-");
 
   return normalized;
 };

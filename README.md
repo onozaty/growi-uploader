@@ -127,6 +127,7 @@ To prevent API errors, page names are automatically normalized using the followi
    - `*` → `-asterisk-`
    - `$` → `-dollar-`
    - `^` → `-caret-`
+   - `%` → `-percent-`
 
 ### Examples
 
