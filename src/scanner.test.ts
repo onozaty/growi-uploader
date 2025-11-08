@@ -763,4 +763,150 @@ describe("scanMarkdownFiles", () => {
       expect(results[2]!.attachments).toHaveLength(1);
     });
   });
+
+  describe("page path normalization", () => {
+    it("should normalize spaces around slashes to underscores", async () => {
+      await createTestFiles(tempDir, {
+        "a / b.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "a / b.md",
+          growiPath: "/a_/_b",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace + with -plus-", async () => {
+      await createTestFiles(tempDir, {
+        "C++.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "C++.md",
+          growiPath: "/C-plus--plus-",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace ? with -question-", async () => {
+      await createTestFiles(tempDir, {
+        "What?.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "What?.md",
+          growiPath: "/What-question-",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace * with -asterisk-", async () => {
+      await createTestFiles(tempDir, {
+        "star*.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "star*.md",
+          growiPath: "/star-asterisk-",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace $ with -dollar-", async () => {
+      await createTestFiles(tempDir, {
+        "price$100.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "price$100.md",
+          growiPath: "/price-dollar-100",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace ^ with -caret-", async () => {
+      await createTestFiles(tempDir, {
+        "x^2.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "x^2.md",
+          growiPath: "/x-caret-2",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should handle multiple special characters", async () => {
+      await createTestFiles(tempDir, {
+        "C++ / Python?.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "C++ / Python?.md",
+          growiPath: "/C-plus--plus-_/_Python-question-",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should not modify normal page paths", async () => {
+      await createTestFiles(tempDir, {
+        "docs/normal-page_name.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "docs/normal-page_name.md",
+          growiPath: "/docs/normal-page_name",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should apply normalization with basePath", async () => {
+      await createTestFiles(tempDir, {
+        "test?.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir, "/imported");
+
+      expect(results).toEqual([
+        {
+          localPath: "test?.md",
+          growiPath: "/imported/test-question-",
+          attachments: [],
+        },
+      ]);
+    });
+  });
 });

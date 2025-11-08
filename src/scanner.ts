@@ -219,6 +219,30 @@ const mergeAttachments = (
   return Array.from(map.values());
 };
 
+/**
+ * Normalize GROWI page path to avoid API errors
+ *
+ * @param path Raw GROWI page path
+ * @returns Normalized page path
+ */
+const normalizeGrowiPath = (path: string): string => {
+  let normalized = path;
+
+  // Replace spaces around slashes with underscores
+  // Example: "a / b" → "a_/_b"
+  normalized = normalized.replace(/\s+\/\s+/g, "_/_");
+
+  // Replace special characters with safe alternatives
+  normalized = normalized
+    .replace(/\+/g, "-plus-")
+    .replace(/\?/g, "-question-")
+    .replace(/\*/g, "-asterisk-")
+    .replace(/\$/g, "-dollar-")
+    .replace(/\^/g, "-caret-");
+
+  return normalized;
+};
+
 export const scanMarkdownFiles = async (
   sourceDir: string,
   basePath: string = "/",
@@ -246,7 +270,10 @@ export const scanMarkdownFiles = async (
       // Convert file path to GROWI page path
       // Example: docs/guide.md → /docs/guide
       const pathWithoutExt = file.replace(/\.md$/, "");
-      const growiPath = join(basePath, pathWithoutExt).replace(/\\/g, "/");
+      let growiPath = join(basePath, pathWithoutExt).replace(/\\/g, "/");
+
+      // Normalize page path to avoid API errors
+      growiPath = normalizeGrowiPath(growiPath);
 
       // Find attachments for this markdown file using both patterns
 

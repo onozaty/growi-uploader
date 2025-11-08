@@ -112,6 +112,35 @@ docs/
 /docs/api/authentication       (from api/authentication.md)
 ```
 
+## Page Name Normalization
+
+To prevent API errors, page names are automatically normalized using the following rules:
+
+### Normalization Rules
+
+1. **Spaces around slashes** → Replaced with underscores
+   - `a / b.md` → `/a_/_b`
+
+2. **Special characters** → Replaced with safe alternatives:
+   - `+` → `-plus-`
+   - `?` → `-question-`
+   - `*` → `-asterisk-`
+   - `$` → `-dollar-`
+   - `^` → `-caret-`
+
+### Examples
+
+```
+Local file                     GROWI page path
+──────────────────────────────────────────────────
+C++.md                      →  /C-plus--plus-
+What?.md                    →  /What-question-
+C++ / Python?.md            →  /C-plus--plus-_/_Python-question-
+docs/normal-page.md         →  /docs/normal-page (no change)
+```
+
+This normalization ensures compatibility with GROWI's page naming requirements while preserving the readability of your file names.
+
 ## Configuration File
 
 Create a `growi-uploader.json` file in your project root:
