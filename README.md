@@ -129,6 +129,9 @@ To prevent API errors, page names are automatically normalized using the followi
    - `^` → `-caret-`
    - `%` → `-percent-`
 
+3. **Reserved page names** → Suffixed with underscore:
+   - `edit` → `edit_` (only when it's the last path segment)
+
 ### Examples
 
 ```
@@ -137,6 +140,8 @@ Local file                     GROWI page path
 C++.md                      →  /C-plus--plus-
 What?.md                    →  /What-question-
 C++ / Python?.md            →  /C-plus--plus-_/_Python-question-
+edit.md                     →  /edit_
+docs/edit.md                →  /docs/edit_
 docs/normal-page.md         →  /docs/normal-page (no change)
 ```
 

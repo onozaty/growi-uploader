@@ -92,7 +92,10 @@ AAA/CCC/DDD.md              →   /AAA/CCC/DDD (ページ)
      - `$` → `-dollar-`
      - `^` → `-caret-`
      - `%` → `-percent-`
+   - 予約済みページ名の回避:
+     - `edit` → `edit_` （パスの最後のセグメントのみ）
    - 例: `C++ / Python?.md` → `/C-plus--plus-_/_Python-question-`
+   - 例: `edit.md` → `/edit_`
 
 #### 3.1.3 処理対象ファイル
 - **Markdownファイル**: `*.md`

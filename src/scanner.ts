@@ -241,6 +241,10 @@ const normalizeGrowiPath = (path: string): string => {
     .replace(/\^/g, "-caret-")
     .replace(/%/g, "-percent-");
 
+  // Replace reserved page names
+  // "edit" is a reserved name in GROWI
+  normalized = normalized.replace(/\/edit$/g, "/edit_");
+
   return normalized;
 };
 

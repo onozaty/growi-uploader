@@ -924,5 +924,59 @@ describe("scanMarkdownFiles", () => {
         },
       ]);
     });
+
+    it("should replace reserved page name 'edit' with 'edit_'", async () => {
+      await createTestFiles(tempDir, {
+        "edit.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "edit.md",
+          growiPath: "/edit_",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should replace 'edit' in subdirectory", async () => {
+      await createTestFiles(tempDir, {
+        "docs/edit.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "docs/edit.md",
+          growiPath: "/docs/edit_",
+          attachments: [],
+        },
+      ]);
+    });
+
+    it("should not replace 'edit' in the middle of page name", async () => {
+      await createTestFiles(tempDir, {
+        "editor.md": "# Content",
+        "my-edit-page.md": "# Content",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toEqual([
+        {
+          localPath: "editor.md",
+          growiPath: "/editor",
+          attachments: [],
+        },
+        {
+          localPath: "my-edit-page.md",
+          growiPath: "/my-edit-page",
+          attachments: [],
+        },
+      ]);
+    });
   });
 });
