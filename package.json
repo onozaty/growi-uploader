@@ -1,6 +1,6 @@
 {
   "name": "@onozaty/growi-uploader",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A content uploader for GROWI",
   "type": "module",
   "bin": {
