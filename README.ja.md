@@ -1,6 +1,6 @@
 # growi-uploader
 
-日本語 | [English](README.md)
+[English](README.md) | 日本語
 
 [![Test](https://github.com/onozaty/growi-uploader/actions/workflows/test.yaml/badge.svg)](https://github.com/onozaty/growi-uploader/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/gh/onozaty/growi-uploader/graph/badge.svg?token=X0YN1OP5PB)](https://codecov.io/gh/onozaty/growi-uploader)
