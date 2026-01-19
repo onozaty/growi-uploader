@@ -1,11 +1,11 @@
 # growi-uploader
 
-English | [日本語](README.ja.md)
-
 [![Test](https://github.com/onozaty/growi-uploader/actions/workflows/test.yaml/badge.svg)](https://github.com/onozaty/growi-uploader/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/gh/onozaty/growi-uploader/graph/badge.svg?token=X0YN1OP5PB)](https://codecov.io/gh/onozaty/growi-uploader)
 [![npm version](https://badge.fury.io/js/@onozaty%2Fgrowi-uploader.svg)](https://www.npmjs.com/package/@onozaty/growi-uploader)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+English | [日本語](README.ja.md)
 
 A CLI tool to batch upload local Markdown files and attachments to [GROWI](https://growi.org/) Wiki.
 
