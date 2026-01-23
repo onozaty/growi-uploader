@@ -337,7 +337,7 @@ describe("uploadFiles", () => {
     );
     // Should log error with error message
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "[ERROR] guide.md → /guide (failed to update attachment links: Update failed)",
+      "[ERROR] guide.md → /guide (failed to update links: Update failed)",
     );
   });
 
@@ -448,7 +448,7 @@ describe("uploadFiles", () => {
     );
     // Should log error with error message
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "[ERROR] guide.md → /guide (failed to update page links: Update failed)",
+      "[ERROR] guide.md → /guide (failed to update links: Update failed)",
     );
   });
 
@@ -728,7 +728,7 @@ describe("uploadFiles", () => {
 
       expect(formatDetailedErrorSpy).toHaveBeenCalledWith(mockError);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[ERROR] guide.md → /guide (failed to update attachment links: HTTP 409 Conflict)",
+        "[ERROR] guide.md → /guide (failed to update links: HTTP 409 Conflict)",
       );
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "  Details:\n  HTTP Status: 409",

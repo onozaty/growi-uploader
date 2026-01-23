@@ -979,4 +979,87 @@ describe("scanMarkdownFiles", () => {
       ]);
     });
   });
+
+  describe("external reference detection", () => {
+    it("should detect external reference when linking to another page's attachment in same directory", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide",
+        "guide_attachment_image.png": "PNG",
+        "cross-reference.md": "# Cross Reference\n\n![Image](guide_attachment_image.png)",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      // cross-reference.md should have external reference
+      const crossRef = results.find((r) => r.localPath === "cross-reference.md");
+      expect(crossRef).toBeDefined();
+      expect(crossRef!.attachments).toHaveLength(1);
+      expect(crossRef!.attachments[0].isExternalReference).toBe(true);
+      expect(crossRef!.attachments[0].ownerPageName).toBe("guide");
+
+      // guide.md should have its own attachment (not external)
+      const guide = results.find((r) => r.localPath === "guide.md");
+      expect(guide).toBeDefined();
+      expect(guide!.attachments).toHaveLength(1);
+      expect(guide!.attachments[0].isExternalReference).toBeUndefined();
+    });
+
+    it("should detect external reference when linking to different directory's attachment", async () => {
+      await createTestFiles(tempDir, {
+        "docs/guide.md": "# Guide",
+        "docs/guide_attachment_image.png": "PNG",
+        "api/reference.md": "# API Reference\n\n![Image](../docs/guide_attachment_image.png)",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      // api/reference.md should have external reference
+      const apiRef = results.find((r) => r.localPath === "api/reference.md");
+      expect(apiRef).toBeDefined();
+      expect(apiRef!.attachments).toHaveLength(1);
+      expect(apiRef!.attachments[0].isExternalReference).toBe(true);
+      expect(apiRef!.attachments[0].ownerPageName).toBe("guide");
+    });
+
+    it("should NOT mark as external reference when same page name exists in different directories", async () => {
+      // This tests the bug: docs/guide.md and api/guide.md both have "guide" as page name
+      // docs/guide.md referencing api/guide_attachment_image.png should be external
+      await createTestFiles(tempDir, {
+        "docs/guide.md": "# Docs Guide\n\n![Image](../api/guide_attachment_image.png)",
+        "api/guide.md": "# API Guide",
+        "api/guide_attachment_image.png": "PNG",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      // docs/guide.md should have external reference to api/guide_attachment_image.png
+      // because the attachment belongs to api/guide.md, not docs/guide.md
+      const docsGuide = results.find((r) => r.localPath === "docs/guide.md");
+      expect(docsGuide).toBeDefined();
+      expect(docsGuide!.attachments).toHaveLength(1);
+      // BUG: This will fail with current implementation
+      // Current: isExternalReference = false (because ownerPageName "guide" === currentPageName "guide")
+      // Expected: isExternalReference = true (because the file is in api/ directory, not docs/)
+      expect(docsGuide!.attachments[0].isExternalReference).toBe(true);
+    });
+
+    it("should not mark as external reference for own attachments", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "# Guide\n\n![Image](guide_attachment_image.png)",
+        "guide_attachment_image.png": "PNG",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      const guide = results.find((r) => r.localPath === "guide.md");
+      expect(guide).toBeDefined();
+      // Naming pattern detection (detectionPattern: "naming") should NOT have isExternalReference
+      // Link pattern detection merged with naming should also NOT be external
+      const namingAttachment = guide!.attachments.find(
+        (a) => a.detectionPattern === "naming"
+      );
+      expect(namingAttachment).toBeDefined();
+      expect(namingAttachment!.isExternalReference).toBeUndefined();
+    });
+  });
 });

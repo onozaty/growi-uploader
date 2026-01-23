@@ -10,6 +10,83 @@ const escapeRegex = (str: string): string => {
 };
 
 /**
+ * Build regex patterns from originalLinkPaths
+ * Generates escaped patterns including variations (./path <-> path)
+ */
+const buildPatternsFromLinkPaths = (linkPaths: string[]): string[] => {
+  const patterns: string[] = [];
+
+  for (const linkPath of linkPaths) {
+    const escapedPath = escapeRegex(linkPath);
+    patterns.push(escapedPath);
+
+    // Also add variations: ./path <-> path
+    if (linkPath.startsWith("./")) {
+      // Add version without ./
+      const withoutDot = linkPath.substring(2);
+      const escapedWithoutDot = escapeRegex(withoutDot);
+      patterns.push(escapedWithoutDot);
+    } else if (!linkPath.startsWith("../") && !linkPath.startsWith("<")) {
+      // Add version with ./
+      patterns.push(`\\./${escapedPath}`);
+    }
+  }
+
+  return patterns;
+};
+
+/**
+ * Replace links in markdown content matching the given patterns with a target path
+ * Handles image links, regular links, and HTML img tags
+ *
+ * @param markdown Markdown content
+ * @param patterns Array of escaped regex patterns to match
+ * @param targetPath Path to replace with (e.g., /attachment/xxx)
+ * @returns Object with replaced content and whether any replacement occurred
+ */
+const replaceLinksWithPatterns = (
+  markdown: string,
+  patterns: string[],
+  targetPath: string,
+): { content: string; replaced: boolean } => {
+  let result = markdown;
+  let replaced = false;
+
+  for (const pattern of patterns) {
+    // Image link: ![...](pattern) → ![...](/attachment/id)
+    const imgRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${pattern}\\)`, "g");
+    if (imgRegex.test(result)) {
+      replaced = true;
+      result = result.replace(imgRegex, `![$1](${targetPath})`);
+    }
+
+    // Regular link: [...](pattern) → [...](/attachment/id)
+    // Note: Negative lookbehind to exclude image links (with !)
+    const linkRegex = new RegExp(
+      `(?<!!)\\[([^\\]]*)\\]\\(${pattern}\\)`,
+      "g",
+    );
+    if (linkRegex.test(result)) {
+      replaced = true;
+      result = result.replace(linkRegex, `[$1](${targetPath})`);
+    }
+
+    // HTML img tag: <img src="pattern" ...> → <img src="/attachment/id" ...>
+    // Supports both single and double quotes
+    const imgTagRegex = new RegExp(
+      `(<img\\s+[^>]*src=)(["'])${pattern}\\2([^>]*>)`,
+      "gi",
+    );
+    if (imgTagRegex.test(result)) {
+      replaced = true;
+      result = result.replace(imgTagRegex, `$1$2${targetPath}$2$3`);
+    }
+  }
+
+  return { content: result, replaced };
+};
+
+/**
  * Replace attachment links in Markdown content with GROWI format
  *
  * Supports two detection patterns:
@@ -48,56 +125,62 @@ export const replaceAttachmentLinks = (
     }
 
     // Pattern 2: originalLinkPaths - for both naming and link patterns
-    // Naming pattern gets this from merging with link pattern
-    // Link pattern always has this from scanning
     if (attachment.originalLinkPaths) {
-      for (const linkPath of attachment.originalLinkPaths) {
-        const escapedPath = escapeRegex(linkPath);
-        patterns.push(escapedPath);
-
-        // Also add variations: ./path <-> path
-        if (linkPath.startsWith("./")) {
-          // Add version without ./
-          const withoutDot = linkPath.substring(2);
-          const escapedWithoutDot = escapeRegex(withoutDot);
-          patterns.push(escapedWithoutDot);
-        } else if (!linkPath.startsWith("../") && !linkPath.startsWith("<")) {
-          // Add version with ./
-          patterns.push(`\\./${escapedPath}`);
-        }
-      }
+      patterns.push(...buildPatternsFromLinkPaths(attachment.originalLinkPaths));
     }
 
     // Replace all patterns
-    for (const pattern of patterns) {
-      // Image link: ![...](pattern) → ![...](/attachment/id)
-      const imgRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${pattern}\\)`, "g");
-      if (imgRegex.test(result)) {
-        replaced = true;
-        result = result.replace(imgRegex, `![$1](${growiPath})`);
-      }
+    const { content: replacedContent, replaced: wasReplaced } =
+      replaceLinksWithPatterns(result, patterns, growiPath);
+    if (wasReplaced) {
+      result = replacedContent;
+      replaced = true;
+    }
+  }
 
-      // Regular link: [...](pattern) → [...](/attachment/id)
-      // Note: Negative lookbehind to exclude image links (with !)
-      const linkRegex = new RegExp(
-        `(?<!!)\\[([^\\]]*)\\]\\(${pattern}\\)`,
-        "g",
-      );
-      if (linkRegex.test(result)) {
-        replaced = true;
-        result = result.replace(linkRegex, `[$1](${growiPath})`);
-      }
+  return { content: result, replaced };
+};
 
-      // HTML img tag: <img src="pattern" ...> → <img src="/attachment/id" ...>
-      // Supports both single and double quotes
-      const imgTagRegex = new RegExp(
-        `(<img\\s+[^>]*src=)(["'])${pattern}\\2([^>]*>)`,
-        "gi",
-      );
-      if (imgTagRegex.test(result)) {
-        replaced = true;
-        result = result.replace(imgTagRegex, `$1$2${growiPath}$2$3`);
-      }
+/**
+ * Replace external attachment links in Markdown content with GROWI format
+ *
+ * External attachments are files that belong to another page (detected via naming convention).
+ * This function resolves them using a global attachment map that contains all uploaded attachments.
+ *
+ * @param markdown Original Markdown content
+ * @param attachments List of external attachments (isExternalReference === true)
+ * @param attachmentMap Global map of localPath → attachmentId
+ * @returns Object with replaced content and whether any replacement occurred
+ */
+export const replaceExternalAttachmentLinks = (
+  markdown: string,
+  attachments: AttachmentFile[],
+  attachmentMap: Map<string, string>,
+): { content: string; replaced: boolean } => {
+  let result = markdown;
+  let replaced = false;
+
+  for (const attachment of attachments) {
+    // Skip if not an external reference
+    if (!attachment.isExternalReference) continue;
+
+    // Look up attachmentId from global map
+    const attachmentId = attachmentMap.get(attachment.localPath);
+    if (!attachmentId) continue;
+
+    const growiPath = `/attachment/${attachmentId}`;
+
+    // Build patterns from originalLinkPaths
+    const patterns = attachment.originalLinkPaths
+      ? buildPatternsFromLinkPaths(attachment.originalLinkPaths)
+      : [];
+
+    // Replace all patterns
+    const { content: replacedContent, replaced: wasReplaced } =
+      replaceLinksWithPatterns(result, patterns, growiPath);
+    if (wasReplaced) {
+      result = replacedContent;
+      replaced = true;
     }
   }
 

@@ -14,6 +14,8 @@ export interface AttachmentFile {
   attachmentId?: string; // Set after upload
   detectionPattern: "naming" | "link"; // How this attachment was detected
   originalLinkPaths?: string[]; // Original link paths in markdown (for link pattern)
+  isExternalReference?: boolean; // True if this is a reference to another page's attachment
+  ownerPageName?: string; // Page name that owns this attachment (from naming convention)
 }
 
 /**
@@ -82,9 +84,41 @@ const processLinkPath = (
   // Normalize path separators to forward slashes
   const normalizedPath = relativePath.replace(/\\/g, "/");
 
+  const fileName = basename(normalizedPath);
+
+  // Check if this is an external reference (reference to another page's attachment)
+  // External reference: file matches naming convention but belongs to a different page
+  const namingMatch = fileName.match(/^(.+)_attachment_/);
+
+  if (namingMatch && namingMatch[1]) {
+    const ownerPageName = namingMatch[1];
+
+    // Compare full paths including directory, not just page names
+    // The attachment file's owner page should be in the same directory as the attachment
+    // e.g., "docs/guide_attachment_image.png" belongs to "docs/guide.md"
+    const attachmentDir = dirname(normalizedPath);
+    const currentMarkdownDir = dirname(markdownFilePath);
+    const currentPageName = basename(markdownFilePath, ".md");
+
+    // External reference if:
+    // 1. Different directory, OR
+    // 2. Same directory but different page name
+    const isExternalReference =
+      attachmentDir !== currentMarkdownDir || ownerPageName !== currentPageName;
+
+    return {
+      localPath: normalizedPath,
+      fileName: fileName,
+      detectionPattern: "link",
+      originalLinkPaths: [originalLinkPath],
+      isExternalReference,
+      ownerPageName,
+    };
+  }
+
   return {
     localPath: normalizedPath,
-    fileName: basename(normalizedPath),
+    fileName: fileName,
     detectionPattern: "link",
     originalLinkPaths: [originalLinkPath], // Keep original format for replacement
   };
