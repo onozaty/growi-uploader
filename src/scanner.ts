@@ -152,7 +152,7 @@ const extractLinkedAttachments = (
   const linkRegex = new RegExp(
     [
       "!?", // Optional ! for image links
-      "\\[(?<alt>[^\\]]*)\\]", // [alt text] or [link text]
+      "\\[(?<alt>(?:[^\\]\\\\]|\\\\.)*)\\]", // [alt text] or [link text] (supports escaped brackets)
       "\\(", // Opening parenthesis
       "(?:", // Non-capturing group for path alternatives
       "<(?<anglePath>[^>]+)>", // Pattern 1: <path> with angle brackets

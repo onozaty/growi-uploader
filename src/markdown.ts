@@ -54,7 +54,11 @@ const replaceLinksWithPatterns = (
 
   for (const pattern of patterns) {
     // Image link: ![...](pattern) → ![...](/attachment/id)
-    const imgRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${pattern}\\)`, "g");
+    // Supports escaped brackets in alt text: !\[\[Label\]...\](pattern)
+    const imgRegex = new RegExp(
+      `!\\[((?:[^\\]\\\\]|\\\\.)*)\\]\\(${pattern}\\)`,
+      "g",
+    );
     if (imgRegex.test(result)) {
       replaced = true;
       result = result.replace(imgRegex, `![$1](${targetPath})`);
@@ -62,8 +66,9 @@ const replaceLinksWithPatterns = (
 
     // Regular link: [...](pattern) → [...](/attachment/id)
     // Note: Negative lookbehind to exclude image links (with !)
+    // Supports escaped brackets in link text: \[\[Label\]...\](pattern)
     const linkRegex = new RegExp(
-      `(?<!!)\\[([^\\]]*)\\]\\(${pattern}\\)`,
+      `(?<!!)\\[((?:[^\\]\\\\]|\\\\.)*)\\]\\(${pattern}\\)`,
       "g",
     );
     if (linkRegex.test(result)) {

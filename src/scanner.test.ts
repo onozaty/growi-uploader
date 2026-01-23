@@ -384,6 +384,42 @@ describe("scanMarkdownFiles", () => {
         originalLinkPaths: ["./images/bad%2.png"],
       });
     });
+
+    it("should detect link with escaped brackets in label", async () => {
+      await createTestFiles(tempDir, {
+        "page1.md": "[\\[Label\\]添付ファイル](page1_attachment_添付ファイル.doc)",
+        "page1_attachment_添付ファイル.doc": "fake-doc",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "page1_attachment_添付ファイル.doc",
+        fileName: "添付ファイル.doc",
+        detectionPattern: "naming",
+        originalLinkPaths: ["page1_attachment_添付ファイル.doc"],
+      });
+    });
+
+    it("should detect image link with escaped brackets in alt text", async () => {
+      await createTestFiles(tempDir, {
+        "guide.md": "![\\[Figure 1\\] Sample Image](./images/sample.png)",
+        "images/sample.png": "fake-image",
+      });
+
+      const results = await scanMarkdownFiles(tempDir);
+
+      expect(results).toHaveLength(1);
+      expect(results[0]!.attachments).toHaveLength(1);
+      expect(results[0]!.attachments[0]).toMatchObject({
+        localPath: "images/sample.png",
+        fileName: "sample.png",
+        detectionPattern: "link",
+        originalLinkPaths: ["./images/sample.png"],
+      });
+    });
   });
 
   describe("HTML img tag detection", () => {
@@ -994,14 +1030,14 @@ describe("scanMarkdownFiles", () => {
       const crossRef = results.find((r) => r.localPath === "cross-reference.md");
       expect(crossRef).toBeDefined();
       expect(crossRef!.attachments).toHaveLength(1);
-      expect(crossRef!.attachments[0].isExternalReference).toBe(true);
-      expect(crossRef!.attachments[0].ownerPageName).toBe("guide");
+      expect(crossRef!.attachments[0]!.isExternalReference).toBe(true);
+      expect(crossRef!.attachments[0]!.ownerPageName).toBe("guide");
 
       // guide.md should have its own attachment (not external)
       const guide = results.find((r) => r.localPath === "guide.md");
       expect(guide).toBeDefined();
       expect(guide!.attachments).toHaveLength(1);
-      expect(guide!.attachments[0].isExternalReference).toBeUndefined();
+      expect(guide!.attachments[0]!.isExternalReference).toBeUndefined();
     });
 
     it("should detect external reference when linking to different directory's attachment", async () => {
@@ -1017,8 +1053,8 @@ describe("scanMarkdownFiles", () => {
       const apiRef = results.find((r) => r.localPath === "api/reference.md");
       expect(apiRef).toBeDefined();
       expect(apiRef!.attachments).toHaveLength(1);
-      expect(apiRef!.attachments[0].isExternalReference).toBe(true);
-      expect(apiRef!.attachments[0].ownerPageName).toBe("guide");
+      expect(apiRef!.attachments[0]!.isExternalReference).toBe(true);
+      expect(apiRef!.attachments[0]!.ownerPageName).toBe("guide");
     });
 
     it("should NOT mark as external reference when same page name exists in different directories", async () => {
@@ -1040,7 +1076,7 @@ describe("scanMarkdownFiles", () => {
       // BUG: This will fail with current implementation
       // Current: isExternalReference = false (because ownerPageName "guide" === currentPageName "guide")
       // Expected: isExternalReference = true (because the file is in api/ directory, not docs/)
-      expect(docsGuide!.attachments[0].isExternalReference).toBe(true);
+      expect(docsGuide!.attachments[0]!.isExternalReference).toBe(true);
     });
 
     it("should not mark as external reference for own attachments", async () => {

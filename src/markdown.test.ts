@@ -425,6 +425,41 @@ describe("replaceAttachmentLinks", () => {
       expect(result.content).toBe(markdown);
       expect(result.replaced).toBe(false);
     });
+
+    it("should replace link with escaped brackets in label", () => {
+      const markdown =
+        "[\\[Label\\]添付ファイル](page1_attachment_添付ファイル.doc)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "page1_attachment_添付ファイル.doc",
+          fileName: "添付ファイル.doc",
+          attachmentId: "abc123",
+          detectionPattern: "naming",
+          originalLinkPaths: ["page1_attachment_添付ファイル.doc"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "page1");
+      expect(result.content).toBe(
+        "[\\[Label\\]添付ファイル](/attachment/abc123)",
+      );
+      expect(result.replaced).toBe(true);
+    });
+
+    it("should replace image with escaped brackets in alt text", () => {
+      const markdown = "![\\[Figure 1\\] Sample](./images/sample.png)";
+      const attachments: AttachmentFile[] = [
+        {
+          localPath: "images/sample.png",
+          fileName: "sample.png",
+          attachmentId: "abc123",
+          detectionPattern: "link",
+          originalLinkPaths: ["./images/sample.png"],
+        },
+      ];
+      const result = replaceAttachmentLinks(markdown, attachments, "guide");
+      expect(result.content).toBe("![\\[Figure 1\\] Sample](/attachment/abc123)");
+      expect(result.replaced).toBe(true);
+    });
   });
 });
 
