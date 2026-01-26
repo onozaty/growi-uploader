@@ -33,7 +33,6 @@ type PageResult = {
   file: MarkdownFile;
   pageId: string;
   revisionId: string;
-  content: string;
 };
 
 /**
@@ -162,7 +161,6 @@ export const uploadFiles = async (
           file,
           pageId: result.pageId,
           revisionId: latestRevisionId,
-          content,
         });
       }
     } else if (file.attachments.length > 0) {
@@ -183,8 +181,9 @@ export const uploadFiles = async (
   // Pass 2: Link replacement
   // ========================================
   for (const pageResult of pageResults) {
-    const { file, pageId, content } = pageResult;
-    let currentContent = content;
+    const { file, pageId } = pageResult;
+    // Re-read file content to minimize memory usage
+    let currentContent = readFileSync(join(sourceDir, file.localPath), "utf-8");
     let currentRevisionId = pageResult.revisionId;
 
     const pageName = basename(file.localPath, ".md");
