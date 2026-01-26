@@ -274,6 +274,48 @@ Download the [documentation](/attachment/68f3a3fa794f665ad2c0d2b3).
 
 両方の検出方法で、複数のリンク形式(`./`あり・なし)がサポートされています。
 
+### クロスページ参照
+
+命名規則に従うファイル（`BBB_attachment_*`）を別のページ（`AAA.md`）から参照している場合:
+
+- 添付ファイルは所有者ページ（`/BBB`）にのみアップロードされます
+- 参照元ページ（`AAA.md`）のリンクは添付ファイルのURL（`/attachment/{id}`）に置換されます
+
+**例:**
+```
+ファイル構成:
+  AAA.md (内容: ![](BBB_attachment_image.png))
+  BBB.md
+  BBB_attachment_image.png
+
+結果:
+  - BBB_attachment_image.png は /BBB ページにのみアップロード
+  - AAA.md 内のリンクは /attachment/{id} に置換
+```
+
+## ページリンクの変換
+
+他のMarkdownファイル（`.md`拡張子）へのリンクは自動的にGROWI形式に変換されます。
+
+### 対応パターン
+
+```markdown
+# アップロード前（ローカル）
+[ユーザーガイド](./guide.md)
+[API概要](../api/overview.md)
+[認証セクション](./api/auth.md#setup)
+
+# アップロード後（GROWI上）
+[ユーザーガイド](./guide)
+[API概要](../api/overview)
+[認証セクション](./api/auth#setup)
+```
+
+- `.md`拡張子が除去されます
+- 相対パスのプレフィックス（`./`、`../`）は維持されます（GROWIは相対リンクをサポート）
+- アンカーリンク（`#section`）は維持されます
+- 外部URL（`http://`、`https://`）は変更されません
+
 ## 高度な使い方
 
 ### 既存ページの更新

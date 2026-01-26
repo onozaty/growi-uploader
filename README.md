@@ -274,6 +274,48 @@ Download the [documentation](/attachment/68f3a3fa794f665ad2c0d2b3).
 
 Both detection methods support multiple link formats (with or without `./`).
 
+### Cross-Page References
+
+When a file following the naming convention (`BBB_attachment_*`) is referenced from a different page (`AAA.md`):
+
+- The attachment is uploaded only to its owner page (`/BBB`)
+- Links in the referencing page (`AAA.md`) are replaced with the attachment URL (`/attachment/{id}`)
+
+**Example:**
+```
+File structure:
+  AAA.md (contains: ![](BBB_attachment_image.png))
+  BBB.md
+  BBB_attachment_image.png
+
+Result:
+  - BBB_attachment_image.png is uploaded to /BBB page only
+  - The link in AAA.md is replaced with /attachment/{id}
+```
+
+## Page Link Conversion
+
+Links to other Markdown files (`.md` extension) are automatically converted to GROWI format.
+
+### Supported Patterns
+
+```markdown
+# Before upload (local)
+[User Guide](./guide.md)
+[API Overview](../api/overview.md)
+[Auth Section](./api/auth.md#setup)
+
+# After upload (on GROWI)
+[User Guide](./guide)
+[API Overview](../api/overview)
+[Auth Section](./api/auth#setup)
+```
+
+- The `.md` extension is removed
+- Relative path prefixes (`./`, `../`) are preserved (GROWI supports relative links)
+- Anchor links (`#section`) are preserved
+- External URLs (`http://`, `https://`) are not modified
+
 ## Advanced Usage
 
 ### Update Existing Pages

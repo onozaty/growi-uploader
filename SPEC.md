@@ -15,7 +15,7 @@
 
 ### 2.1 使用技術
 - **言語**: TypeScript (ESNext, NodeNext module)
-- **ランタイム**: Node.js
+- **ランタイム**: Node.js 18以降
 - **APIクライアント**: Axios (GROWI REST API v3 との通信)
 - **API定義**: OpenAPI 3.0.1 (orval による型生成)
 - **CLIフレームワーク**: commander.js
@@ -99,6 +99,7 @@ AAA/CCC/DDD.md              →   /AAA/CCC/DDD (ページ)
 
 #### 3.1.3 処理対象ファイル
 - **Markdownファイル**: `*.md`
+  - ただし、`*_attachment_*.md` パターンに一致するファイルは除外（添付ファイルとして扱われるため）
 - **添付ファイル**: 後述の命名規則に従うファイル
 
 ### 3.2 Markdownファイルの処理
