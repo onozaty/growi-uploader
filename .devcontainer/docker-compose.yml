@@ -6,6 +6,7 @@ services:
     volumes:
       - ../..:/workspaces:cached
       - app-node-modules:/workspaces/app/node_modules
+      - claude-config:/home/node/.claude
     command: sleep infinity
     environment:
       TZ: Asia/Tokyo
@@ -88,6 +89,7 @@ services:
 
 volumes:
   app-node-modules:
+  claude-config:
   growi_data:
   mongo_configdb:
   mongo_db:

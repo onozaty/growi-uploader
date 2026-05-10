@@ -58,6 +58,20 @@ npm install -g @onozaty/growi-uploader
 growi-uploader <source-dir>
 ```
 
+### Dockerでの使用
+
+GitHub Container Registry にビルド済みのDockerイメージを公開しています。Node.js が利用できない環境(CI/CDパイプラインなど)で便利です。
+
+```bash
+docker run --rm \
+  -v "$(pwd):/work" \
+  ghcr.io/onozaty/growi-uploader:latest ./docs -c ./growi-uploader.json
+```
+
+イメージの作業ディレクトリは `/work` です。プロジェクトディレクトリをそこにバインドマウントすることで、`./docs` や `./growi-uploader.json` をそのまま参照できます。
+
+コンテナは非rootユーザ (uid 1000) で動作します。マウント元のファイルがそのユーザから読めることを確認してください。対応プラットフォーム: `linux/amd64`, `linux/arm64`。
+
 ## 使い方
 
 ### 基本コマンド

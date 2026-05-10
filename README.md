@@ -58,6 +58,20 @@ npm install -g @onozaty/growi-uploader
 growi-uploader <source-dir>
 ```
 
+### Using Docker
+
+A pre-built Docker image is available on GitHub Container Registry. This is useful in environments without Node.js (e.g., CI/CD pipelines).
+
+```bash
+docker run --rm \
+  -v "$(pwd):/work" \
+  ghcr.io/onozaty/growi-uploader:latest ./docs -c ./growi-uploader.json
+```
+
+The image's working directory is `/work`, so bind-mounting your project directory there lets you reference `./docs` and `./growi-uploader.json` directly.
+
+The container runs as a non-root user (uid 1000); make sure mounted files are readable by that user. Supported platforms: `linux/amd64`, `linux/arm64`.
+
 ## Usage
 
 ### Basic Command
