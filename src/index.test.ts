@@ -95,6 +95,79 @@ describe("main", () => {
     expect(consoleLogSpy).toHaveBeenCalledWith("- Pages created: 1");
   });
 
+  it("should throw an error when source directory does not exist", async () => {
+    const configPath = join(tempDir, "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/",
+        update: false,
+      }),
+      "utf-8",
+    );
+
+    const missingDir = join(tempDir, "does-not-exist");
+
+    vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+    const uploadFilesSpy = vi
+      .spyOn(uploader, "uploadFiles")
+      .mockResolvedValue({
+        pagesCreated: 0,
+        pagesUpdated: 0,
+        pagesSkipped: 0,
+        pageErrors: 0,
+        attachmentsUploaded: 0,
+        attachmentsSkipped: 0,
+        attachmentErrors: 0,
+        linkReplacementErrors: 0,
+      });
+
+    await expect(main(missingDir, configPath)).rejects.toThrow(
+      `Source directory not found: ${missingDir}`,
+    );
+
+    expect(uploadFilesSpy).not.toHaveBeenCalled();
+  });
+
+  it("should throw an error when source path is a file, not a directory", async () => {
+    const configPath = join(tempDir, "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        url: "https://growi.example.com",
+        token: "test-token",
+        basePath: "/",
+        update: false,
+      }),
+      "utf-8",
+    );
+
+    const filePath = join(tempDir, "not-a-dir.md");
+    await writeFile(filePath, "# Not a directory", "utf-8");
+
+    vi.spyOn(growiClient, "configureAxios").mockImplementation(() => {});
+    const uploadFilesSpy = vi
+      .spyOn(uploader, "uploadFiles")
+      .mockResolvedValue({
+        pagesCreated: 0,
+        pagesUpdated: 0,
+        pagesSkipped: 0,
+        pageErrors: 0,
+        attachmentsUploaded: 0,
+        attachmentsSkipped: 0,
+        attachmentErrors: 0,
+        linkReplacementErrors: 0,
+      });
+
+    await expect(main(filePath, configPath)).rejects.toThrow(
+      `Source path is not a directory: ${filePath}`,
+    );
+
+    expect(uploadFilesSpy).not.toHaveBeenCalled();
+  });
+
   it("should handle multiple markdown files", async () => {
     const configPath = join(tempDir, "config.json");
     await writeFile(

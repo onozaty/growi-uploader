@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
+import { statSync } from "node:fs";
 import { resolve } from "node:path";
 import packageJson from "../package.json";
 import { loadConfig } from "./config";
@@ -24,6 +25,20 @@ export const main = async (
   }
 
   const sourceDirPath = resolve(sourceDir);
+
+  // Validate source directory
+  let sourceDirStat;
+  try {
+    sourceDirStat = statSync(sourceDirPath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error(`Source directory not found: ${sourceDirPath}`);
+    }
+    throw error;
+  }
+  if (!sourceDirStat.isDirectory()) {
+    throw new Error(`Source path is not a directory: ${sourceDirPath}`);
+  }
 
   // Configure axios once
   configureAxios(config.url, config.token);
